@@ -53,6 +53,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)VortexEngine\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -67,6 +68,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)VortexEngine\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -76,12 +78,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Vortex\Log.h" />
     <ClInclude Include="src\Vortex.h" />
     <ClInclude Include="src\Vortex\Application.h" />
     <ClInclude Include="src\Vortex\Core.h" />
     <ClInclude Include="src\Vortex\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Vortex\Log.cpp" />
     <ClCompile Include="src\Vortex\Application.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
