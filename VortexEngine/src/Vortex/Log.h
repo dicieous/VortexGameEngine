@@ -15,11 +15,11 @@
 #define VX_CORE_FATAL(...)	::Vortex::Log::GetCoreLogger()->fatal(__VA_ARGS__);
 
 //Client Log Macros
-#define VX_CLIENT_TRACE(...)	::Vortex::Log::GetClientLogger()->trace(__VA_ARGS__);
-#define VX_CLIENT_INFO(...)		::Vortex::Log::GetClientLogger()->info(__VA_ARGS__);
-#define VX_CLIENT_WARN(...)		::Vortex::Log::GetClientLogger()->warn(__VA_ARGS__);
-#define VX_CLIENT_ERROR(...)	::Vortex::Log::GetClientLogger()->error(__VA_ARGS__);
-#define VX_CLIENT_FATAL(...)	::Vortex::Log::GetClientLogger()->fatal(__VA_ARGS__);
+#define VX_TRACE(...)	::Vortex::Log::GetClientLogger()->trace(__VA_ARGS__);
+#define VX_INFO(...)	::Vortex::Log::GetClientLogger()->info(__VA_ARGS__);
+#define VX_WARN(...)	::Vortex::Log::GetClientLogger()->warn(__VA_ARGS__);
+#define VX_ERROR(...)	::Vortex::Log::GetClientLogger()->error(__VA_ARGS__);
+#define VX_FATAL(...)	::Vortex::Log::GetClientLogger()->fatal(__VA_ARGS__);
 
 namespace Vortex {
 	class VORTEX_API Log

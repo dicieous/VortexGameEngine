@@ -4,6 +4,9 @@
     <Filter Include="Vortex">
       <UniqueIdentifier>{EDC893D8-D96A-BEAE-C225-D202AE6645FF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vortex\Events">
+      <UniqueIdentifier>{3188EA07-9D48-663E-6683-AFBBD202AB1A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Vortex.h" />
@@ -15,6 +18,9 @@
     </ClInclude>
     <ClInclude Include="src\Vortex\EntryPoint.h">
       <Filter>Vortex</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\Events\Event.h">
+      <Filter>Vortex\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Vortex\Log.h">
       <Filter>Vortex</Filter>
