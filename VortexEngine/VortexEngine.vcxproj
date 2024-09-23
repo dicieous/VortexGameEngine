@@ -152,11 +152,14 @@ copy /B /Y ..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Dist-
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Vortex\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Vortex\Events\KeyEvent.h" />
     <ClInclude Include="src\Vortex.h" />
     <ClInclude Include="src\Vortex\Application.h" />
     <ClInclude Include="src\Vortex\Core.h" />
     <ClInclude Include="src\Vortex\EntryPoint.h" />
     <ClInclude Include="src\Vortex\Events\Event.h" />
+    <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
     <ClInclude Include="src\Vortex\Log.h" />
   </ItemGroup>
   <ItemGroup>

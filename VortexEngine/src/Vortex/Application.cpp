@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include "Vortex/Events/ApplicationEvent.h"
+#include "Vortex/Log.h"
+
 
 namespace Vortex {
 	Application::Application() {
@@ -12,7 +15,10 @@ namespace Vortex {
 
 	void Application::Run() {
 
-		while (true){
+		WindowResizeEvent resize_Event(1280, 720);
+		
+		VX_TRACE("{}", resize_Event.ToString());
+		while (true) {
 
 		}
 	}

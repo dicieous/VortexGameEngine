@@ -11,7 +11,7 @@ namespace Vortex {
 	//For the future, a better strategy might be to buffer events in an event
 	//bus and process them during the "event" part of the update stage.
 
-	enum EventType
+	enum class EventType
 	{
 		None = 0,
 		WindowClose,
@@ -21,7 +21,7 @@ namespace Vortex {
 		WindowMoved,
 		Apptick,
 		AppUpdate,
-		AppRenderer,
+		AppRender,
 		KeyPressed,
 		KeyReleased,
 		MouseButtonPressed,
@@ -33,16 +33,16 @@ namespace Vortex {
 	enum EventCategory
 	{
 		None = 0,
-		EventCategoryApplication = BIT(0),
-		EventCategoryInput = BIT(1),
-		EventCategoryKeyboard = BIT(2),
-		EventCategoryMouse = BIT(3),
-		EventCategoryMouseButton = BIT(4),
+		EventCategoryApplication =	BIT(0),
+		EventCategoryInput =		BIT(1),
+		EventCategoryKeyboard =		BIT(2),
+		EventCategoryMouse =		BIT(3),
+		EventCategoryMouseButton =	BIT(4),
 	};
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType : ##type}\
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType :: type;}\
 								virtual EventType GetEventType() const override {return GetStaticType();}\
-								virtual const char* GetName() const override {return ##type}
+								virtual const char* GetEventName() const override {return #type;}
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category; }
 
@@ -56,7 +56,7 @@ namespace Vortex {
 		virtual std::string ToString() const { return GetEventName(); };
 
 		inline bool IsInCategory(EventCategory category) const {
-			GetCategoryFlags()& category;
+			return GetCategoryFlags()& category;
 		}
 
 	protected:

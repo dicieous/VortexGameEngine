@@ -25,6 +25,11 @@
     <ClInclude Include="src\Vortex\Log.h">
       <Filter>Vortex</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Events\KeyEvent.h">
+      <Filter>Vortex\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
+    <ClInclude Include="src\Vortex\Events\ApplicationEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vortex\Application.cpp">
