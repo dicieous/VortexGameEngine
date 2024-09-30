@@ -19,6 +19,9 @@ project "VortexEngine"
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
 	objdir ("bin-int/"..outputDir.."/%{prj.name}")
 
+	pchheader "Vxpch.h"
+	pchsource "VortexEngine/src/Vxpch.cpp"
+
 	files{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"

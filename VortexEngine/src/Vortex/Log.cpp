@@ -1,3 +1,4 @@
+#include "Vxpch.h"
 #include "Log.h"
 
 namespace Vortex {

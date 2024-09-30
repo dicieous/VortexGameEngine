@@ -1,9 +1,8 @@
 #pragma once
 
+#include "Vxpch.h"
 #include "Vortex/Core.h"
 
-#include <string>
-#include <functional>
 
 namespace Vortex {
 	//Events in Hazel are currently blocking, meaning when an event occurs it

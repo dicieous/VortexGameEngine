@@ -1,3 +1,4 @@
+#include "Vxpch.h"
 #include "Application.h"
 
 #include "Vortex/Events/ApplicationEvent.h"

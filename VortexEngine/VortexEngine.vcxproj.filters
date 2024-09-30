@@ -19,17 +19,22 @@
     <ClInclude Include="src\Vortex\EntryPoint.h">
       <Filter>Vortex</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Events\ApplicationEvent.h">
+      <Filter>Vortex\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex\Events\Event.h">
+      <Filter>Vortex\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\Events\KeyEvent.h">
+      <Filter>Vortex\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\Events\MouseEvent.h">
       <Filter>Vortex\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Vortex\Log.h">
       <Filter>Vortex</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vortex\Events\KeyEvent.h">
-      <Filter>Vortex\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
-    <ClInclude Include="src\Vortex\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Vxpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vortex\Application.cpp">
@@ -38,5 +43,6 @@
     <ClCompile Include="src\Vortex\Log.cpp">
       <Filter>Vortex</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vxpch.cpp" />
   </ItemGroup>
 </Project>
