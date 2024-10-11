@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Vxpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_BUILD_DLL;VX_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -90,6 +90,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Debug-windows-x86_64\VortexEngine\VortexEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -104,7 +105,7 @@ copy /B /Y ..\bin\Debug-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Debu
       <PrecompiledHeaderFile>Vxpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_BUILD_DLL;VX_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -118,6 +119,7 @@ copy /B /Y ..\bin\Debug-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Debu
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Release-windows-x86_64\VortexEngine\VortexEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -132,7 +134,7 @@ copy /B /Y ..\bin\Release-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Re
       <PrecompiledHeaderFile>Vxpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_BUILD_DLL;VX_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -146,6 +148,7 @@ copy /B /Y ..\bin\Release-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Re
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -155,6 +158,7 @@ copy /B /Y ..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Dist-
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Vortex.h" />
     <ClInclude Include="src\Vortex\Application.h" />
     <ClInclude Include="src\Vortex\Core.h" />
@@ -164,14 +168,21 @@ copy /B /Y ..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Dist-
     <ClInclude Include="src\Vortex\Events\KeyEvent.h" />
     <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
     <ClInclude Include="src\Vortex\Log.h" />
+    <ClInclude Include="src\Vortex\Window.h" />
     <ClInclude Include="src\Vxpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Vortex\Application.cpp" />
     <ClCompile Include="src\Vortex\Log.cpp" />
     <ClCompile Include="src\Vxpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

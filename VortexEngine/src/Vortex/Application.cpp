@@ -7,7 +7,7 @@
 
 namespace Vortex {
 	Application::Application() {
-
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application() {
@@ -16,11 +16,8 @@ namespace Vortex {
 
 	void Application::Run() {
 
-		WindowResizeEvent resize_Event(1280, 720);
-		
-		VX_TRACE("{}", resize_Event.ToString());
-		while (true) {
-
+		while (m_Running) {
+			m_Window->OnUpdate();
 		}
 	}
 }

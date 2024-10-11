@@ -35,6 +35,8 @@
       <Filter>Vortex</Filter>
     </ClInclude>
     <ClInclude Include="src\Vxpch.h" />
+    <ClInclude Include="src\Vortex\Window.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vortex\Application.cpp">
@@ -44,5 +46,6 @@
       <Filter>Vortex</Filter>
     </ClCompile>
     <ClCompile Include="src\Vxpch.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

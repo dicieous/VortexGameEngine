@@ -10,6 +10,11 @@ workspace "VortexEngine"
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+--Include Directories relative to root folder (solution Directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
+
+include "VortexEngine/vendor/GLFW"
 
 project "VortexEngine"
 	location "VortexEngine"
@@ -29,7 +34,13 @@ project "VortexEngine"
 
 	includedirs{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

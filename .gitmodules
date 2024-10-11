@@ -1,3 +1,6 @@
 [submodule "VortexEngine/vendor/spdlog"]
 	path = VortexEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "VortexEngine/vendor/GLFW"]
+	path = VortexEngine/vendor/GLFW
+	url = https://github.com/dicieous/glfw.git
