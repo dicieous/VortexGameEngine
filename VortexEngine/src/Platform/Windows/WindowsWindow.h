@@ -6,9 +6,9 @@
 
 namespace Vortex {
 
-	class WindowsWindow : public Window 
+	class WindowsWindow : public Window
 	{
-	
+
 	public:
 		WindowsWindow(const WindowProps& props);
 

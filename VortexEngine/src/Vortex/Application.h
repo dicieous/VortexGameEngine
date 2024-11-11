@@ -4,7 +4,10 @@
 #include "Events/Event.h"
 #include "Window.h"
 
+#include "Vortex/Events/ApplicationEvent.h"
+
 namespace Vortex {
+
 	class VORTEX_API Application
 	{
 	public:
@@ -14,8 +17,10 @@ namespace Vortex {
 		virtual ~Application();
 
 		void Run();
-
+		void OnEvent(Event& e);
 	private:
+
+		bool OnWindowClose(WindowCloseEvent& e);
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
 	};
