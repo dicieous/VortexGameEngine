@@ -3,6 +3,8 @@
 #include "Vxpch.h"
 #include "Vortex/Core.h"
 
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace Vortex {
 	//Events in Hazel are currently blocking, meaning when an event occurs it
@@ -39,7 +41,7 @@ namespace Vortex {
 		EventCategoryMouseButton =	BIT(4),
 	};
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType :: ##type;}\
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType :: type;}\
 								virtual EventType GetEventType() const override {return GetStaticType();}\
 								virtual const char* GetEventName() const override {return #type;}
 
@@ -49,6 +51,8 @@ namespace Vortex {
 	{
 		friend class EventDispacher;
 	public:
+		bool Handled = false;
+		
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetEventName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
@@ -59,7 +63,6 @@ namespace Vortex {
 		}
 
 	protected:
-		bool m_Handled = false;
 	};
 
 	class EventDispacher {
@@ -73,7 +76,7 @@ namespace Vortex {
 		template<typename T>
 		bool Dispatch(EventFn<T> func) {
 			if (m_Event.GetEventType() == T::GetStaticType()) {
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(*(T*)&m_Event);
 				return true;
 			}
 
@@ -88,4 +91,10 @@ namespace Vortex {
 		return os << e.ToString();
 	}
 
+	template <typename T>
+	struct fmt::formatter<T, std::enable_if_t<std::is_base_of<Vortex::Event, T>::value, char>> : fmt::formatter<std::string> {
+		auto format(const Vortex::Event& event, format_context& ctx) const {
+			return fmt::formatter<std::string>::format(event.ToString(), ctx);
+		}
+	};
 }

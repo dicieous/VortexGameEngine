@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Vortex">
       <UniqueIdentifier>{EDC893D8-D96A-BEAE-C225-D202AE6645FF}</UniqueIdentifier>
     </Filter>
@@ -9,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex.h" />
     <ClInclude Include="src\Vortex\Application.h">
       <Filter>Vortex</Filter>
@@ -31,21 +40,36 @@
     <ClInclude Include="src\Vortex\Events\MouseEvent.h">
       <Filter>Vortex\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Layer.h">
+      <Filter>Vortex</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\LayerStack.h">
+      <Filter>Vortex</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex\Log.h">
       <Filter>Vortex</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Window.h">
+      <Filter>Vortex</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vxpch.h" />
-    <ClInclude Include="src\Vortex\Window.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vortex\Application.cpp">
+      <Filter>Vortex</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vortex\Layer.cpp">
+      <Filter>Vortex</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vortex\LayerStack.cpp">
       <Filter>Vortex</Filter>
     </ClCompile>
     <ClCompile Include="src\Vortex\Log.cpp">
       <Filter>Vortex</Filter>
     </ClCompile>
     <ClCompile Include="src\Vxpch.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

@@ -35,7 +35,7 @@ namespace Vortex {
 		inline float GetXOffset() const { return m_XOffset; }
 		inline float GetYOffset() const { return m_YOffset; }
 
-		std::string ToString() const override
+		std::string ToString() const override	
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvents: " << "xOffset: " << m_XOffset << "yOffset: " << m_YOffset;

@@ -84,6 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -112,6 +113,7 @@ copy /B /Y ..\bin\Debug-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Debu
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -141,6 +143,7 @@ copy /B /Y ..\bin\Release-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Re
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -167,6 +170,8 @@ copy /B /Y ..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Dist-
     <ClInclude Include="src\Vortex\Events\Event.h" />
     <ClInclude Include="src\Vortex\Events\KeyEvent.h" />
     <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
+    <ClInclude Include="src\Vortex\Layer.h" />
+    <ClInclude Include="src\Vortex\LayerStack.h" />
     <ClInclude Include="src\Vortex\Log.h" />
     <ClInclude Include="src\Vortex\Window.h" />
     <ClInclude Include="src\Vxpch.h" />
@@ -174,6 +179,8 @@ copy /B /Y ..\bin\Dist-windows-x86_64\VortexEngine\VortexEngine.dll ..\bin\Dist-
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Vortex\Application.cpp" />
+    <ClCompile Include="src\Vortex\Layer.cpp" />
+    <ClCompile Include="src\Vortex\LayerStack.cpp" />
     <ClCompile Include="src\Vortex\Log.cpp" />
     <ClCompile Include="src\Vxpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

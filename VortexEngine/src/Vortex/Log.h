@@ -1,6 +1,6 @@
 #pragma once
 
-#include<memory>
+#include "Vxpch.h"
 
 #include "Core.h"
 
