@@ -4,3 +4,6 @@
 [submodule "VortexEngine/vendor/GLFW"]
 	path = VortexEngine/vendor/GLFW
 	url = https://github.com/dicieous/glfw.git
+[submodule "VortexEngine/vendor/imgui"]
+	path = VortexEngine/vendor/imgui
+	url = https://github.com/dicieous/imgui.git

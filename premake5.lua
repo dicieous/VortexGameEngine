@@ -12,9 +12,17 @@ outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 --Include Directories relative to root folder (solution Directory)
 IncludeDir = {}
+IncludeDir["Glad"] = "VortexEngine/vendor/Glad/include"
 IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
+IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
 
+
+
+include "VortexEngine/vendor/Glad"
 include "VortexEngine/vendor/GLFW"
+include "VortexEngine/vendor/imgui"
+
+
 
 project "VortexEngine"
 	location "VortexEngine"
@@ -35,11 +43,16 @@ project "VortexEngine"
 	includedirs{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.ImGui}"
+
 	}
 
 	links{
+		"Glad",
 		"GLFW",
+		"ImGui",
 		"opengl32.lib"
 	}
 
@@ -50,7 +63,8 @@ project "VortexEngine"
 
 		defines{
 			"VX_PLATFORM_WINDOWS",
-			"VX_BUILD_DLL"
+			"VX_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands{

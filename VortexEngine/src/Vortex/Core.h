@@ -18,5 +18,6 @@
 	#define VX_CORE_ASSERT(x, ...)
 #endif // VX_ENABLE_ASSERTS
 
+#define VX_BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
 
 #define BIT(x) (1 << x)
