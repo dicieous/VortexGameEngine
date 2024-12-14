@@ -10,6 +10,11 @@
 	#error Vortex only Support Windows
 #endif // VORTEX_PLATFORM_WINDOWS
 
+#ifdef VX_DEBUG
+#define VX_ENABLE_ASSERTS
+#endif // VX_DEBUG
+
+
 #ifdef VX_ENABLE_ASSERTS
 	#define VX_ASSERT(x, ...) {if(!x){VX_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); }}
 	#define VX_CORE_ASSERT(x, ...){if(!x){VX_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}

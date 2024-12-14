@@ -22,11 +22,10 @@ include "VortexEngine/vendor/Glad"
 include "VortexEngine/vendor/GLFW"
 include "VortexEngine/vendor/imgui"
 
-
-
 project "VortexEngine"
 	location "VortexEngine"
 	kind "SharedLib"
+	staticruntime "Off"
 	language "C++"
 
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
@@ -58,7 +57,7 @@ project "VortexEngine"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
+		staticruntime "Off"
 		systemversion "latest"
 
 		defines{
@@ -67,31 +66,32 @@ project "VortexEngine"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands{
-			"{RMDIR} ../bin/" .. outputDir .. "/Sandbox",
-			"{MKDIR} ../bin/" .. outputDir .. "/Sandbox",
-			"{COPYFILE} %{cfg.buildtarget.relpath} ../bin/"..outputDir.."/Sandbox"
-		}		
+		-- postbuildcommands{
+		-- 	"{RMDIR} ../bin/" .. outputDir .. "/Sandbox",
+		-- 	"{MKDIR} ../bin/" .. outputDir .. "/Sandbox",
+		-- 	"{COPYFILE} %{cfg.buildtarget.relpath} ../bin/"..outputDir.."/Sandbox"
+		-- }		
 
 	filter "configurations:Debug"
 		defines "VX_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "VX_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 	
 	filter "configurations:Dist"
 		defines "VX_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
+	staticruntime "Off"
 	language "C++"
 
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
@@ -104,7 +104,8 @@ project "Sandbox"
 
 	includedirs{
 		"VortexEngine/vendor/spdlog/include",
-		"VortexEngine/src"
+		"VortexEngine/src",
+		"VortexEngine/vendor/imgui"
 	}
 
 	links{
@@ -113,24 +114,29 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines{
 			"VX_PLATFORM_WINDOWS"
 		}
 
+	-- Hazel Github issue fix Solution
+	postbuildcommands
+	{
+		("{COPYFILE} ../bin/" .. outputDir .. "/VortexEngine/VortexEngine.dll" .. " ../bin/" .. outputDir .. "/%{prj.name}")
+	}
+
 	filter "configurations:Debug"
 		defines "VX_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "VX_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 	
 	filter "configurations:Dist"
 		defines "VX_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"

@@ -5,7 +5,7 @@
 #include "Vortex/Events/MouseEvent.h"
 #include "Vortex/Events/ApplicationEvent.h"
 
-#include "../../VortexEngine/vendor/imgui/imgui.h"
+#include "imgui.h"
 
 
 namespace Vortex {
@@ -20,7 +20,6 @@ namespace Vortex {
 		void OnDetach();
 		void OnUpdate();
 		void OnEvent(Event& event);
-
 
 	private:
 
