@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Vortex.h" />
     <ClInclude Include="src\Vortex\Application.h" />
@@ -154,14 +155,18 @@
     <ClInclude Include="src\Vortex\Events\KeyEvent.h" />
     <ClInclude Include="src\Vortex\Events\MouseEvent.h" />
     <ClInclude Include="src\Vortex\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Vortex\Input.h" />
+    <ClInclude Include="src\Vortex\Keycodes.h" />
     <ClInclude Include="src\Vortex\Layer.h" />
     <ClInclude Include="src\Vortex\LayerStack.h" />
     <ClInclude Include="src\Vortex\Log.h" />
+    <ClInclude Include="src\Vortex\MouseCodes.h" />
     <ClInclude Include="src\Vortex\Window.h" />
     <ClInclude Include="src\Vxpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Vortex\Application.cpp" />
     <ClCompile Include="src\Vortex\ImGui\ImGuiLayer.cpp" />

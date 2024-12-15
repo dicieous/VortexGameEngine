@@ -10,12 +10,15 @@ public:
 
 	void OnUpdate() override
 	{
-		VX_INFO("ExampleLayer::Update");
+		//VX_INFO("ExampleLayer::Update");
+		if (Vortex::Input::IsKeyPressed(VX_KEY_SPACE)) {
+			VX_CORE_TRACE("Space Key Pressed");
+		}
 	}
 
 	void OnEvent(Vortex::Event& event) override
 	{
-		VX_TRACE("{0}", event);
+		//VX_TRACE("{0}", event);
 	}
 };
 

@@ -5,6 +5,10 @@
 #include "Vortex/Layer.h"
 #include "Vortex/Log.h"
 
+#include "Vortex/Input.h"
+#include "Vortex/Keycodes.h"
+#include "Vortex/MouseCodes.h"
+
 #include "Vortex/ImGui/ImGuiLayer.h"
 
 //---------Entry Point-----------

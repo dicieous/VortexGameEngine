@@ -17,10 +17,14 @@ IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
 IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
 
 
+group "Dependencies"{
 
-include "VortexEngine/vendor/Glad"
-include "VortexEngine/vendor/GLFW"
-include "VortexEngine/vendor/imgui"
+	include "VortexEngine/vendor/Glad"
+	include "VortexEngine/vendor/GLFW"
+	include "VortexEngine/vendor/imgui"
+}
+
+group ""
 
 project "VortexEngine"
 	location "VortexEngine"

@@ -2,8 +2,9 @@
 #include "Application.h"
 
 #include "Vortex/Log.h"
+#include "Input.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Vortex {
 
@@ -50,7 +51,7 @@ namespace Vortex {
 			}
 		}
 
-		VX_CORE_TRACE("{0}",e);
+		//VX_CORE_TRACE("{0}",e);
 	}
 
 

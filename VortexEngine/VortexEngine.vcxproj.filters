@@ -65,6 +65,10 @@
       <Filter>Vortex</Filter>
     </ClInclude>
     <ClInclude Include="src\Vxpch.h" />
+    <ClInclude Include="src\Vortex\Input.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Vortex\Keycodes.h" />
+    <ClInclude Include="src\Vortex\MouseCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
@@ -89,5 +93,6 @@
       <Filter>Vortex</Filter>
     </ClCompile>
     <ClCompile Include="src\Vxpch.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
