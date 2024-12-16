@@ -15,14 +15,13 @@ IncludeDir = {}
 IncludeDir["Glad"] = "VortexEngine/vendor/Glad/include"
 IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
 IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
+IncludeDir["glm"] = "VortexEngine/vendor/glm"
 
 
-group "Dependencies"{
-
+group "Dependencies"
 	include "VortexEngine/vendor/Glad"
 	include "VortexEngine/vendor/GLFW"
 	include "VortexEngine/vendor/imgui"
-}
 
 group ""
 
@@ -40,7 +39,10 @@ project "VortexEngine"
 
 	files{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/glm/glm/**.h"
 	}
 
 	includedirs{
@@ -48,7 +50,8 @@ project "VortexEngine"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 
 	}
 
@@ -109,7 +112,8 @@ project "Sandbox"
 	includedirs{
 		"VortexEngine/vendor/spdlog/include",
 		"VortexEngine/src",
-		"VortexEngine/vendor/imgui"
+		"VortexEngine/vendor/imgui",
+		"%{IncludeDir.glm}"
 	}
 
 	links{
