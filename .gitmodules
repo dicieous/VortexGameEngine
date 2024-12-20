@@ -7,6 +7,7 @@
 [submodule "VortexEngine/vendor/imgui"]
 	path = VortexEngine/vendor/imgui
 	url = https://github.com/dicieous/imgui.git
+        branch = docking
 [submodule "VortexEngine/vendor/glm"]
 	path = VortexEngine/vendor/glm
 	url = https://github.com/g-truc/glm

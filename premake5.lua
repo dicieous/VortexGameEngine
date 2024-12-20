@@ -112,12 +112,13 @@ project "Sandbox"
 	includedirs{
 		"VortexEngine/vendor/spdlog/include",
 		"VortexEngine/src",
-		"VortexEngine/vendor/imgui",
+		"VortexEngine/vendor",
 		"%{IncludeDir.glm}"
 	}
 
 	links{
-		"VortexEngine"
+		"VortexEngine",
+		"ImGui"
 	}
 
 	filter "system:windows"

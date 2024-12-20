@@ -3,6 +3,8 @@
 #include "Core.h"
 
 #include "LayerStack.h"
+#include "Vortex/ImGui/ImGuiLayer.h"
+
 #include "Events/Event.h"
 #include "Window.h"
 #include "Vortex/Events/ApplicationEvent.h"
@@ -29,7 +31,9 @@ namespace Vortex {
 	private:
 
 		std::unique_ptr<Window> m_Window;
-		
+
+		ImGuiLayer* m_ImGuiLayer;
+
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
 
