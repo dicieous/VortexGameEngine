@@ -27,9 +27,10 @@ group ""
 
 project "VortexEngine"
 	location "VortexEngine"
-	kind "SharedLib"
-	staticruntime "Off"
+	kind "StaticLib"
+	staticruntime "on"
 	language "C++"
+	cppdialect "C++17"
 
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
 	objdir ("bin-int/"..outputDir.."/%{prj.name}")
@@ -63,13 +64,10 @@ project "VortexEngine"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "Off"
 		systemversion "latest"
 
 		defines{
 			"VX_PLATFORM_WINDOWS",
-			"VX_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
 
@@ -82,23 +80,23 @@ project "VortexEngine"
 	filter "configurations:Debug"
 		defines "VX_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "VX_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 	
 	filter "configurations:Dist"
 		defines "VX_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
-	staticruntime "Off"
+	staticruntime "on"
 	language "C++"
 
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
@@ -130,22 +128,22 @@ project "Sandbox"
 		}
 
 	-- Hazel Github issue fix Solution
-	postbuildcommands
-	{
-		("{COPYFILE} ../bin/" .. outputDir .. "/VortexEngine/VortexEngine.dll" .. " ../bin/" .. outputDir .. "/%{prj.name}")
-	}
+	-- postbuildcommands
+	-- {
+	-- 	("{COPYFILE} ../bin/" .. outputDir .. "/VortexEngine/VortexEngine.dll" .. " ../bin/" .. outputDir .. "/%{prj.name}")
+	-- }
 
 	filter "configurations:Debug"
 		defines "VX_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "VX_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 	
 	filter "configurations:Dist"
 		defines "VX_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"

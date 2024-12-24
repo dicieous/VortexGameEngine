@@ -37,6 +37,8 @@ namespace Vortex {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
 
+		unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+
 		LayerStack m_LayerStack;
 
 	private:

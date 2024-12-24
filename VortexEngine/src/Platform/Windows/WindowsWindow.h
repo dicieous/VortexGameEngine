@@ -2,7 +2,9 @@
 
 #include "Vortex/Window.h"
 
-#include "GLFW/glfw3.h"
+#include "Vortex/Renderer/GraphicsContext.h"
+
+#include <GLFW/glfw3.h>
 
 namespace Vortex {
 
@@ -31,6 +33,8 @@ namespace Vortex {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{

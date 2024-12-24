@@ -7,7 +7,9 @@
 #include "Vortex/Events/KeyEvent.h"
 #include "Vortex/Events/MouseEvent.h"
 
-#include "glad/glad.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
+//core#include <glad/glad.h>
 
 namespace Vortex {
 	static bool s_GLFWInitialized = false;
@@ -36,6 +38,7 @@ namespace Vortex {
 
 		VX_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
+
 		if (!s_GLFWInitialized) {
 			//TODO: glfwTerminate on system Shutdown
 			int success = glfwInit();
@@ -44,11 +47,11 @@ namespace Vortex {
 			s_GLFWInitialized = true;
 		}
 
+
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		VX_CORE_ASSERT(status, "Failed to Initialize Glad!");
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
@@ -151,7 +154,7 @@ namespace Vortex {
 
 	void WindowsWindow::OnUpdate() {
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled) {
