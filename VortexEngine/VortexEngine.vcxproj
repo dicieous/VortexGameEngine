@@ -162,6 +162,7 @@
     <ClInclude Include="src\Vortex\Log.h" />
     <ClInclude Include="src\Vortex\MouseCodes.h" />
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Vortex\Renderer\Shader.h" />
     <ClInclude Include="src\Vortex\Window.h" />
     <ClInclude Include="src\Vxpch.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
@@ -601,6 +602,7 @@
     <ClCompile Include="src\Vortex\Layer.cpp" />
     <ClCompile Include="src\Vortex\LayerStack.cpp" />
     <ClCompile Include="src\Vortex\Log.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\Shader.cpp" />
     <ClCompile Include="src\Vxpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
