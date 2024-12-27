@@ -6,6 +6,7 @@
 #include "Vortex/ImGui/ImGuiLayer.h"
 
 #include "Vortex/Renderer/Shader.h"
+#include "Vortex/Renderer/Buffer.h"
 
 #include "Events/Event.h"
 #include "Window.h"
@@ -39,9 +40,12 @@ namespace Vortex {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
 
-		unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+		unsigned int m_vertexArray;
 
 		std::unique_ptr<Shader> m_Shader;
+
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<IndexBuffer> m_indexBuffer;
 
 		LayerStack m_LayerStack;
 

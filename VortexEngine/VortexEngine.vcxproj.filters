@@ -1383,6 +1383,9 @@
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Vortex\Renderer\Shader.h" />
+    <ClInclude Include="src\Vortex\Renderer\Buffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Vortex\Renderer\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -1414,5 +1417,8 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\Renderer.cpp" />
   </ItemGroup>
 </Project>
