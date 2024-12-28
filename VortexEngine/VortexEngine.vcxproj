@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Vortex.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Vortex\Renderer\Renderer.h" />
     <ClInclude Include="src\Vortex\Renderer\Shader.h" />
+    <ClInclude Include="src\Vortex\Renderer\VertexArray.h" />
     <ClInclude Include="src\Vortex\Window.h" />
     <ClInclude Include="src\Vxpch.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
@@ -598,6 +600,7 @@
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Vortex\Application.cpp" />
@@ -609,6 +612,7 @@
     <ClCompile Include="src\Vortex\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Vxpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

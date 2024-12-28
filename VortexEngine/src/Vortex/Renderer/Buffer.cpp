@@ -18,13 +18,11 @@ namespace Vortex {
 			VX_CORE_ASSERT(false, "RenderAPI None is Currently bot supported! ");
 			return nullptr;
 
-			break;
 		case Vortex::OpenGL:
 
 			return new OpenGLVertexBuffer(vertices, size);
-
-			break;
 		}
+
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;
 	}
@@ -42,12 +40,9 @@ namespace Vortex {
 			VX_CORE_ASSERT(false, "RenderAPI None is Currently bot supported! ");
 			return nullptr;
 
-			break;
 		case Vortex::OpenGL:
 
 			return new OpenGLIndexBuffer(indices, size);
-
-			break;
 		}
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;

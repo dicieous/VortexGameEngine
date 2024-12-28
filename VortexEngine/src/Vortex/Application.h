@@ -7,6 +7,7 @@
 
 #include "Vortex/Renderer/Shader.h"
 #include "Vortex/Renderer/Buffer.h"
+#include "Vortex/Renderer/VertexArray.h"
 
 #include "Events/Event.h"
 #include "Window.h"
@@ -40,12 +41,12 @@ namespace Vortex {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
 
-		unsigned int m_vertexArray;
+		std::shared_ptr<Shader> m_Shader;
 
-		std::unique_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray> m_vertexArray;
 
-		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		std::shared_ptr<VertexArray> m_squareVA;
+		std::shared_ptr<Shader> m_ShaderSqr;
 
 		LayerStack m_LayerStack;
 
