@@ -2,9 +2,7 @@
 #include "Application.h"
 
 #include "Vortex/Log.h"
-#include "Input.h"
-
-#include <glad/glad.h>
+#include "Vortex/Renderer/Renderer.h"
 
 namespace Vortex {
 
@@ -173,17 +171,19 @@ namespace Vortex {
 
 		while (m_Running) {
 
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 
 			m_ShaderSqr->Bind();
-			m_squareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_squareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_squareVA);
 
 			m_Shader->Bind();
-			m_vertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_vertexArray);
 
+			Renderer::EndScene();
+			
 			for (Layer* layer : m_LayerStack) {
 				layer->OnUpdate();
 			}

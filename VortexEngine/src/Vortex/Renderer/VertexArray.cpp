@@ -11,12 +11,12 @@ namespace Vortex {
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
-		case Vortex::None:
+		case RendererAPI::API::None:
 
 			VX_CORE_ASSERT(false, "RenderAPI None is Currently bot supported! ");
 			return nullptr;
 
-		case Vortex::OpenGL:
+		case RendererAPI::API::OpenGL:
 
 			return new OpenGLVertexArray();
 		}
