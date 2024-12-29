@@ -5,13 +5,10 @@
 #include "LayerStack.h"
 #include "Vortex/ImGui/ImGuiLayer.h"
 
-#include "Vortex/Renderer/Shader.h"
-#include "Vortex/Renderer/Buffer.h"
-#include "Vortex/Renderer/VertexArray.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include "Events/Event.h"
 #include "Window.h"
-#include "Vortex/Events/ApplicationEvent.h"
 
 namespace Vortex {
 
@@ -40,13 +37,6 @@ namespace Vortex {
 
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
-
-		std::shared_ptr<Shader> m_Shader;
-
-		std::shared_ptr<VertexArray> m_vertexArray;
-
-		std::shared_ptr<VertexArray> m_squareVA;
-		std::shared_ptr<Shader> m_ShaderSqr;
 
 		LayerStack m_LayerStack;
 
