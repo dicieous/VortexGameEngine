@@ -5,7 +5,7 @@
 class ExampleLayer : public Vortex::Layer {
 
 public:
-	ExampleLayer() : Layer("Example") {
+	ExampleLayer() : Layer("Example"), m_Camera(-1.6f, 1.6f, 0.9f, -0.9f), m_cameraPositon(0.0f) {
 
 		m_vertexArray.reset(Vortex::VertexArray::Create());
 
@@ -38,6 +38,8 @@ public:
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
@@ -45,7 +47,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -64,8 +66,7 @@ public:
 			}
 		)";
 
-		m_Shader = std::make_unique<Vortex::OpenGLShader>(vertexSrc, fragmentSrc);
-
+		m_Shader = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(vertexSrc, fragmentSrc));
 
 
 		/////// Square Mesh //////////
@@ -99,12 +100,14 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -121,7 +124,8 @@ public:
 			}
 		)";
 
-		m_ShaderSqr = std::make_unique<Vortex::OpenGLShader>(blueVertexSrcSqr, blueFragmentSrcSqr);
+		m_ShaderSqr = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(blueVertexSrcSqr, blueFragmentSrcSqr));
+
 	}
 
 	void OnUpdate() override
@@ -129,40 +133,68 @@ public:
 		Vortex::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Vortex::RenderCommand::Clear();
 
-		Vortex::Renderer::BeginScene();
+		m_Camera.SetPosition(m_cameraPositon);
+		m_Camera.SetRotation(m_Rotation);
 
-		m_ShaderSqr->Bind();
-		Vortex::Renderer::Submit(m_squareVA);
+		Vortex::Renderer::BeginScene(m_Camera);
 
-		m_Shader->Bind();
-		Vortex::Renderer::Submit(m_vertexArray);
+		Vortex::Renderer::Submit(m_ShaderSqr, m_squareVA);
+
+		Vortex::Renderer::Submit(m_Shader, m_vertexArray);
 
 		Vortex::Renderer::EndScene();
+	}
 
-		//VX_INFO("ExampleLayer::Update");
-		if (Vortex::Input::IsKeyPressed(VX_KEY_SPACE)) {
-			VX_CORE_TRACE("Space Key Pressed");
+	bool OnKeyPressedEvent(Vortex::KeyPressedEvent& event)
+	{
+		if (event.GetKeyCode() == VX_KEY_LEFT) {
+			m_cameraPositon.x -= m_cameraSpeed;
 		}
+		else if (event.GetKeyCode() == VX_KEY_RIGHT) {
+			m_cameraPositon.x += m_cameraSpeed;
+		}
+		else if (event.GetKeyCode() == VX_KEY_UP) {
+			m_cameraPositon.y += m_cameraSpeed;
+		}
+		else if (event.GetKeyCode() == VX_KEY_DOWN) {
+			m_cameraPositon.y -= m_cameraSpeed;
+		}
+
+		if (event.GetKeyCode() == VX_KEY_A) {
+			m_Rotation += m_RotationSpeed;
+		}
+		else if (event.GetKeyCode() == VX_KEY_D) {
+			m_Rotation -= m_RotationSpeed;
+		}
+
+		return false;
 	}
 
 	virtual void OnImGuiRender() override {
-		ImGui::Begin("Test");
-		ImGui::Text("Hello World");
-		ImGui::End();
+
 	}
 
 	void OnEvent(Vortex::Event& event) override
 	{
-		//VX_TRACE("{0}", event);
+		Vortex::EventDispacher dispatcher(event);
+		dispatcher.Dispatch<Vortex::KeyPressedEvent>(VX_BIND_EVENT_FUNC(ExampleLayer::OnKeyPressedEvent));
 	}
 
 private:
 
-	std::shared_ptr<Vortex::OpenGLShader> m_Shader;
+	std::shared_ptr<Vortex::Shader> m_Shader;
 	std::shared_ptr<Vortex::VertexArray> m_vertexArray;
 
 	std::shared_ptr<Vortex::VertexArray> m_squareVA;
-	std::shared_ptr<Vortex::OpenGLShader> m_ShaderSqr;
+	std::shared_ptr<Vortex::Shader> m_ShaderSqr;
+
+	Vortex::OrthographicCamera m_Camera;
+
+	glm::vec3 m_cameraPositon;
+	float m_cameraSpeed = 0.1f;
+
+	float m_Rotation = 0.0f;
+	float m_RotationSpeed = 5.0f;
 };
 
 class SandBox : public Vortex::Application {

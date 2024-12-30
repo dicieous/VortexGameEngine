@@ -166,6 +166,7 @@
     <ClInclude Include="src\Vortex\Log.h" />
     <ClInclude Include="src\Vortex\MouseCodes.h" />
     <ClInclude Include="src\Vortex\Renderer\Buffer.h" />
+    <ClInclude Include="src\Vortex\Renderer\Camera.h" />
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Vortex\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Vortex\Renderer\Renderer.h" />
@@ -616,6 +617,7 @@
     <ClCompile Include="src\Vortex\LayerStack.cpp" />
     <ClCompile Include="src\Vortex\Log.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\Camera.cpp" />
     <ClCompile Include="src\Vortex\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\RendererAPI.cpp" />
