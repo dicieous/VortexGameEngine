@@ -1,6 +1,7 @@
 #include <Vortex.h>
 
 #include "imgui/imgui.h"
+#include <glm/ext/matrix_transform.hpp>
 
 class ExampleLayer : public Vortex::Layer {
 
@@ -39,6 +40,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -47,7 +49,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -71,10 +73,10 @@ public:
 
 		/////// Square Mesh //////////
 		float verticesSqr[3 * 4] = {
-			-0.75f,-0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f, 0.75f, 0.0f,
-			-0.75f, 0.75f, 0.0f,
+			-0.5f,-0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f, 0.5f, 0.0f,
+			-0.5f, 0.5f, 0.0f,
 		};
 
 		m_squareVA.reset(Vortex::VertexArray::Create());
@@ -101,13 +103,14 @@ public:
 			layout(location = 0) in vec3 a_Position;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_transform;
 
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -128,8 +131,29 @@ public:
 
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Vortex::TimeStep timeStep) override
 	{
+
+		if (Vortex::Input::IsKeyPressed(VX_KEY_LEFT)) {
+			m_cameraPositon.x -= m_cameraSpeed * timeStep;
+		}
+		else if (Vortex::Input::IsKeyPressed(VX_KEY_RIGHT)) {
+			m_cameraPositon.x += m_cameraSpeed * timeStep;
+		}
+		else if (Vortex::Input::IsKeyPressed(VX_KEY_UP)) {
+			m_cameraPositon.y += m_cameraSpeed * timeStep;
+		}
+		else if (Vortex::Input::IsKeyPressed(VX_KEY_DOWN)) {
+			m_cameraPositon.y -= m_cameraSpeed * timeStep;
+		}
+
+		if (Vortex::Input::IsKeyPressed(VX_KEY_A)) {
+			m_Rotation += m_RotationSpeed * timeStep;
+		}
+		else if (Vortex::Input::IsKeyPressed(VX_KEY_D)) {
+			m_Rotation -= m_RotationSpeed * timeStep;
+		}
+
 		Vortex::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Vortex::RenderCommand::Clear();
 
@@ -138,36 +162,21 @@ public:
 
 		Vortex::Renderer::BeginScene(m_Camera);
 
-		Vortex::Renderer::Submit(m_ShaderSqr, m_squareVA);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		for (int i = 0; i < 20; i++) {
+
+			for (int j = 0; j < 20; j++) 
+			{
+				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Vortex::Renderer::Submit(m_ShaderSqr, m_squareVA, transform);
+			}
+		}
 
 		Vortex::Renderer::Submit(m_Shader, m_vertexArray);
 
 		Vortex::Renderer::EndScene();
-	}
-
-	bool OnKeyPressedEvent(Vortex::KeyPressedEvent& event)
-	{
-		if (event.GetKeyCode() == VX_KEY_LEFT) {
-			m_cameraPositon.x -= m_cameraSpeed;
-		}
-		else if (event.GetKeyCode() == VX_KEY_RIGHT) {
-			m_cameraPositon.x += m_cameraSpeed;
-		}
-		else if (event.GetKeyCode() == VX_KEY_UP) {
-			m_cameraPositon.y += m_cameraSpeed;
-		}
-		else if (event.GetKeyCode() == VX_KEY_DOWN) {
-			m_cameraPositon.y -= m_cameraSpeed;
-		}
-
-		if (event.GetKeyCode() == VX_KEY_A) {
-			m_Rotation += m_RotationSpeed;
-		}
-		else if (event.GetKeyCode() == VX_KEY_D) {
-			m_Rotation -= m_RotationSpeed;
-		}
-
-		return false;
 	}
 
 	virtual void OnImGuiRender() override {
@@ -176,8 +185,6 @@ public:
 
 	void OnEvent(Vortex::Event& event) override
 	{
-		Vortex::EventDispacher dispatcher(event);
-		dispatcher.Dispatch<Vortex::KeyPressedEvent>(VX_BIND_EVENT_FUNC(ExampleLayer::OnKeyPressedEvent));
 	}
 
 private:
@@ -191,10 +198,10 @@ private:
 	Vortex::OrthographicCamera m_Camera;
 
 	glm::vec3 m_cameraPositon;
-	float m_cameraSpeed = 0.1f;
+	float m_cameraSpeed = 1.0f;
 
 	float m_Rotation = 0.0f;
-	float m_RotationSpeed = 5.0f;
+	float m_RotationSpeed = 10.0f;
 };
 
 class SandBox : public Vortex::Application {

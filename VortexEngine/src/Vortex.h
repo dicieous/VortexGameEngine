@@ -5,6 +5,8 @@
 #include "Vortex/Layer.h"
 #include "Vortex/Log.h"
 
+#include "Vortex/Core/TimeStep.h"
+
 //--------- Renderer -----------
 #include "Vortex/Renderer/Renderer.h"
 #include "Vortex/Renderer/RenderCommand.h"

@@ -9,6 +9,7 @@
 
 #include "Events/Event.h"
 #include "Window.h"
+#include "Core/TimeStep.h"
 
 namespace Vortex {
 
@@ -30,15 +31,18 @@ namespace Vortex {
 		
 		inline static Application& Get() { return *s_Instance; }
 	private:
+		bool OnWindowClose(WindowCloseEvent& e);
 
+	private:
 		std::unique_ptr<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
 
-		bool OnWindowClose(WindowCloseEvent& e);
 		bool m_Running = true;
 
 		LayerStack m_LayerStack;
+
+		float m_lastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

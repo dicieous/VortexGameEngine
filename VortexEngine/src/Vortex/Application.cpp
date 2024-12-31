@@ -1,5 +1,6 @@
 #include "Vxpch.h"
 #include "Application.h"
+#include <GLFW/glfw3.h>
 
 
 namespace Vortex {
@@ -54,8 +55,13 @@ namespace Vortex {
 
 		while (m_Running) {
 			
+
+			float time = (float)glfwGetTime(); //Should be in something like Platform::GetTime
+			TimeStep timeStep = time - m_lastFrameTime;
+			m_lastFrameTime = time;
+
 			for (Layer* layer : m_LayerStack) {
-				layer->OnUpdate();
+				layer->OnUpdate(timeStep);
 			}
 
 			m_ImGuiLayer->Begin();
