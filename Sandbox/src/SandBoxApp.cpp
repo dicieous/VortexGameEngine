@@ -1,7 +1,9 @@
 #include <Vortex.h>
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Vortex::Layer {
 
@@ -97,7 +99,7 @@ public:
 		m_squareVA->SetIndexBuffer(squareIB);
 
 
-		std::string blueVertexSrcSqr = R"(
+		std::string flatColorShaderVertexSrcSqr = R"(
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
@@ -114,20 +116,21 @@ public:
 			}
 		)";
 
-		std::string blueFragmentSrcSqr = R"(
+		std::string flatColorShaderFragmentSrcSqr = R"(
 			#version 330 core
 
 			layout(location = 0) out vec4 o_Color;
 
+			uniform vec3 u_Color;
 			in vec3 v_Position;
 
 			void main()
 			{
-				o_Color = vec4(0.2, 0.3, 0.8, 1.0);
+				o_Color = vec4(u_Color, 1.0f);
 			}
 		)";
 
-		m_ShaderSqr = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(blueVertexSrcSqr, blueFragmentSrcSqr));
+		m_flatColorShaderSqr = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr));
 
 	}
 
@@ -162,17 +165,22 @@ public:
 
 		Vortex::Renderer::BeginScene(m_Camera);
 
+		//std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->Bind();
+
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		for (int i = 0; i < 20; i++) {
 
-			for (int j = 0; j < 20; j++) 
+			for (int j = 0; j < 20; j++)
 			{
 				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Vortex::Renderer::Submit(m_ShaderSqr, m_squareVA, transform);
+
+				Vortex::Renderer::Submit(m_flatColorShaderSqr, m_squareVA, transform);
+
 			}
 		}
+		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->UploadUniformFloat3("u_Color", m_squareColor);
 
 		Vortex::Renderer::Submit(m_Shader, m_vertexArray);
 
@@ -180,7 +188,9 @@ public:
 	}
 
 	virtual void OnImGuiRender() override {
-
+		ImGui::Begin("FlatColor Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Vortex::Event& event) override
@@ -193,7 +203,7 @@ private:
 	std::shared_ptr<Vortex::VertexArray> m_vertexArray;
 
 	std::shared_ptr<Vortex::VertexArray> m_squareVA;
-	std::shared_ptr<Vortex::Shader> m_ShaderSqr;
+	std::shared_ptr<Vortex::Shader> m_flatColorShaderSqr;
 
 	Vortex::OrthographicCamera m_Camera;
 
@@ -202,6 +212,8 @@ private:
 
 	float m_Rotation = 0.0f;
 	float m_RotationSpeed = 10.0f;
+
+	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f};
 };
 
 class SandBox : public Vortex::Application {
