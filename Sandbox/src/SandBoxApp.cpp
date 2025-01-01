@@ -156,17 +156,22 @@ public:
 
 			layout(location = 0) out vec4 o_Color;
 
-			uniform vec3 u_Color;
-			
 			in vec2 v_TexCoord;
+			
+			uniform sampler2D u_Texture;
 
 			void main()
 			{
-				o_Color = vec4(v_TexCoord, 0.0f, 1.0f);
+				o_Color = texture(u_Texture, v_TexCoord);
 			}
 		)";
 
 		m_textureShader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(textureShaderVertexSrcSqr, textureShaderFragmentSrcSqr));
+
+		m_texture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
+
+		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->Bind();
+		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->UploadUniformInt("u_Texture", 0);
 
 	}
 
@@ -218,7 +223,7 @@ public:
 		}
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->UploadUniformFloat3("u_Color", m_squareColor);
 
-		
+		m_texture->Bind();
 		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 
@@ -245,6 +250,8 @@ private:
 
 	Vortex::Ref<Vortex::VertexArray> m_squareVA;
 	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr, m_textureShader;
+
+	Vortex::Ref<Vortex::Texture2D> m_texture;
 
 	Vortex::OrthographicCamera m_Camera;
 

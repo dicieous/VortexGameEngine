@@ -16,6 +16,7 @@ IncludeDir["Glad"] = "VortexEngine/vendor/Glad/include"
 IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
 IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
 IncludeDir["glm"] = "VortexEngine/vendor/glm"
+IncludeDir["stb_image"] = "VortexEngine/vendor/stb_image"
 
 
 group "Dependencies"
@@ -41,6 +42,8 @@ project "VortexEngine"
 	files{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/glm/glm/**.h"
@@ -52,7 +55,8 @@ project "VortexEngine"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 
 	}
 
