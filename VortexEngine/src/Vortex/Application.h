@@ -34,7 +34,7 @@ namespace Vortex {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 	private:
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
 

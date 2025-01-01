@@ -18,7 +18,7 @@ public:
 			0.0f,0.5f,0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
 		};
 
-		std::shared_ptr<Vortex::VertexBuffer> triangleVB(Vortex::VertexBuffer::Create(vertices, sizeof(vertices)));
+		Vortex::Ref<Vortex::VertexBuffer> triangleVB(Vortex::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		Vortex::BufferLayout layout = {
 			{Vortex::ShaderDataType::Float3, "a_Position"},
@@ -32,7 +32,7 @@ public:
 
 		uint32_t indices[3] = { 0, 1, 2 };
 
-		std::shared_ptr<Vortex::IndexBuffer> triangleIB(Vortex::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Vortex::Ref<Vortex::IndexBuffer> triangleIB(Vortex::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->SetIndexBuffer(triangleIB);
 
 		std::string vertexSrc = R"(
@@ -70,32 +70,32 @@ public:
 			}
 		)";
 
-		m_Shader = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(vertexSrc, fragmentSrc));
 
 
 		/////// Square Mesh //////////
-		float verticesSqr[3 * 4] = {
-			-0.5f,-0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f,
+		float verticesSqr[5 * 4] = {
+			-0.5f,-0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f,-0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		m_squareVA.reset(Vortex::VertexArray::Create());
 
-		std::shared_ptr<Vortex::VertexBuffer> squareVB(Vortex::VertexBuffer::Create(verticesSqr, sizeof(verticesSqr)));
+		Vortex::Ref<Vortex::VertexBuffer> squareVB(Vortex::VertexBuffer::Create(verticesSqr, sizeof(verticesSqr)));
 
 		squareVB->SetLayout({
-			{
-				Vortex::ShaderDataType::Float3, "a_Position"},
-			});
+			{Vortex::ShaderDataType::Float3, "a_Position"},
+			{Vortex::ShaderDataType::Float2, "a_TexCoord"}
+		});
 
 		m_squareVA->AddVertexBuffer(squareVB);
 
 
 		uint32_t indicesSqr[6] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<Vortex::IndexBuffer> squareIB(Vortex::IndexBuffer::Create(indicesSqr, sizeof(indicesSqr) / sizeof(uint32_t)));
+		Vortex::Ref<Vortex::IndexBuffer> squareIB(Vortex::IndexBuffer::Create(indicesSqr, sizeof(indicesSqr) / sizeof(uint32_t)));
 		m_squareVA->SetIndexBuffer(squareIB);
 
 
@@ -130,7 +130,43 @@ public:
 			}
 		)";
 
-		m_flatColorShaderSqr = std::shared_ptr<Vortex::Shader>(Vortex::Shader::Create(flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr));
+		m_flatColorShaderSqr = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr));
+
+		//TextureShader//////
+		std::string textureShaderVertexSrcSqr = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string textureShaderFragmentSrcSqr = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 o_Color;
+
+			uniform vec3 u_Color;
+			
+			in vec2 v_TexCoord;
+
+			void main()
+			{
+				o_Color = vec4(v_TexCoord, 0.0f, 1.0f);
+			}
+		)";
+
+		m_textureShader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(textureShaderVertexSrcSqr, textureShaderFragmentSrcSqr));
 
 	}
 
@@ -182,7 +218,12 @@ public:
 		}
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->UploadUniformFloat3("u_Color", m_squareColor);
 
-		Vortex::Renderer::Submit(m_Shader, m_vertexArray);
+		
+		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+
+		//Triangle Rendering
+		//Vortex::Renderer::Submit(m_Shader, m_vertexArray);
 
 		Vortex::Renderer::EndScene();
 	}
@@ -199,11 +240,11 @@ public:
 
 private:
 
-	std::shared_ptr<Vortex::Shader> m_Shader;
-	std::shared_ptr<Vortex::VertexArray> m_vertexArray;
+	Vortex::Ref<Vortex::Shader> m_Shader;
+	Vortex::Ref<Vortex::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Vortex::VertexArray> m_squareVA;
-	std::shared_ptr<Vortex::Shader> m_flatColorShaderSqr;
+	Vortex::Ref<Vortex::VertexArray> m_squareVA;
+	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr, m_textureShader;
 
 	Vortex::OrthographicCamera m_Camera;
 
