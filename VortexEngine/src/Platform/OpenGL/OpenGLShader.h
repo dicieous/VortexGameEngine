@@ -2,11 +2,17 @@
 
 #include "Vortex/Renderer/Shader.h"
 
+
+//TODO : Remove this typedef
+
+typedef unsigned int GLenum;
+
 namespace Vortex {
 
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string& filePath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
@@ -24,7 +30,11 @@ namespace Vortex {
 		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 	private:
+		std::string ReadFile(const std::string& filePath);
+		std::unordered_map<GLenum, std::string> Preprocess(const std::string& source);
+		void Compile(const std::unordered_map<GLenum, std::string>& sources);
 
+	private:
 		uint32_t m_RendererID;
 	};
 }

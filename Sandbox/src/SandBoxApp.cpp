@@ -133,42 +133,11 @@ public:
 		m_flatColorShaderSqr = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr));
 
 		//TextureShader//////
-		std::string textureShaderVertexSrcSqr = R"(
-			#version 330 core
 
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_transform;
-
-			out vec2 v_TexCoord;
-
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * u_transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string textureShaderFragmentSrcSqr = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 o_Color;
-
-			in vec2 v_TexCoord;
-			
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-				o_Color = texture(u_Texture, v_TexCoord);
-			}
-		)";
-
-		m_textureShader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(textureShaderVertexSrcSqr, textureShaderFragmentSrcSqr));
+		m_textureShader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create("Assets/Shaders/Texture.glsl"));
 
 		m_texture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
+		m_alphaTexture = Vortex::Texture2D::Create("Assets/Textures/cross.png");
 
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->Bind();
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->UploadUniformInt("u_Texture", 0);
@@ -223,9 +192,11 @@ public:
 		}
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->UploadUniformFloat3("u_Color", m_squareColor);
 
-		m_texture->Bind();
+		m_texture->Bind();	
 		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		m_alphaTexture->Bind();
+		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Triangle Rendering
 		//Vortex::Renderer::Submit(m_Shader, m_vertexArray);
@@ -252,6 +223,7 @@ private:
 	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr, m_textureShader;
 
 	Vortex::Ref<Vortex::Texture2D> m_texture;
+	Vortex::Ref<Vortex::Texture2D> m_alphaTexture;
 
 	Vortex::OrthographicCamera m_Camera;
 

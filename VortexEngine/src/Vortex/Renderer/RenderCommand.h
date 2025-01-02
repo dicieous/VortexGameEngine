@@ -8,6 +8,11 @@ namespace Vortex {
 
 	public:
 
+		inline static void Init() 
+		{
+			s_RendereAPI -> Init();
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{ 
 			return s_RendereAPI->SetClearColor(color);
