@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <fstream>
+#include <filesystem>
 #include <glm/gtc/type_ptr.hpp>
 
 
@@ -21,9 +22,13 @@ namespace Vortex {
 
 		auto shaderSourcesList = Preprocess(shaderSource);
 		Compile(shaderSourcesList);
+
+		std::filesystem::path path = filePath;
+		m_name = path.stem().string(); // Returns the file's name stripped of the extension.
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) : m_RendererID(0)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+		: m_RendererID(0), m_name(name)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 
@@ -42,7 +47,7 @@ namespace Vortex {
 	std::string OpenGLShader::ReadFile(const std::string& filePath)
 	{
 		std::string result;
-		std::ifstream in(filePath, std::ios::in, std::ios::binary);
+		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 
 		if (in) {
 			in.seekg(0, std::ios::end);
@@ -86,8 +91,9 @@ namespace Vortex {
 	{
 		GLuint program = glCreateProgram();
 
-		std::vector<GLuint> glShaderIDs;
-
+		VX_CORE_ASSERT((ShaderSources.size() <= 2), "We only support two shaders for now");
+		std::array<GLenum, 2> glShaderIDs;
+		int glShaderIDsIndex = 0;
 		for (auto kv : ShaderSources) {
 			GLenum type = kv.first;
 			const std::string& source = kv.second;
@@ -120,7 +126,7 @@ namespace Vortex {
 				break;
 			}
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShaderIDsIndex++] = (shader);
 		}
 
 

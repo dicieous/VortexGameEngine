@@ -70,7 +70,7 @@ public:
 			}
 		)";
 
-		m_Shader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Vortex::Shader::Create("TriangleShader", vertexSrc, fragmentSrc);
 
 
 		/////// Square Mesh //////////
@@ -130,17 +130,17 @@ public:
 			}
 		)";
 
-		m_flatColorShaderSqr = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create(flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr));
+		m_flatColorShaderSqr = Vortex::Shader::Create("square_shader", flatColorShaderVertexSrcSqr, flatColorShaderFragmentSrcSqr);
 
 		//TextureShader//////
 
-		m_textureShader = Vortex::Ref<Vortex::Shader>(Vortex::Shader::Create("Assets/Shaders/Texture.glsl"));
+		auto textureShader = m_shaderLibrary.Load("Assets/Shaders/Texture.glsl");
 
 		m_texture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
 		m_alphaTexture = Vortex::Texture2D::Create("Assets/Textures/cross.png");
 
-		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->Bind();
-		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_textureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Vortex::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Vortex::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 
 	}
 
@@ -192,11 +192,13 @@ public:
 		}
 		std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->UploadUniformFloat3("u_Color", m_squareColor);
 
+		auto textureShader = m_shaderLibrary.Get("Texture");
+
 		m_texture->Bind();	
-		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Vortex::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		m_alphaTexture->Bind();
-		Vortex::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Vortex::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Triangle Rendering
 		//Vortex::Renderer::Submit(m_Shader, m_vertexArray);
@@ -215,12 +217,13 @@ public:
 	}
 
 private:
+	Vortex::ShaderLibrary m_shaderLibrary;
 
 	Vortex::Ref<Vortex::Shader> m_Shader;
 	Vortex::Ref<Vortex::VertexArray> m_vertexArray;
 
 	Vortex::Ref<Vortex::VertexArray> m_squareVA;
-	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr, m_textureShader;
+	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr;
 
 	Vortex::Ref<Vortex::Texture2D> m_texture;
 	Vortex::Ref<Vortex::Texture2D> m_alphaTexture;

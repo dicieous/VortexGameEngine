@@ -6,7 +6,8 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Vortex {
-	Shader* Shader::Create(const std::string& filePath)
+
+	Ref<Shader> Shader::Create(const std::string& filePath)
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -17,7 +18,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return new OpenGLShader(filePath);
+			return std::make_shared<OpenGLShader>(filePath);
 		}
 
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
@@ -25,7 +26,7 @@ namespace Vortex {
 	}
 
 
-	Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -36,10 +37,48 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return new OpenGLShader(vertexSrc, fragmentSrc);
+			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;
+	}
+
+
+	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
+	{
+		VX_CORE_ASSERT((!Exists(name)), "Shader is Already Present");
+		m_shaders[name] = shader;
+	}
+
+	void ShaderLibrary::Add(const Ref<Shader>& shader)
+	{
+		auto name = shader->GetName();
+		Add(name, shader);
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& filePath)
+	{
+		auto shader = Shader::Create(filePath);
+		Add(shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filePath)
+	{
+		auto shader = Shader::Create(filePath);
+		Add(name, shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Get(const std::string& name)
+	{
+		VX_CORE_ASSERT(Exists(name), "Shader not found");
+		return m_shaders[name];
+	}
+
+	bool ShaderLibrary::Exists(const std::string& name) const
+	{
+		return m_shaders.find(name) != m_shaders.end();
 	}
 }
