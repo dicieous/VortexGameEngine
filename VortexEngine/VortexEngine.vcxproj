@@ -167,6 +167,7 @@
     <ClInclude Include="src\Vortex\LayerStack.h" />
     <ClInclude Include="src\Vortex\Log.h" />
     <ClInclude Include="src\Vortex\MouseCodes.h" />
+    <ClInclude Include="src\Vortex\OrthographicCameraController.h" />
     <ClInclude Include="src\Vortex\Renderer\Buffer.h" />
     <ClInclude Include="src\Vortex\Renderer\Camera.h" />
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
@@ -621,6 +622,7 @@
     <ClCompile Include="src\Vortex\Layer.cpp" />
     <ClCompile Include="src\Vortex\LayerStack.cpp" />
     <ClCompile Include="src\Vortex\Log.cpp" />
+    <ClCompile Include="src\Vortex\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Camera.cpp" />
     <ClCompile Include="src\Vortex\Renderer\RenderCommand.cpp" />

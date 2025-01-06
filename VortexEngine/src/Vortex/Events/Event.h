@@ -68,16 +68,18 @@ namespace Vortex {
 
 	class EventDispacher {
 
-		template<typename T>
-		using EventFn = std::function<bool(T&)>;
+		/*template<typename T>
+		using EventFn = std::function<bool(T&)>;*/
 
 	public:
 		EventDispacher(Event& event) : m_Event(event) { }
 
-		template<typename T>
-		bool Dispatch(EventFn<T> func) {
-			if (m_Event.GetEventType() == T::GetStaticType()) {
-				m_Event.Handled = func(*(T*)&m_Event);
+		template<typename T, typename F>
+		bool Dispatch(const F& func) 
+		{
+			if (m_Event.GetEventType() == T::GetStaticType())
+			{
+				m_Event.Handled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 
@@ -88,7 +90,7 @@ namespace Vortex {
 		Event& m_Event;
 	};
 
-	inline std::ostream& operator <<(std::ostream& os, const Event& e) {
+	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
 		return os << e.ToString();
 	}
 

@@ -43,6 +43,7 @@ namespace Vortex {
 	{
 		EventDispacher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);
@@ -58,14 +59,16 @@ namespace Vortex {
 	void Application::Run() {
 
 		while (m_Running) {
-			
+
 
 			float time = (float)glfwGetTime(); //Should be in something like Platform::GetTime
 			TimeStep timeStep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack) {
-				layer->OnUpdate(timeStep);
+			if (!m_minimized) {
+				for (Layer* layer : m_LayerStack) {
+					layer->OnUpdate(timeStep);
+				}
 			}
 
 			m_ImGuiLayer->Begin();
@@ -81,6 +84,20 @@ namespace Vortex {
 	bool Application::OnWindowClose(WindowCloseEvent& e) {
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
+			m_minimized = true;
+
+			return false;
+		}
+
+		m_minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }
 

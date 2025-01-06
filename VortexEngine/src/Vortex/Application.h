@@ -32,6 +32,7 @@ namespace Vortex {
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 	private:
 		Scope<Window> m_Window;
@@ -39,6 +40,7 @@ namespace Vortex {
 		ImGuiLayer* m_ImGuiLayer;
 
 		bool m_Running = true;
+		bool m_minimized = false;
 
 		LayerStack m_LayerStack;
 

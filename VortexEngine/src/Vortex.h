@@ -5,6 +5,7 @@
 #include "Vortex/Layer.h"
 #include "Vortex/Log.h"
 
+#include "Vortex/OrthographicCameraController.h"
 #include "Vortex/Core/TimeStep.h"
 
 //--------- Renderer -----------

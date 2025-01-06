@@ -8,7 +8,7 @@
 class ExampleLayer : public Vortex::Layer {
 
 public:
-	ExampleLayer() : Layer("Example"), m_Camera(-1.6f, 1.6f, 0.9f, -0.9f), m_cameraPositon(0.0f) {
+	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f, true) {
 
 		m_vertexArray.reset(Vortex::VertexArray::Create());
 
@@ -88,7 +88,7 @@ public:
 		squareVB->SetLayout({
 			{Vortex::ShaderDataType::Float3, "a_Position"},
 			{Vortex::ShaderDataType::Float2, "a_TexCoord"}
-		});
+			});
 
 		m_squareVA->AddVertexBuffer(squareVB);
 
@@ -146,34 +146,15 @@ public:
 
 	void OnUpdate(Vortex::TimeStep timeStep) override
 	{
+		//OnUpdate
 
-		if (Vortex::Input::IsKeyPressed(VX_KEY_LEFT)) {
-			m_cameraPositon.x -= m_cameraSpeed * timeStep;
-		}
-		else if (Vortex::Input::IsKeyPressed(VX_KEY_RIGHT)) {
-			m_cameraPositon.x += m_cameraSpeed * timeStep;
-		}
-		else if (Vortex::Input::IsKeyPressed(VX_KEY_UP)) {
-			m_cameraPositon.y += m_cameraSpeed * timeStep;
-		}
-		else if (Vortex::Input::IsKeyPressed(VX_KEY_DOWN)) {
-			m_cameraPositon.y -= m_cameraSpeed * timeStep;
-		}
+		m_CameraController.OnUpdate(timeStep);
 
-		if (Vortex::Input::IsKeyPressed(VX_KEY_A)) {
-			m_Rotation += m_RotationSpeed * timeStep;
-		}
-		else if (Vortex::Input::IsKeyPressed(VX_KEY_D)) {
-			m_Rotation -= m_RotationSpeed * timeStep;
-		}
-
+		//Rendering
 		Vortex::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Vortex::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_cameraPositon);
-		m_Camera.SetRotation(m_Rotation);
-
-		Vortex::Renderer::BeginScene(m_Camera);
+		Vortex::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		//std::dynamic_pointer_cast<Vortex::OpenGLShader>(m_flatColorShaderSqr)->Bind();
 
@@ -194,13 +175,13 @@ public:
 
 		auto textureShader = m_shaderLibrary.Get("Texture");
 
-		m_texture->Bind();	
+		m_texture->Bind();
 		Vortex::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		m_alphaTexture->Bind();
 		Vortex::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		//Triangle Rendering
+		//Triangle Rendering 
 		//Vortex::Renderer::Submit(m_Shader, m_vertexArray);
 
 		Vortex::Renderer::EndScene();
@@ -214,6 +195,7 @@ public:
 
 	void OnEvent(Vortex::Event& event) override
 	{
+		m_CameraController.OnEvent(event);
 	}
 
 private:
@@ -228,15 +210,9 @@ private:
 	Vortex::Ref<Vortex::Texture2D> m_texture;
 	Vortex::Ref<Vortex::Texture2D> m_alphaTexture;
 
-	Vortex::OrthographicCamera m_Camera;
+	Vortex::OrthographicCameraController m_CameraController;
 
-	glm::vec3 m_cameraPositon;
-	float m_cameraSpeed = 1.0f;
-
-	float m_Rotation = 0.0f;
-	float m_RotationSpeed = 10.0f;
-
-	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f};
+	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 };
 
 class SandBox : public Vortex::Application {
