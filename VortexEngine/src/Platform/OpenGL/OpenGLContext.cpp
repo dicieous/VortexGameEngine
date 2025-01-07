@@ -1,6 +1,6 @@
 #include "Vxpch.h"
 #include "OpenGLContext.h"
-#include "Vortex/Log.h"
+#include "Vortex/Core/Log.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>

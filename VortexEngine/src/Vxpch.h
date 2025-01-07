@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Vortex/Log.h"
+#include "Vortex/Core/Log.h"
 
 #ifdef VX_PLATFORM_WINDOWS
 

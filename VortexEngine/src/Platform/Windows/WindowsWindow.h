@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vortex/Window.h"
+#include "Vortex/Core/Window.h"
 
 #include "Vortex/Renderer/GraphicsContext.h"
 

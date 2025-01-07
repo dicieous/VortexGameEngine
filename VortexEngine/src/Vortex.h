@@ -1,11 +1,11 @@
 #pragma once
 
 //For Use by external Application
-#include "Vortex/Application.h"
-#include "Vortex/Layer.h"
-#include "Vortex/Log.h"
+#include "Vortex/Core/Application.h"
+#include "Vortex/Core/Layer.h"
+#include "Vortex/Core/Log.h"
 
-#include "Vortex/OrthographicCameraController.h"
+#include "Vortex/Renderer/OrthographicCameraController.h"
 #include "Vortex/Core/TimeStep.h"
 
 //--------- Renderer -----------
@@ -19,13 +19,13 @@
 
 #include "Vortex/Renderer/Camera.h"
 
-#include "Vortex/Input.h"
-#include "Vortex/Keycodes.h"
-#include "Vortex/MouseCodes.h"
+#include "Vortex/Core/Input.h"
+#include "Vortex/Core/Keycodes.h"
+#include "Vortex/Core/MouseCodes.h"
 
 #include "Vortex/ImGui/ImGuiLayer.h"
 //----------------------------
 
 //---------Entry Point-----------
-#include "Vortex/EntryPoint.h"
+#include "Vortex/Core/EntryPoint.h"
 //-------------------------------

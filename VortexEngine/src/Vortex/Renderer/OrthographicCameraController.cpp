@@ -1,8 +1,8 @@
 #include "Vxpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Vortex/Input.h"
-#include "Vortex/Keycodes.h"
+#include "Vortex/Core/Input.h"
+#include "Vortex/Core/Keycodes.h"
 
 namespace Vortex {
 

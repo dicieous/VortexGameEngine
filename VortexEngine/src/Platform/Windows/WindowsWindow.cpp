@@ -1,7 +1,7 @@
 #include "Vxpch.h"
 
 #include "WindowsWindow.h"
-#include "Vortex/Log.h"
+#include "Vortex/Core/Log.h"
 
 #include "Vortex/Events/ApplicationEvent.h"
 #include "Vortex/Events/KeyEvent.h"

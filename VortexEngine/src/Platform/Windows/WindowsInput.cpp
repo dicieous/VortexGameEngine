@@ -1,7 +1,7 @@
 
 #include "Vxpch.h"
 #include "WindowsInput.h"
-#include "Vortex/Application.h"
+#include "Vortex/Core/Application.h"
 
 
 #include <GLFW/glfw3.h>

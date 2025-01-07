@@ -1,7 +1,7 @@
 #include "Vxpch.h"
 #include "Application.h"
 
-#include "Renderer/Renderer.h"
+#include "Vortex/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
 
 

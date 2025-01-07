@@ -7,9 +7,9 @@
 
 #include "Vortex/Renderer/Camera.h"
 
-#include "Events/Event.h"
+#include "Vortex/Events/Event.h"
 #include "Window.h"
-#include "Core/TimeStep.h"
+#include "Vortex/Core/TimeStep.h"
 
 namespace Vortex {
 

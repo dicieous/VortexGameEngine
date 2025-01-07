@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Vortex/Core.h"
+#include "Vortex/Core/Core.h"
 
 namespace Vortex{
 
