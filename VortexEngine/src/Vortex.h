@@ -25,7 +25,3 @@
 
 #include "Vortex/ImGui/ImGuiLayer.h"
 //----------------------------
-
-//---------Entry Point-----------
-#include "Vortex/Core/EntryPoint.h"
-//-------------------------------

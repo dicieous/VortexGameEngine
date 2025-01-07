@@ -1,9 +1,12 @@
 #include <Vortex.h>
+#include <Vortex/Core/EntryPoint.h>
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "SandBox2D.h"
 
 class ExampleLayer : public Vortex::Layer {
 
@@ -218,7 +221,8 @@ private:
 class SandBox : public Vortex::Application {
 public:
 	SandBox() {
-		PushLayer(new ExampleLayer());
+		// PushLayer(new ExampleLayer());
+		PushLayer(new SandBox2D());
 	}
 
 	~SandBox() {
