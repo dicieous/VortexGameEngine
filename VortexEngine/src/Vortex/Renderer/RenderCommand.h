@@ -34,6 +34,6 @@ namespace Vortex {
 		};
 
 	private:
-		static RendererAPI* s_RendereAPI;
+		static Scope<RendererAPI> s_RendereAPI;
 	};
 }
