@@ -7,7 +7,7 @@
 
 namespace Vortex {
 
-	VertexArray* VertexArray::Create()
+	Scope<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -18,7 +18,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return new OpenGLVertexArray();
+			return CreateScope<OpenGLVertexArray>();
 		}
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;

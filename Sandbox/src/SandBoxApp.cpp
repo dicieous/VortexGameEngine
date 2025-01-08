@@ -13,7 +13,7 @@ class ExampleLayer : public Vortex::Layer {
 public:
 	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f, true) {
 
-		m_vertexArray.reset(Vortex::VertexArray::Create());
+		m_vertexArray = Vortex::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f,-0.5f,0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -84,7 +84,7 @@ public:
 			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		m_squareVA.reset(Vortex::VertexArray::Create());
+		m_squareVA = Vortex::VertexArray::Create();
 
 		Vortex::Ref<Vortex::VertexBuffer> squareVB(Vortex::VertexBuffer::Create(verticesSqr, sizeof(verticesSqr)));
 
@@ -215,7 +215,7 @@ private:
 
 	Vortex::OrthographicCameraController m_CameraController;
 
-	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
+	glm::vec4 m_squareColor{ 0.2f, 0.3f, 0.8f, 1.0f };
 };
 
 class SandBox : public Vortex::Application {

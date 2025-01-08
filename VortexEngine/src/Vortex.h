@@ -10,6 +10,7 @@
 
 //--------- Renderer -----------
 #include "Vortex/Renderer/Renderer.h"
+#include "Vortex/Renderer/Renderer2D.h"
 #include "Vortex/Renderer/RenderCommand.h"
 
 #include "Vortex/Renderer/Buffer.h"
