@@ -21,10 +21,10 @@ namespace Vortex {
 		else if (Input::IsKeyPressed(VX_KEY_D)) {
 			m_cameraPositon.x += m_cameraTranslationSpeed * ts;
 		}
-		else if (Input::IsKeyPressed(VX_KEY_S)) {
+		else if (Input::IsKeyPressed(VX_KEY_W)) {
 			m_cameraPositon.y += m_cameraTranslationSpeed * ts;
 		}
-		else if (Input::IsKeyPressed(VX_KEY_W)) {
+		else if (Input::IsKeyPressed(VX_KEY_S)) {
 			m_cameraPositon.y -= m_cameraTranslationSpeed * ts;
 		}
 

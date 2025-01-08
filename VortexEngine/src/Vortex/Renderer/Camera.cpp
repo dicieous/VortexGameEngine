@@ -4,13 +4,13 @@
 
 namespace Vortex {
 
-	OrthographicCamera::OrthographicCamera(float left, float right, float top, float bottom)
+	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
 		: m_projectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_viewMatrix(1.0f)
 	{
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void OrthographicCamera::SetProjection(float left, float right, float top, float bottom)
+	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
 	{
 		m_projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
