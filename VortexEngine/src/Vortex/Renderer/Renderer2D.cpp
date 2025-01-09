@@ -49,12 +49,12 @@ namespace Vortex {
 
 		s_2Ddata->QuadVertexArray->SetIndexBuffer(squareIB);
 
-		s_2Ddata->TextureShader = Shader::Create("Assets/Shaders/Texture.shader");
 		
 		s_2Ddata->WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_2Ddata->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
+		s_2Ddata->TextureShader = Shader::Create("Assets/Shaders/Texture.shader");
 		s_2Ddata->TextureShader->Bind();
 		s_2Ddata->TextureShader->SetInt("u_Texture", 0);
 	}
@@ -94,12 +94,12 @@ namespace Vortex {
 	}
 
 
-	void Renderer2D::DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture)
+	void Renderer2D::DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
 		DrawQuads({ position.x, position.y, 0.0f }, size, texture);
 	}
 
-	void Renderer2D::DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture)
+	void Renderer2D::DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
 		s_2Ddata->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f)); 
 
