@@ -137,7 +137,7 @@ public:
 
 		//TextureShader//////
 
-		auto textureShader = m_shaderLibrary.Load("Assets/Shaders/Texture.glsl");
+		auto textureShader = m_shaderLibrary.Load("Assets/Shaders/Texture.shader");
 
 		m_texture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
 		m_alphaTexture = Vortex::Texture2D::Create("Assets/Textures/cross.png");

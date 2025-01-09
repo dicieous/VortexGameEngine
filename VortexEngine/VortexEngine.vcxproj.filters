@@ -150,6 +150,9 @@
     <ClInclude Include="src\Vortex\Renderer\Renderer.h">
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Renderer\Renderer2D.h">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex\Renderer\RendererAPI.h">
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
@@ -1446,7 +1449,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vortex\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -1506,6 +1508,9 @@
     <ClCompile Include="src\Vortex\Renderer\Renderer.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vortex\Renderer\Renderer2D.cpp">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vortex\Renderer\RendererAPI.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
@@ -1524,6 +1529,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vortex\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
