@@ -16,15 +16,6 @@ public:
 	virtual void OnEvent(Vortex::Event& event) override;
 
 private:
-	struct ProfileResults
-	{
-		const char* Name;
-		float Time;
-	};
-
-	std::vector<ProfileResults> m_profileResults;
-
-private:
 	Vortex::OrthographicCameraController m_CameraController;
 
 	//Temp

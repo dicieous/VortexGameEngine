@@ -15,6 +15,8 @@
 
 #include "Vortex/Core/Log.h"
 
+#include "Vortex/Debug/Instrumentor.h"
+
 #ifdef VX_PLATFORM_WINDOWS
 
 #include <Windows.h>

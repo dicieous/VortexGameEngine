@@ -163,6 +163,7 @@
     <ClInclude Include="src\Vortex\Core\MouseCodes.h" />
     <ClInclude Include="src\Vortex\Core\TimeStep.h" />
     <ClInclude Include="src\Vortex\Core\Window.h" />
+    <ClInclude Include="src\Vortex\Debug\Instrumentor.h" />
     <ClInclude Include="src\Vortex\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Vortex\Events\Event.h" />
     <ClInclude Include="src\Vortex\Events\KeyEvent.h" />

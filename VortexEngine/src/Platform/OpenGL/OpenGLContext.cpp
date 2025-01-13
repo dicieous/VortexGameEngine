@@ -16,6 +16,8 @@ namespace Vortex {
 
 	void OpenGLContext::Init()
 	{
+		VX_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		VX_CORE_ASSERT(status, "Failed to Initialize Glad!");
@@ -28,6 +30,7 @@ namespace Vortex {
 
 	void OpenGLContext::SwapBuffers()
 	{
+		VX_PROFILE_FUNCTION();
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

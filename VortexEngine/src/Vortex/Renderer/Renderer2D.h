@@ -10,7 +10,7 @@ namespace Vortex {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(OrthographicCamera& camera);
+		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 
 		//primitives////

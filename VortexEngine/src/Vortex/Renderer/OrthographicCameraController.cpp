@@ -14,6 +14,7 @@ namespace Vortex {
 
 	void OrthographicCameraController::OnUpdate(TimeStep& ts)
 	{
+		VX_PROFILE_FUNCTION();
 
 		if (Input::IsKeyPressed(VX_KEY_A)) {
 			m_cameraPositon.x -= m_cameraTranslationSpeed * ts;
@@ -46,6 +47,8 @@ namespace Vortex {
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		VX_PROFILE_FUNCTION();
+
 		EventDispacher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(VX_BIND_EVENT_FUNC(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(VX_BIND_EVENT_FUNC(OrthographicCameraController::OnWindowResized));
@@ -54,6 +57,8 @@ namespace Vortex {
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		VX_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = glm::max(0.10f, m_ZoomLevel);
 
@@ -64,6 +69,8 @@ namespace Vortex {
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		VX_PROFILE_FUNCTION();
+
 		m_aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(-m_aspectRatio * m_ZoomLevel, m_aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 

@@ -12,6 +12,7 @@ namespace Vortex {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
+		VX_PROFILE_FUNCTION();
 
 		VX_CORE_ASSERT(!s_Instance, "Application Already Exist")
 			s_Instance = this;
@@ -26,21 +27,28 @@ namespace Vortex {
 	}
 
 	Application::~Application() {
+		VX_PROFILE_FUNCTION();
 
 	}
 
 	void Application::PushLayer(Layer* layer) {
+		VX_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer) {
+		VX_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e)
 	{
+		VX_PROFILE_FUNCTION();
+
 		EventDispacher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
@@ -57,25 +65,38 @@ namespace Vortex {
 
 
 	void Application::Run() {
+		VX_PROFILE_FUNCTION();
 
 		while (m_Running) {
 
 
+			VX_PROFILE_SCOPE("RunTime Loop");
 			float time = (float)glfwGetTime(); //Should be in something like Platform::GetTime
 			TimeStep timeStep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
 			if (!m_minimized) {
-				for (Layer* layer : m_LayerStack) {
-					layer->OnUpdate(timeStep);
+
+				{
+					VX_PROFILE_SCOPE("LayerStack OnUpdates");
+
+					for (Layer* layer : m_LayerStack) {
+						layer->OnUpdate(timeStep);
+					}
 				}
+
+				m_ImGuiLayer->Begin();
+				{
+					VX_PROFILE_SCOPE("LayerStack OnImGuiRender");
+
+					for (Layer* layer : m_LayerStack) {
+						layer->OnImGuiRender();
+					}
+				}
+				m_ImGuiLayer->End();
+
 			}
 
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack) {
-				layer->OnImGuiRender();
-			}
-			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 		}
@@ -88,6 +109,8 @@ namespace Vortex {
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		VX_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
 			m_minimized = true;
 

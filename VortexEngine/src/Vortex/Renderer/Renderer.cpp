@@ -9,6 +9,8 @@ namespace Vortex {
 
 	void Renderer::Init()
 	{
+		VX_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}
