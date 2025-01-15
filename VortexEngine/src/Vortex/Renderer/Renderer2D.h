@@ -14,10 +14,16 @@ namespace Vortex {
 		static void EndScene();
 
 		//primitives////
-		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const glm::vec4 color);
-		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const glm::vec4 color);
+		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 
-		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture);
-		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture);
+		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
+		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
+
+		static void DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
+		static void DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
+
+		static void DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
+		static void DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 	};
 }
