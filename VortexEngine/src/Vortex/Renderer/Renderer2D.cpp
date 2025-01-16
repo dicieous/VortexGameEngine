@@ -14,8 +14,8 @@ namespace Vortex {
 		glm::vec3 Position;
 		glm::vec4 color;
 		glm::vec2 TexCoord;
-
-		//TODO: texid
+		float TexIndex;
+		float TilingFactor;
 	};
 
 	struct Renderer2Ddata
@@ -23,6 +23,7 @@ namespace Vortex {
 		const uint32_t MAX_QUADS = 10000;
 		const uint32_t MAX_VERTICES = MAX_QUADS * 4;
 		const uint32_t MAX_INDICES = MAX_QUADS * 6;
+		static const uint32_t MAX_TEXTURE_SLOTS = 32; // TODO: Render Capabilities
 
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
@@ -33,6 +34,9 @@ namespace Vortex {
 
 		QuadVertex* QuadVertexBufferBase;
 		QuadVertex* QuadVertexBufferPtr;
+
+		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> TextureSlots;
+		uint32_t TextureSlotIndex = 1; // 0 = white Texture
 	};
 
 	static Renderer2Ddata s_2Ddata;
@@ -41,14 +45,6 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		/////// Square Mesh //////////
-		float verticesSqr[5 * 4] = {
-			-0.5f,-0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f,-0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-		};
-
 		s_2Ddata.QuadVertexArray = VertexArray::Create();
 
 		s_2Ddata.QuadVertexBuffer = VertexBuffer::Create(s_2Ddata.MAX_VERTICES * sizeof(QuadVertex));
@@ -56,7 +52,9 @@ namespace Vortex {
 		s_2Ddata.QuadVertexBuffer->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float4, "a_Color"},
-			{ShaderDataType::Float2, "a_TexCoord"}
+			{ShaderDataType::Float2, "a_TexCoord"},
+			{ShaderDataType::Float, "a_TexIndex"},
+			{ShaderDataType::Float, "a_TilingFactor"}
 			});
 
 		s_2Ddata.QuadVertexArray->AddVertexBuffer(s_2Ddata.QuadVertexBuffer);
@@ -90,9 +88,17 @@ namespace Vortex {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_2Ddata.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
+		int samplers[s_2Ddata.MAX_TEXTURE_SLOTS];
+
+		for (uint32_t i = 0; i < s_2Ddata.MAX_TEXTURE_SLOTS; i++) {
+			samplers[i] = i;
+		}
+
 		s_2Ddata.TextureShader = Shader::Create("Assets/Shaders/Texture.shader");
 		s_2Ddata.TextureShader->Bind();
-		s_2Ddata.TextureShader->SetInt("u_Texture", 0);
+		s_2Ddata.TextureShader->SetIntArray("u_Texture", samplers, s_2Ddata.MAX_TEXTURE_SLOTS);
+
+		s_2Ddata.TextureSlots[0] = s_2Ddata.WhiteTexture;
 	}
 
 	void Renderer2D::Shutdown()
@@ -109,6 +115,8 @@ namespace Vortex {
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::EndScene()
@@ -123,6 +131,11 @@ namespace Vortex {
 
 	void Renderer2D::Flush()
 	{
+		//Bind Textures
+		for (uint32_t i = 0; i < s_2Ddata.TextureSlotIndex; i++) {
+			s_2Ddata.TextureSlots[i]->Bind(i);
+		}
+
 		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray, s_2Ddata.QuadIndexCount);
 	}
 
@@ -135,28 +148,41 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		s_2Ddata.QuadVertexBufferPtr->Position = { position.x, position.y, 0.0f };
+		const float texIndex = 0.0f; // White Texture
+		const float tilingFactor = 1.0f;
+
+		s_2Ddata.QuadVertexBufferPtr->Position = position;
 		s_2Ddata.QuadVertexBufferPtr->color = color;
 		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadVertexBufferPtr->Position = { position.x + size.x, position.y, 0.0f };
 		s_2Ddata.QuadVertexBufferPtr->color = color;
 		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
 		s_2Ddata.QuadVertexBufferPtr->color = color;
 		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
 		s_2Ddata.QuadVertexBufferPtr->color = color;
 		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadIndexCount += 6;
-		/*s_2Ddata.TextureShader->SetFloat4("u_Color", color);
+
+#if OLD_PATH
+		s_2Ddata.TextureShader->SetFloat4("u_Color", color);
 		s_2Ddata.TextureShader->SetFloat("u_TilingFactor", 1.0f);
 
 		s_2Ddata.WhiteTexture->Bind();
@@ -165,7 +191,8 @@ namespace Vortex {
 		s_2Ddata.TextureShader->SetMat4("u_transform", transform);
 
 		s_2Ddata.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray);*/
+		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray);
+#endif
 	}
 
 
@@ -178,6 +205,57 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_2Ddata.TextureSlotIndex; i++)
+		{
+			if (*s_2Ddata.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f) 
+		{
+			textureIndex = (float)s_2Ddata.TextureSlotIndex;
+			s_2Ddata.TextureSlots[s_2Ddata.TextureSlotIndex] = texture;
+			s_2Ddata.TextureSlotIndex++;
+		}
+
+		s_2Ddata.QuadVertexBufferPtr->Position = position;
+		s_2Ddata.QuadVertexBufferPtr->color = color;
+		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_2Ddata.QuadVertexBufferPtr++;
+
+		s_2Ddata.QuadVertexBufferPtr->Position = { position.x + size.x, position.y, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->color = color;
+		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_2Ddata.QuadVertexBufferPtr++;
+
+		s_2Ddata.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->color = color;
+		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_2Ddata.QuadVertexBufferPtr++;
+
+		s_2Ddata.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
+		s_2Ddata.QuadVertexBufferPtr->color = color;
+		s_2Ddata.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_2Ddata.QuadVertexBufferPtr++;
+
+		s_2Ddata.QuadIndexCount += 6;
+
+#if OLD_PATH
 		s_2Ddata.TextureShader->SetFloat4("u_Color",tintColor); 
 		s_2Ddata.TextureShader->SetFloat("u_TilingFactor", tilingFactor);
 
@@ -188,6 +266,7 @@ namespace Vortex {
 
 		s_2Ddata.QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray);
+#endif
 	}
 
 	void Renderer2D::DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)

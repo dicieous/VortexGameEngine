@@ -44,6 +44,8 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 		//Vortex::Renderer2D::DrawRotatedQuads({ -1.0f,0.0f }, { 0.8f,0.8f },glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
 		Vortex::Renderer2D::DrawQuads({ -1.0f,0.0f }, { 0.8f,0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Vortex::Renderer2D::DrawQuads({ 0.5f,-0.5f }, { 0.5f,0.75f }, { 0.2f, 0.2f, 0.3f, 1.0f });
+		Vortex::Renderer2D::DrawQuads({ -2.5f, -2.5f, -0.1f }, { 5.0f,5.0f }, m_checkerBoardTexture, 10.0f);
+		Vortex::Renderer2D::DrawQuads({ -0.5f, -0.5f, 0.0f }, { 1.0f,1.0f }, m_checkerBoardTexture, 20.0f);
 		//Vortex::Renderer2D::DrawRotatedQuads({ 0.0f,0.0f, -0.1f }, { 5.0f,5.0f }, glm::radians(45.0f), m_checkerBoardTexture, 10.0f, { 1.0f, 0.9f, 0.9f, 1.0f });
 	}
 
