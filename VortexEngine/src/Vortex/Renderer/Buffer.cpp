@@ -9,6 +9,24 @@ namespace Vortex {
 
 	//////////// Vertex Buffer Stuff ////////////////////////////////////////////////////
 
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
+	{
+		switch (Renderer::GetCurrentAPI())
+		{
+		case RendererAPI::API::None:
+
+			VX_CORE_ASSERT(false, "RenderAPI None is Currently not supported! ");
+			return nullptr;
+
+		case RendererAPI::API::OpenGL:
+
+			return CreateRef<OpenGLVertexBuffer>(size);
+		}
+
+		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
+		return nullptr;
+	}
+
 	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetCurrentAPI())
@@ -31,7 +49,7 @@ namespace Vortex {
 	
 	//////////// Index Buffer Stuff ////////////////////////////////////////////////////
 
-	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -42,7 +60,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return CreateRef<OpenGLIndexBuffer>(indices, size);
+			return CreateRef<OpenGLIndexBuffer>(indices, count);
 		}
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;
