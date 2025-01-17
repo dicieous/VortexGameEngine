@@ -20,9 +20,9 @@ namespace Vortex {
 
 	struct Renderer2Ddata
 	{
-		const uint32_t MAX_QUADS = 10000;
-		const uint32_t MAX_VERTICES = MAX_QUADS * 4;
-		const uint32_t MAX_INDICES = MAX_QUADS * 6;
+		static const uint32_t MAX_QUADS = 10000;
+		static const uint32_t MAX_VERTICES = MAX_QUADS * 4;
+		static const uint32_t MAX_INDICES = MAX_QUADS * 6;
 		static const uint32_t MAX_TEXTURE_SLOTS = 32; // TODO: Render Capabilities
 
 		Ref<VertexArray> QuadVertexArray;
@@ -39,6 +39,8 @@ namespace Vortex {
 		uint32_t TextureSlotIndex = 1; // 0 = white Texture
 
 		glm::vec4 QuadVertexPositions[4];
+
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2Ddata s_2Ddata;
@@ -85,7 +87,7 @@ namespace Vortex {
 		s_2Ddata.QuadVertexArray->SetIndexBuffer(quadIB);
 
 		delete[] quadIndices;
-		
+
 		s_2Ddata.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_2Ddata.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
@@ -103,8 +105,8 @@ namespace Vortex {
 		s_2Ddata.TextureSlots[0] = s_2Ddata.WhiteTexture;
 
 		s_2Ddata.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_2Ddata.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		s_2Ddata.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_2Ddata.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_2Ddata.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		s_2Ddata.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 
@@ -144,6 +146,18 @@ namespace Vortex {
 		}
 
 		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray, s_2Ddata.QuadIndexCount);
+
+		s_2Ddata.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::FlushAndReset() {
+
+		EndScene();
+
+		s_2Ddata.QuadIndexCount = 0;
+		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawQuads(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -154,6 +168,9 @@ namespace Vortex {
 	void Renderer2D::DrawQuads(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		VX_PROFILE_FUNCTION();
+
+		if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
+			FlushAndReset();
 
 		const float texIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
@@ -190,6 +207,8 @@ namespace Vortex {
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadIndexCount += 6;
+
+		s_2Ddata.Stats.QuadCount++;
 	}
 
 
@@ -201,6 +220,9 @@ namespace Vortex {
 	void Renderer2D::DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		VX_PROFILE_FUNCTION();
+
+		if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
+			FlushAndReset();
 
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -215,7 +237,7 @@ namespace Vortex {
 			}
 		}
 
-		if (textureIndex == 0.0f) 
+		if (textureIndex == 0.0f)
 		{
 			textureIndex = (float)s_2Ddata.TextureSlotIndex;
 			s_2Ddata.TextureSlots[s_2Ddata.TextureSlotIndex] = texture;
@@ -254,20 +276,25 @@ namespace Vortex {
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadIndexCount += 6;
+
+		s_2Ddata.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
-		DrawRotatedQuads({position.x, position.y, 0.0f }, size, rotation, color);
+		DrawRotatedQuads({ position.x, position.y, 0.0f }, size, rotation, color);
 	}
 
 	void Renderer2D::DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		VX_PROFILE_FUNCTION();
 
+		if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
+			FlushAndReset();
+
 		const float texIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
-		
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f,0.0f,1.0f })
 			* glm::scale(glm::mat4(1.0f), glm::vec3{ size.x, size.y, 1.0f });
@@ -303,9 +330,9 @@ namespace Vortex {
 
 		s_2Ddata.QuadIndexCount += 6;
 
-
+		s_2Ddata.Stats.QuadCount++;
 	}
-	
+
 	void Renderer2D::DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		DrawRotatedQuads({ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor, tintColor);
@@ -314,6 +341,9 @@ namespace Vortex {
 	void Renderer2D::DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		VX_PROFILE_FUNCTION();
+
+		if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
+			FlushAndReset();
 
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -368,5 +398,18 @@ namespace Vortex {
 		s_2Ddata.QuadVertexBufferPtr++;
 
 		s_2Ddata.QuadIndexCount += 6;
+
+		s_2Ddata.Stats.QuadCount++;
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return s_2Ddata.Stats;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		s_2Ddata.Stats = Statistics();
+		//memset(&s_2Ddata.Stats, 0, sizeof(Statistics));
 	}
 }

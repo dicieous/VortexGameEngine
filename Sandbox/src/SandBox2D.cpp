@@ -22,12 +22,14 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 	VX_PROFILE_FUNCTION();
 	//OnUpdate
 
+
 	{
 		VX_PROFILE_SCOPE("CameraController");
 		m_CameraController.OnUpdate(timeStep);
 	}
-	//Rendering
 
+	//Rendering
+	Vortex::Renderer2D::ResetStats();
 	{
 		VX_PROFILE_SCOPE("RenderPrep");
 		Vortex::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -44,16 +46,24 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 		rotation += 2.0f;
 
 		VX_PROFILE_SCOPE("RenderDraw");
-		Vortex::Renderer2D::DrawRotatedQuads({ -1.0f,1.0f }, { 0.8f,0.8f },45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Vortex::Renderer2D::DrawRotatedQuads({ -1.0f,1.0f }, { 0.8f,0.8f }, 45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Vortex::Renderer2D::DrawQuads({ -1.0f,0.0f }, { 0.8f,0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Vortex::Renderer2D::DrawQuads({ 0.5f,-0.5f }, { 0.5f,0.75f }, { 0.2f, 0.2f, 0.3f, 1.0f });
-		Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, -0.1f }, { 5.0f,5.0f }, m_checkerBoardTexture, 10.0f);
-		//Vortex::Renderer2D::DrawQuads({ -0.5f, -0.5f, 0.0f }, { 1.0f,1.0f }, m_checkerBoardTexture, 20.0f);
+		Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, -0.1f }, { 20.0f,20.0f }, m_checkerBoardTexture, 10.0f);
 		Vortex::Renderer2D::DrawRotatedQuads({ -2.0f, 0.0f, 0.0f }, { 1.0f,1.0f }, rotation, m_checkerBoardTexture, 20.0f, { 1.0f, 0.9f, 0.9f, 1.0f });
+		for (float y = -5.0f; y < 5.0f; y += 0.5f) {
+			for (float x = -5.0f; x < 5.0f; x += 0.5f) {
+
+				glm::vec4 color = { ((x + 5.0f) / 10.0f), 0.3f, ((y + 5.0f) / 10.0f),0.7f };
+				Vortex::Renderer2D::DrawQuads({ x, y }, { 0.45f,0.45f }, color);
+			}
+		}
+
 	}
 
 
 	Vortex::Renderer2D::EndScene();
+
 
 }
 
@@ -61,8 +71,16 @@ void SandBox2D::OnImGuiRender()
 {
 	VX_PROFILE_FUNCTION();
 
-	ImGui::Begin("FlatColor Settings");
-	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
+	auto stats = Vortex::Renderer2D::GetStats();
+
+	ImGui::Begin("Settings");
+
+	ImGui::Text("Renderer2D Stats");
+	ImGui::Text("Draw Calls : %d", stats.DrawCalls);
+	ImGui::Text("Quads : %d", stats.QuadCount);
+	ImGui::Text("Vertices : %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices : %d", stats.GetTotalIndexCount());
+	//ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
 
 	ImGui::End();
 }
