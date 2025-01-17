@@ -5,3 +5,6 @@ bin-int/
 
 #Files
 *.user
+Sandbox/Vortex-RunTime.json
+Sandbox/Vortex-ShutDown.json
+Sandbox/Vortex-Startup.json
