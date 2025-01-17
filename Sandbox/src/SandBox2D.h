@@ -1,6 +1,7 @@
 #pragma once
 #include <Vortex.h>
 
+#include "ParticleSystem.h"
 
 class SandBox2D : public Vortex::Layer {
 
@@ -24,4 +25,7 @@ private:
 	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr;
 
 	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
+
+	ParticleProps m_ParticleProp;
+	ParticleSystem m_ParticleSystem;
 };

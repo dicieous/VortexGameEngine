@@ -7,6 +7,15 @@
 
 namespace Vortex {
 
+	struct OrthographicCameraBounds
+	{
+		float Left, Right;
+		float Bottom, Top;
+
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class OrthographicCameraController {
 
 	public:
@@ -17,6 +26,8 @@ namespace Vortex {
 
 		inline OrthographicCamera& GetCamera() { return m_Camera; }
 		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
+
+		inline const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 
 		inline float GetZoomLevel() const { return m_ZoomLevel; }
 		inline void SetZoomLevel(float level) { m_ZoomLevel = level; }
@@ -38,5 +49,6 @@ namespace Vortex {
 
 	private:
 		OrthographicCamera m_Camera;
+		OrthographicCameraBounds m_Bounds;
 	};
 }
