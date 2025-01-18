@@ -45,6 +45,11 @@ namespace Vortex {
 		layer->OnAttach();
 	}
 
+	void Application::Close()
+	{
+		m_Running = false;
+	}
+
 	void Application::OnEvent(Event& e)
 	{
 		VX_PROFILE_FUNCTION();
