@@ -3,6 +3,24 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+static uint32_t s_MapWidth = 23;
+
+static const char* s_MapTiles = 
+"GGGGGGGGGGGGGGGGGGGGGGG"
+"GFDDDDDDFGGGGGGGTGGGGGG"
+"GFDDDDDDFGGGGGGGGGGGGGG"
+"GFDDDDDDFGGGGGGGGGGGGGG"
+"GGGGRGGGGGGWGGGGGGGGGGG"
+"GGGGRGGGGGGRGGGGGGGGGGG"
+"GGGGRGGGGGGRGGGGGTGGGGG"
+"GGGGRGGGGGGRGGGGGGGGGGG"
+"GGGGRRRRRRRRGGGGGGGGGGG"
+"GGGGGGGTGGGGGHHHHGGGGGG"
+"GGGGGGGGGGGGGHHHHGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGG"
+;
+
+static uint32_t s_MapHeight = strlen(s_MapTiles) / s_MapWidth;
 
 SandBox2D::SandBox2D() :
 	Layer("SandBox2D"), m_CameraController(1280.0f / 720.0f, true) {}
@@ -12,7 +30,15 @@ void SandBox2D::OnAttach()
 	m_checkerBoardTexture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
 	m_SpriteSheet = Vortex::Texture2D::Create("Assets/Textures/tilemap_packed.png");
 
-	m_TextureTree = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 3, 9 }, { 16, 16 }, { 1, 2 });
+	m_TextureTree = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 4, 8 }, { 16, 16 });
+	
+	m_TextureMap['G'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {1, 10}, {16, 16});
+	m_TextureMap['F'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {11, 6}, {16, 16});
+	m_TextureMap['D'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {0, 10}, {16, 16});
+	m_TextureMap['R'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {7, 7},  {16, 16});
+	m_TextureMap['T'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {3, 8},  {16, 16});
+	m_TextureMap['W'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {7, 2},  {16, 16});
+	m_TextureMap['H'] = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, {2, 10}, {16, 16});
 
 	m_CameraController.SetZoomLevel(5.0f);
 
@@ -100,7 +126,19 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 
 	Vortex::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
+	for (uint32_t y = 0; y < s_MapHeight; y++)
+	{
+		for (uint32_t x = 0; x < s_MapWidth; x++)
+		{
+			char spriteText = s_MapTiles[x + y * s_MapWidth];
+			if (m_TextureMap.find(spriteText) != m_TextureMap.end()) 
+			{
+				Vortex::Renderer2D::DrawQuads({ x - s_MapWidth / 2.0f, s_MapHeight - y - s_MapHeight / 2.0f, 0.2f }, { 1.0f, 1.0f }, m_TextureMap[spriteText]);
+			}
+		}
+	}
+
+	//Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
 
 	Vortex::Renderer2D::EndScene();
 
