@@ -1450,6 +1450,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Vortex\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Vortex\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -1530,5 +1531,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vortex\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>

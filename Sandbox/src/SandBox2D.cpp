@@ -10,7 +10,13 @@ SandBox2D::SandBox2D() :
 void SandBox2D::OnAttach()
 {
 	m_checkerBoardTexture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
+	m_SpriteSheet = Vortex::Texture2D::Create("Assets/Textures/tilemap_packed.png");
 
+	m_TextureTree = Vortex::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 3, 9 }, { 16, 16 }, { 1, 2 });
+
+	m_CameraController.SetZoomLevel(5.0f);
+
+#if 1
 	m_ParticleProp.ColorBegin = { 61 / 255.0f, 255 / 255.0f, 246 / 255.0f, 1.0f };
 	m_ParticleProp.ColorEnd = { 155 / 255.0f, 77 / 255.0f, 255 / 255.0f, 1.0f };
 	m_ParticleProp.SizeBegin = 0.25f, m_ParticleProp.SizeVariation = 0.3f, m_ParticleProp.SizeEnd = 0.0f;
@@ -18,6 +24,7 @@ void SandBox2D::OnAttach()
 	m_ParticleProp.Velocity = { 0.0f, 0.0f };
 	m_ParticleProp.VelocityVariation = { 3.0f, 1.0f };
 	m_ParticleProp.Position = { 0.0f, 0.0f };
+#endif
 }
 
 void SandBox2D::OnDetach()
@@ -30,14 +37,12 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 	VX_PROFILE_FUNCTION();
 	//OnUpdate
 
-
 	{
 		VX_PROFILE_SCOPE("CameraController");
 		m_CameraController.OnUpdate(timeStep);
 	}
 
 	//Rendering
-
 	Vortex::Renderer2D::ResetStats();
 	{
 		VX_PROFILE_SCOPE("RenderPrep");
@@ -45,6 +50,7 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 		Vortex::RenderCommand::Clear();
 	}
 
+#if 0
 	{
 		VX_PROFILE_SCOPE("SandBox2D::BeginScene");
 		Vortex::Renderer2D::BeginScene(m_CameraController.GetCamera());
@@ -72,7 +78,7 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 	}
 
 	Vortex::Renderer2D::EndScene();
-
+#endif
 
 	if (Vortex::Input::IsMouseButtonPressed(VX_MOUSE_BUTTON_LEFT))
 	{
@@ -91,6 +97,13 @@ void SandBox2D::OnUpdate(Vortex::TimeStep timeStep)
 
 	m_ParticleSystem.OnUpdate(timeStep);
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+
+	Vortex::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+	Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
+
+	Vortex::Renderer2D::EndScene();
+
 }
 
 void SandBox2D::OnImGuiRender()

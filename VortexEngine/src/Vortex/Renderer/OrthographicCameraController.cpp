@@ -57,6 +57,12 @@ namespace Vortex {
 
 	}
 
+	void OrthographicCameraController::CalculateView()
+	{
+		m_Bounds = { -m_aspectRatio * m_ZoomLevel, m_aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+	}
+
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		VX_PROFILE_FUNCTION();
@@ -64,8 +70,7 @@ namespace Vortex {
 		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = glm::max(0.10f, m_ZoomLevel);
 
-		m_Bounds = { -m_aspectRatio * m_ZoomLevel, m_aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		CalculateView();
 
 		return false;
 	}
@@ -75,8 +80,7 @@ namespace Vortex {
 		VX_PROFILE_FUNCTION();
 
 		m_aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		m_Bounds = { -m_aspectRatio * m_ZoomLevel, m_aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		CalculateView();
 
 		return false;
 	}

@@ -178,6 +178,7 @@
     <ClInclude Include="src\Vortex\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Vortex\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Vortex\Renderer\Shader.h" />
+    <ClInclude Include="src\Vortex\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\Vortex\Renderer\Texture.h" />
     <ClInclude Include="src\Vortex\Renderer\VertexArray.h" />
     <ClInclude Include="src\Vxpch.h" />
@@ -632,6 +633,7 @@
     <ClCompile Include="src\Vortex\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Vortex\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Texture.cpp" />
     <ClCompile Include="src\Vortex\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Vxpch.cpp">

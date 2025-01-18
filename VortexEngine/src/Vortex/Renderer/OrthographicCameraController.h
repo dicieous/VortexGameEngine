@@ -30,8 +30,10 @@ namespace Vortex {
 		inline const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 
 		inline float GetZoomLevel() const { return m_ZoomLevel; }
-		inline void SetZoomLevel(float level) { m_ZoomLevel = level; }
+		inline void SetZoomLevel(float level) { m_ZoomLevel = level; CalculateView(); }
 	private:
+		void CalculateView();
+
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 
