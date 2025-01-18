@@ -21,17 +21,8 @@ private:
 
 	//Temp
 	Vortex::Ref<Vortex::VertexArray> m_squareVA;
-
 	Vortex::Ref<Vortex::Texture2D> m_checkerBoardTexture;
-	Vortex::Ref<Vortex::Texture2D> m_SpriteSheet;
-	Vortex::Ref<Vortex::SubTexture2D> m_TextureTree;
-
-	std::unordered_map<char, Vortex::Ref<Vortex::SubTexture2D>> m_TextureMap;
-
 	Vortex::Ref<Vortex::Shader> m_flatColorShaderSqr;
 
 	glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
-
-	ParticleProps m_ParticleProp;
-	ParticleSystem m_ParticleSystem;
 };
