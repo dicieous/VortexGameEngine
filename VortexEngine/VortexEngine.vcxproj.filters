@@ -19,6 +19,9 @@
     <Filter Include="src\Vortex\Core">
       <UniqueIdentifier>{FCBC5AF8-6848-C8BC-7159-4BB1DD6324BD}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Vortex\Debug">
+      <UniqueIdentifier>{9AB7BE03-86B0-DD55-AFE2-C2DA9B3ABD61}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Vortex\Events">
       <UniqueIdentifier>{88FD1F7F-F413-1E15-3D8B-A936A9E0EE9C}</UniqueIdentifier>
     </Filter>
@@ -61,6 +64,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -117,6 +123,9 @@
     <ClInclude Include="src\Vortex\Core\Window.h">
       <Filter>src\Vortex\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Debug\Instrumentor.h">
+      <Filter>src\Vortex\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex\Events\ApplicationEvent.h">
       <Filter>src\Vortex\Events</Filter>
     </ClInclude>
@@ -138,6 +147,9 @@
     <ClInclude Include="src\Vortex\Renderer\Camera.h">
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vortex\Renderer\FrameBuffer.h">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h">
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
@@ -157,6 +169,9 @@
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Vortex\Renderer\Shader.h">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vortex\Renderer\SubTexture2D.h">
       <Filter>src\Vortex\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Vortex\Renderer\Texture.h">
@@ -1449,14 +1464,15 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vortex\Debug\Instrumentor.h" />
-    <ClInclude Include="src\Vortex\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -1501,6 +1517,9 @@
     <ClCompile Include="src\Vortex\Renderer\Camera.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vortex\Renderer\FrameBuffer.cpp">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vortex\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
@@ -1519,6 +1538,9 @@
     <ClCompile Include="src\Vortex\Renderer\Shader.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vortex\Renderer\SubTexture2D.cpp">
+      <Filter>src\Vortex\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vortex\Renderer\Texture.cpp">
       <Filter>src\Vortex\Renderer</Filter>
     </ClCompile>
@@ -1531,6 +1553,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vortex\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>

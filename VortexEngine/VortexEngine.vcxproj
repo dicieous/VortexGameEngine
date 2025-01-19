@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\Vortex\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Vortex\Renderer\Buffer.h" />
     <ClInclude Include="src\Vortex\Renderer\Camera.h" />
+    <ClInclude Include="src\Vortex\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Vortex\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Vortex\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Vortex\Renderer\RenderCommand.h" />
@@ -613,6 +615,7 @@
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
@@ -627,6 +630,7 @@
     <ClCompile Include="src\Vortex\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Vortex\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Vortex\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Vortex\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Renderer.cpp" />

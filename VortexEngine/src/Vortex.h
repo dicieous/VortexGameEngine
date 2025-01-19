@@ -14,6 +14,7 @@
 #include "Vortex/Renderer/RenderCommand.h"
 
 #include "Vortex/Renderer/Buffer.h"
+#include "Vortex/Renderer/FrameBuffer.h"
 #include "Vortex/Renderer/Shader.h"
 #include "Vortex/Renderer/Texture.h"
 #include "Vortex/Renderer/SubTexture2D.h"

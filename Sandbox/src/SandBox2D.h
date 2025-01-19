@@ -1,8 +1,6 @@
 #pragma once
 #include <Vortex.h>
 
-#include "ParticleSystem.h"
-
 class SandBox2D : public Vortex::Layer {
 
 public:

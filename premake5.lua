@@ -1,11 +1,16 @@
 workspace "VortexEngine"
-	architecture "x64"
+	architecture "x86_64"
 	 startproject "Sandbox"
 
 	configurations{
 		"Debug",
 		"Release",
 		"Dist"
+	}
+
+	flag
+	{
+		"MultiProcessorCompile"
 	}
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -102,6 +107,64 @@ project "Sandbox"
 	kind "ConsoleApp"
 	staticruntime "on"
 	language "C++"
+	cppdialect "C++17"
+
+	targetdir ("bin/"..outputDir.."/%{prj.name}")
+	objdir ("bin-int/"..outputDir.."/%{prj.name}")
+
+	files{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs{
+		"VortexEngine/vendor/spdlog/include",
+		"VortexEngine/src",
+		"VortexEngine/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links{
+		"VortexEngine",
+		"ImGui"
+	}
+
+	filter "system:windows"
+		cppdialect "C++17"
+		systemversion "latest"
+
+		defines{
+			"VX_PLATFORM_WINDOWS"
+		}
+
+	-- Hazel Github issue fix Solution
+	-- postbuildcommands
+	-- {
+	-- 	("{COPYFILE} ../bin/" .. outputDir .. "/VortexEngine/VortexEngine.dll" .. " ../bin/" .. outputDir .. "/%{prj.name}")
+	-- }
+
+	filter "configurations:Debug"
+		defines "VX_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "VX_RELEASE"
+		runtime "Release"
+		optimize "on"
+	
+	filter "configurations:Dist"
+		defines "VX_DIST"
+		runtime "Release"
+		optimize "on"
+
+
+project "VortexEditor"
+	location "VortexEditor"
+	kind "ConsoleApp"
+	staticruntime "on"
+	language "C++"
+	cppdialect "C++17"
 
 	targetdir ("bin/"..outputDir.."/%{prj.name}")
 	objdir ("bin-int/"..outputDir.."/%{prj.name}")

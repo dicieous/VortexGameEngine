@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "VortexEngine\vendor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "VortexEngine\vendor\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VortexEditor", "VortexEditor\VortexEditor.vcxproj", "{741C3526-607F-C4CA-0905-FD80F546904D}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VortexEngine", "VortexEngine\VortexEngine.vcxproj", "{C3C9E826-AF2C-78CB-58B2-B08144F4434E}"
 EndProject
 Global
@@ -44,6 +46,12 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Dist|x64.Build.0 = Dist|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Debug|x64.ActiveCfg = Debug|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Debug|x64.Build.0 = Debug|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Dist|x64.ActiveCfg = Dist|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Dist|x64.Build.0 = Dist|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Release|x64.ActiveCfg = Release|x64
+		{741C3526-607F-C4CA-0905-FD80F546904D}.Release|x64.Build.0 = Release|x64
 		{C3C9E826-AF2C-78CB-58B2-B08144F4434E}.Debug|x64.ActiveCfg = Debug|x64
 		{C3C9E826-AF2C-78CB-58B2-B08144F4434E}.Debug|x64.Build.0 = Debug|x64
 		{C3C9E826-AF2C-78CB-58B2-B08144F4434E}.Dist|x64.ActiveCfg = Dist|x64

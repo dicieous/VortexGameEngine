@@ -17,7 +17,7 @@ namespace Vortex {
 	{
 	public:
 
-		Application();
+		Application(const std::string& name = "Vortex App");
 
 		virtual ~Application();
 
