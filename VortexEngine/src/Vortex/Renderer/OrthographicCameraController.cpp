@@ -63,6 +63,12 @@ namespace Vortex {
 		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
 	}
 
+	void OrthographicCameraController::OnResize(float width, float height)
+	{
+		m_aspectRatio = width / height;
+		CalculateView();
+	}
+
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		VX_PROFILE_FUNCTION();
@@ -79,9 +85,7 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		m_aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		CalculateView();
-
+		OnResize((float)e.GetWidth() , (float)e.GetHeight());
 		return false;
 	}
 }

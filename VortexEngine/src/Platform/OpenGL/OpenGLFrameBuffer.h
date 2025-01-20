@@ -14,15 +14,17 @@ namespace Vortex {
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
 
+		void Invalidate();
+		
+		virtual void Resize(uint32_t width, uint32_t height) override;
+
 		virtual uint32_t GetAttachementID() const override { return m_ColorAttachment; }
 
 		virtual const FrameBufferSpecifications& GetSpecifications() const override { return m_Specifications; }
-
-		void Invalidate();
 	
 	private:
-		uint32_t m_RendererID;
-		uint32_t m_ColorAttachment, m_DepthAttachment;
+		uint32_t m_RendererID = 0;
+		uint32_t m_ColorAttachment = 0, m_DepthAttachment = 0;
 
 		FrameBufferSpecifications m_Specifications;
 	};

@@ -24,11 +24,14 @@ namespace Vortex {
 		void OnUpdate(TimeStep& ts);
 		void OnEvent(Event& e);
 
+
 		inline OrthographicCamera& GetCamera() { return m_Camera; }
 		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
 
 		inline const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 
+		void OnResize(float width, float height);
+		
 		inline float GetZoomLevel() const { return m_ZoomLevel; }
 		inline void SetZoomLevel(float level) { m_ZoomLevel = level; CalculateView(); }
 	private:

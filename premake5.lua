@@ -1,6 +1,6 @@
 workspace "VortexEngine"
 	architecture "x86_64"
-	 startproject "Sandbox"
+	 startproject "VortexEditor"
 
 	configurations{
 		"Debug",

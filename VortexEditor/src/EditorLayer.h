@@ -22,8 +22,10 @@ namespace Vortex {
 		Ref<VertexArray> m_squareVA;
 		Ref<Texture2D> m_checkerBoardTexture;
 		Ref<Shader> m_flatColorShaderSqr;
+
 		Ref<FrameBuffer> m_FrameBuffer;
 
+		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 	};
 }

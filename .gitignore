@@ -8,3 +8,7 @@ bin-int/
 Sandbox/Vortex-RunTime.json
 Sandbox/Vortex-ShutDown.json
 Sandbox/Vortex-Startup.json
+
+VortexEditor/Vortex-RunTime.json
+VortexEditor/Vortex-ShutDown.json
+VortexEditor/Vortex-Startup.json
