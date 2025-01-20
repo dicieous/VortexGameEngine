@@ -27,9 +27,12 @@ namespace Vortex {
 	void EditorLayer::OnUpdate(Vortex::TimeStep timeStep)
 	{
 		VX_PROFILE_FUNCTION();
-		//OnUpdate
 
-		m_CameraController.OnUpdate(timeStep);
+		//OnUpdate
+		if (m_ViewPortFocused)
+		{
+			m_CameraController.OnUpdate(timeStep);
+		}
 
 		//Rendering
 		Vortex::Renderer2D::ResetStats();
@@ -134,12 +137,18 @@ namespace Vortex {
 
 		ImGui::End();
 
+
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-
 		ImGui::Begin("ViewPort");
+		
 		ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
-
 		uint32_t texture = m_FrameBuffer->GetAttachementID();
+
+		m_ViewPortFocused = ImGui::IsWindowFocused();
+		m_ViewPortHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewPortFocused || !m_ViewPortHovered);
+		
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
 		if (m_ViewportSize != *((glm::vec2*)&viewPortPanelSize))

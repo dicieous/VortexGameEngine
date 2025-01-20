@@ -23,6 +23,7 @@ namespace Vortex {
 		Ref<Texture2D> m_checkerBoardTexture;
 		Ref<Shader> m_flatColorShaderSqr;
 
+		bool m_ViewPortFocused = false, m_ViewPortHovered = false;
 		Ref<FrameBuffer> m_FrameBuffer;
 
 		glm::vec2 m_ViewportSize;

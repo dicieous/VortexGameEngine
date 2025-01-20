@@ -12,7 +12,6 @@
 #include <glad/glad.h>
 
 
-
 namespace Vortex {
 
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
@@ -61,6 +60,15 @@ namespace Vortex {
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
+	void ImGuiLayer::OnDetach()
+	{
+		VX_PROFILE_FUNCTION();
+
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
+
 	void ImGuiLayer::Begin()
 	{
 		VX_PROFILE_FUNCTION();
@@ -70,12 +78,16 @@ namespace Vortex {
 		ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::OnImGuiRender()
+	void ImGuiLayer::OnEvent(Event& event)
 	{
 		VX_PROFILE_FUNCTION();
-
-		/*static bool show = true;
-		ImGui::ShowDemoWindow(&show);*/
+		
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			event.Handled |= event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			event.Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImGuiLayer::End()
@@ -101,12 +113,5 @@ namespace Vortex {
 		}
 	}
 
-	void ImGuiLayer::OnDetach()
-	{
-		VX_PROFILE_FUNCTION();
-
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
+	
 }
