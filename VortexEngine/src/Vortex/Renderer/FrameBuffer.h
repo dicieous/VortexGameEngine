@@ -15,6 +15,8 @@ namespace Vortex {
 	class FrameBuffer {
 
 	public:
+		virtual ~FrameBuffer() = default;
+
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
 

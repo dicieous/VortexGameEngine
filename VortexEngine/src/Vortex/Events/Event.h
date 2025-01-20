@@ -51,7 +51,10 @@ namespace Vortex {
 	class VORTEX_API Event
 	{
 		friend class EventDispacher;
+	
 	public:
+		virtual ~Event() = default;
+
 		bool Handled = false;
 		
 		virtual EventType GetEventType() const = 0;
