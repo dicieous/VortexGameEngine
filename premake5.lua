@@ -8,10 +8,10 @@ workspace "VortexEngine"
 		"Dist"
 	}
 
-	flag
-	{
-		"MultiProcessorCompile"
-	}
+	-- flag
+	-- {
+	-- 	"MultiProcessorCompile",
+	-- }
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -22,6 +22,7 @@ IncludeDir["GLFW"] = "VortexEngine/vendor/GLFW/include"
 IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
 IncludeDir["glm"] = "VortexEngine/vendor/glm"
 IncludeDir["stb_image"] = "VortexEngine/vendor/stb_image"
+IncludeDir["Entt"] = "VortexEngine/vendor/Entt/include"
 
 
 group "Dependencies"
@@ -50,6 +51,7 @@ project "VortexEngine"
 		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/Entt/include/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/glm/glm/**.h"
 	}
@@ -61,7 +63,8 @@ project "VortexEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.Entt}"
 
 	}
 
@@ -121,7 +124,8 @@ project "Sandbox"
 		"VortexEngine/vendor/spdlog/include",
 		"VortexEngine/src",
 		"VortexEngine/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links{
@@ -178,7 +182,8 @@ project "VortexEditor"
 		"VortexEngine/vendor/spdlog/include",
 		"VortexEngine/src",
 		"VortexEngine/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links{

@@ -34,6 +34,12 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\Entt">
+      <UniqueIdentifier>{BDF466C1-29AA-DFB6-B29E-D98D1E53D6BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\Entt\include">
+      <UniqueIdentifier>{3089875D-9CEA-646B-2558-AB1D91B89B2A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
     </Filter>
@@ -179,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="src\Vxpch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Entt\include\entt.hpp">
+      <Filter>vendor\Entt\include</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>

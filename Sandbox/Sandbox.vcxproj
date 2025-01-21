@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;..\VortexEngine\vendor\Entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;..\VortexEngine\vendor\Entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>VX_PLATFORM_WINDOWS;VX_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VortexEngine\vendor\spdlog\include;..\VortexEngine\src;..\VortexEngine\vendor;..\VortexEngine\vendor\glm;..\VortexEngine\vendor\Entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

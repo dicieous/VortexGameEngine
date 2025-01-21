@@ -137,8 +137,6 @@ namespace Vortex {
 
 		ImGui::End();
 
-
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
 		
