@@ -151,7 +151,7 @@ namespace Vortex {
 		
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
-		if (m_ViewportSize != *((glm::vec2*)&viewPortPanelSize))
+		if (m_ViewportSize != *((glm::vec2*)&viewPortPanelSize) && viewPortPanelSize.x > 0 && viewPortPanelSize.y > 0)
 		{
 			m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
