@@ -9,14 +9,28 @@ namespace Vortex {
 
 	void EditorLayer::OnAttach()
 	{
-		m_checkerBoardTexture = Vortex::Texture2D::Create("Assets/Textures/Checkerboard.png");
+		m_checkerBoardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
 
-		Vortex::FrameBufferSpecifications frameSpecs;
+		FrameBufferSpecifications frameSpecs;
 		frameSpecs.Width = 1280;
 		frameSpecs.Height = 720;
 
-		m_FrameBuffer = Vortex::FrameBuffer::Create(frameSpecs);
+		m_FrameBuffer = FrameBuffer::Create(frameSpecs);
 		m_ViewportSize = { 1280.0f, 720.0f };
+
+		m_ActiveScene = CreateRef<Scene>();
+
+		//Entity
+		//Vortex::Entity square = m_ActiveScene->CreateEntity();
+
+		//square.AddComponent<TransformComponent>();
+		//square.GetComponent<TransfromComponent>();
+
+		m_SquareEntity = m_ActiveScene->CreateEntity();
+
+		m_ActiveScene->Reg().emplace<TransformComponent>(m_SquareEntity);
+		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(m_SquareEntity, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -24,7 +38,7 @@ namespace Vortex {
 
 	}
 
-	void EditorLayer::OnUpdate(Vortex::TimeStep timeStep)
+	void EditorLayer::OnUpdate(TimeStep timeStep)
 	{
 		VX_PROFILE_FUNCTION();
 
@@ -34,33 +48,20 @@ namespace Vortex {
 			m_CameraController.OnUpdate(timeStep);
 		}
 
+
 		//Rendering
-		Vortex::Renderer2D::ResetStats();
+		Renderer2D::ResetStats();
 
 		m_FrameBuffer->Bind();
-		Vortex::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-		Vortex::RenderCommand::Clear();
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::Clear();
 
-		Vortex::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		static float rotation = 0.0f;
-		rotation += 2.0f;
+		m_ActiveScene->OnUpdate(timeStep);
 
-		Vortex::Renderer2D::DrawRotatedQuads({ -1.0f,1.0f }, { 0.8f,0.8f }, glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-		Vortex::Renderer2D::DrawQuads({ -1.0f,0.0f }, { 0.8f,0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Vortex::Renderer2D::DrawQuads({ 0.5f,-0.5f }, { 0.5f,0.75f }, { 0.2f, 0.2f, 0.3f, 1.0f });
-		Vortex::Renderer2D::DrawQuads({ 0.0f, 0.0f, -0.1f }, { 20.0f,20.0f }, m_checkerBoardTexture, 10.0f);
-		Vortex::Renderer2D::DrawRotatedQuads({ -2.0f, 0.0f, 0.0f }, { 1.0f,1.0f }, glm::radians(rotation), m_checkerBoardTexture, 20.0f, { 1.0f, 0.9f, 0.9f, 1.0f });
-
-		for (float y = -5.0f; y < 5.0f; y += 0.5f) {
-			for (float x = -5.0f; x < 5.0f; x += 0.5f) {
-
-				glm::vec4 color = { ((x + 5.0f) / 10.0f), 0.3f, ((y + 5.0f) / 10.0f),0.7f };
-				Vortex::Renderer2D::DrawQuads({ x, y }, { 0.45f,0.45f }, color);
-			}
-		}
-
-		Vortex::Renderer2D::EndScene();
+		Renderer2D::EndScene();
 		m_FrameBuffer->UnBind();
 	}
 
@@ -68,7 +69,7 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		auto stats = Vortex::Renderer2D::GetStats();
+		auto stats = Renderer2D::GetStats();
 
 		static bool dockSpaceOpen = true;
 		static bool opt_fullscreen = true;
@@ -116,7 +117,7 @@ namespace Vortex {
 		{
 			if (ImGui::BeginMenu("Docking"))
 			{
-				if (ImGui::MenuItem("Exit")) Vortex::Application::Get().Close();
+				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 
 				ImGui::EndMenu();
 			}
@@ -134,6 +135,9 @@ namespace Vortex {
 		ImGui::Text("Indices : %d", stats.GetTotalIndexCount());
 		ImGui::Text("Draw Calls : %d", stats.DrawCalls);
 		ImGui::Text("Quads : %d", stats.QuadCount);
+
+		auto& spriteColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+		ImGui::ColorEdit4("SquareColor", glm::value_ptr(spriteColor));
 
 		ImGui::End();
 
@@ -162,7 +166,7 @@ namespace Vortex {
 	}
 
 
-	void EditorLayer::OnEvent(Vortex::Event& event)
+	void EditorLayer::OnEvent(Event& event)
 	{
 		m_CameraController.OnEvent(event);
 	}
