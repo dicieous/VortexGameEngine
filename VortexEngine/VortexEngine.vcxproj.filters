@@ -1472,6 +1472,7 @@
     </ClInclude>
     <ClInclude Include="src\Vortex\Scene\Scene.h" />
     <ClInclude Include="src\Vortex\Scene\Components.h" />
+    <ClInclude Include="src\Vortex\Scene\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -1562,5 +1563,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Vortex\Scene\Scene.cpp" />
+    <ClCompile Include="src\Vortex\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

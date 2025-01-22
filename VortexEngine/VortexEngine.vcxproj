@@ -183,6 +183,7 @@
     <ClInclude Include="src\Vortex\Renderer\Texture.h" />
     <ClInclude Include="src\Vortex\Renderer\VertexArray.h" />
     <ClInclude Include="src\Vortex\Scene\Components.h" />
+    <ClInclude Include="src\Vortex\Scene\Entity.h" />
     <ClInclude Include="src\Vortex\Scene\Scene.h" />
     <ClInclude Include="src\Vxpch.h" />
     <ClInclude Include="vendor\Entt\include\entt.hpp" />
@@ -642,6 +643,7 @@
     <ClCompile Include="src\Vortex\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Vortex\Renderer\Texture.cpp" />
     <ClCompile Include="src\Vortex\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Vortex\Scene\Entity.cpp" />
     <ClCompile Include="src\Vortex\Scene\Scene.cpp" />
     <ClCompile Include="src\Vxpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

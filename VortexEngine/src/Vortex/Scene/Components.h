@@ -4,6 +4,17 @@
 
 namespace Vortex {
 
+	struct TagComponent
+	{
+		std::string Tag;
+
+		TagComponent() = default;
+		TagComponent(const TagComponent&) = default;
+
+		TagComponent(const std::string& tag)
+			:Tag(tag) {};
+	};
+
 	struct TransformComponent
 	{
 		glm::mat4 Transform{ 1.0f };
@@ -28,4 +39,5 @@ namespace Vortex {
 		SpriteRendererComponent(const glm::vec4& color)
 			:Color(color) {};
 	};
+
 }

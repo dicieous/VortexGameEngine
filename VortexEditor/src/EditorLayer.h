@@ -27,7 +27,7 @@ namespace Vortex {
 		Ref<FrameBuffer> m_FrameBuffer;
 
 		Ref<Scene> m_ActiveScene;
-		entt::entity  m_SquareEntity;
+		Entity m_SquareEntity;
 
 		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };

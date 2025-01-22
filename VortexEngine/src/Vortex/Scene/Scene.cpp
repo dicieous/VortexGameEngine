@@ -4,6 +4,9 @@
 #include "Vortex/Scene/Components.h"
 #include "Vortex/Renderer/Renderer2D.h"
 
+#include "Entity.h"
+
+
 namespace Vortex {
 
 	Scene::Scene()
@@ -17,9 +20,15 @@ namespace Vortex {
 
 	}
 
-	entt::entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_Registry.create();
+		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		
+		auto& tag =  entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+
+		return entity;
 	}
 
 	void Scene::OnUpdate(TimeStep ts)

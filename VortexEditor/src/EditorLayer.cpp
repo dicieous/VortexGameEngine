@@ -20,17 +20,10 @@ namespace Vortex {
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		//Entity
-		//Vortex::Entity square = m_ActiveScene->CreateEntity();
-
-		//square.AddComponent<TransformComponent>();
-		//square.GetComponent<TransfromComponent>();
-
-		m_SquareEntity = m_ActiveScene->CreateEntity();
-
-		m_ActiveScene->Reg().emplace<TransformComponent>(m_SquareEntity);
-		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(m_SquareEntity, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
+		
+		auto& square = m_ActiveScene->CreateEntity("Square");
+		square.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f));
+		m_SquareEntity = square;
 	}
 
 	void EditorLayer::OnDetach()
@@ -56,7 +49,7 @@ namespace Vortex {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		
+
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		m_ActiveScene->OnUpdate(timeStep);
@@ -136,21 +129,27 @@ namespace Vortex {
 		ImGui::Text("Draw Calls : %d", stats.DrawCalls);
 		ImGui::Text("Quads : %d", stats.QuadCount);
 
-		auto& spriteColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-		ImGui::ColorEdit4("SquareColor", glm::value_ptr(spriteColor));
+		ImGui::Separator();
+		auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("%s", tag.c_str());
+		if (m_SquareEntity) {
+			auto& spriteColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("SquareColor", glm::value_ptr(spriteColor));
+		}
+		ImGui::Separator();
 
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
-		
+
 		ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
 		uint32_t texture = m_FrameBuffer->GetAttachementID();
 
 		m_ViewPortFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewPortFocused || !m_ViewPortHovered);
-		
+
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
 		if (m_ViewportSize != *((glm::vec2*)&viewPortPanelSize) && viewPortPanelSize.x > 0 && viewPortPanelSize.y > 0)
