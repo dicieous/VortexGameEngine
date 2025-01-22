@@ -5,7 +5,7 @@
 #include "LayerStack.h"
 #include "Vortex/ImGui/ImGuiLayer.h"
 
-#include "Vortex/Renderer/Camera.h"
+#include "Vortex/Renderer/OrthographicCamera.h"
 
 #include "Vortex/Events/Event.h"
 #include "Window.h"

@@ -16,14 +16,21 @@ namespace Vortex {
 		frameSpecs.Height = 720;
 
 		m_FrameBuffer = FrameBuffer::Create(frameSpecs);
-		m_ViewportSize = { 1280.0f, 720.0f };
+		//m_ViewportSize = { 1280.0f, 720.0f };
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		
+
 		auto& square = m_ActiveScene->CreateEntity("Square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f));
 		m_SquareEntity = square;
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
+		m_CameraEntity.AddComponent<CameraComponent>();
+
+		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Second Camera");
+		auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
+		cc.primary = false;
 	}
 
 	void EditorLayer::OnDetach()
@@ -34,6 +41,19 @@ namespace Vortex {
 	void EditorLayer::OnUpdate(TimeStep timeStep)
 	{
 		VX_PROFILE_FUNCTION();
+
+		FrameBufferSpecifications specs = m_FrameBuffer->GetSpecifications();
+
+		//Resize
+		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && //zero sized framebuffer is invalid
+			(specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y)
+			)
+		{
+			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
 
 		//OnUpdate
 		if (m_ViewPortFocused)
@@ -49,12 +69,8 @@ namespace Vortex {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-
 		m_ActiveScene->OnUpdate(timeStep);
 
-		Renderer2D::EndScene();
 		m_FrameBuffer->UnBind();
 	}
 
@@ -130,35 +146,49 @@ namespace Vortex {
 		ImGui::Text("Quads : %d", stats.QuadCount);
 
 		ImGui::Separator();
+
 		auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
 		ImGui::Text("%s", tag.c_str());
-		if (m_SquareEntity) {
+
+		if (m_SquareEntity)
+		{
 			auto& spriteColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
 			ImGui::ColorEdit4("SquareColor", glm::value_ptr(spriteColor));
 		}
+
 		ImGui::Separator();
+
+		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
+
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
+		{
+			m_CameraEntity.GetComponent<CameraComponent>().primary = m_PrimaryCamera;
+			m_SecondCameraEntity.GetComponent<CameraComponent>().primary = !m_PrimaryCamera;
+		}
+
+		{
+			auto& camera = m_SecondCameraEntity.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
+				camera.SetOrthographicSize(orthoSize);
+		}
 
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
 
-		ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
+
 		uint32_t texture = m_FrameBuffer->GetAttachementID();
 
 		m_ViewPortFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewPortFocused || !m_ViewPortHovered);
 
+		ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
+		m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
+
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
-
-		if (m_ViewportSize != *((glm::vec2*)&viewPortPanelSize) && viewPortPanelSize.x > 0 && viewPortPanelSize.y > 0)
-		{
-			m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
-			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-			m_CameraController.OnResize(viewPortPanelSize.x, viewPortPanelSize.y);
-		}
 
 		ImGui::PopStyleVar();
 		ImGui::End();

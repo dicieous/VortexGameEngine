@@ -117,6 +117,21 @@ namespace Vortex {
 		VX_PROFILE_FUNCTION();
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		VX_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		s_2Ddata.TextureShader->Bind();
+		s_2Ddata.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+		s_2Ddata.QuadIndexCount = 0;
+		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.TextureSlotIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
 		VX_PROFILE_FUNCTION();

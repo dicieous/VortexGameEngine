@@ -24,7 +24,7 @@
 #include "Vortex/Renderer/SubTexture2D.h"
 #include "Vortex/Renderer/VertexArray.h"
 
-#include "Vortex/Renderer/Camera.h"
+#include "Vortex/Renderer/OrthographicCamera.h"
 
 #include "Vortex/Core/Input.h"
 #include "Vortex/Core/Keycodes.h"

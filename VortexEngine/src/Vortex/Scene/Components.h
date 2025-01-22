@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "SceneCamera.h"
 
 namespace Vortex {
 
@@ -40,4 +41,13 @@ namespace Vortex {
 			:Color(color) {};
 	};
 
+	struct CameraComponent 
+	{
+		SceneCamera Camera;
+		bool primary = true;
+		bool FixedAspectRatio = false;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+	};
 }

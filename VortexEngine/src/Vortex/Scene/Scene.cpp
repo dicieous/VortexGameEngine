@@ -33,11 +33,57 @@ namespace Vortex {
 
 	void Scene::OnUpdate(TimeStep ts)
 	{
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		//Renderer2D
 
-		for (auto entity : group) {
-			auto& [transfrom, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuads(transfrom, spriteRenderer.Color);
+		Camera* mainCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
+		{
+			auto view = m_Registry.view<TransformComponent, CameraComponent>();
+
+			for (auto entity : view) 
+			{
+				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+				if (camera.primary)
+				{
+					mainCamera = &camera.Camera;
+					cameraTransform = &transform.Transform;
+					break;
+				}
+			}
+		}
+
+		if (mainCamera) {
+
+			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+			for (auto entity : group)
+			{
+				auto& [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawQuads(transform, spriteRenderer.Color);
+			}
+
+			Renderer2D::EndScene();
+		}
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		//Resize Non-Fixed Aspect Ratio Cameras
+
+		auto view = m_Registry.view<CameraComponent>();
+
+		for (auto entity : view)
+		{
+			auto& cameraComponent = view.get<CameraComponent>(entity);
+			if (!cameraComponent.FixedAspectRatio)
+			{
+				cameraComponent.Camera.SetViewportSize(width, height);
+			}
 		}
 	}
 }

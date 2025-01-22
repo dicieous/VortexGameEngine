@@ -1,6 +1,6 @@
 #pragma once
 #include "Vortex/Core/TimeStep.h"
-#include "Vortex/Renderer/Camera.h"
+#include "Vortex/Renderer/OrthographicCamera.h"
 
 #include "Vortex/Events/ApplicationEvent.h"
 #include "Vortex/Events/MouseEvent.h"

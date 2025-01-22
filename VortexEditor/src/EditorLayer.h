@@ -29,6 +29,11 @@ namespace Vortex {
 		Ref<Scene> m_ActiveScene;
 		Entity m_SquareEntity;
 
+		Entity m_CameraEntity;
+		Entity m_SecondCameraEntity;
+
+		bool m_PrimaryCamera = true;
+
 		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 	};
