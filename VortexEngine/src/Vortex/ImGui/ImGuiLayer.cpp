@@ -19,10 +19,6 @@ namespace Vortex {
 
 	}
 
-	ImGuiLayer::~ImGuiLayer()
-	{
-	}
-
 	void ImGuiLayer::OnAttach()
 	{
 		VX_PROFILE_FUNCTION();
