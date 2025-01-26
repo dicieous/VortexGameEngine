@@ -79,18 +79,19 @@ namespace Vortex {
 
 		const char* typetoken = "#type";
 		size_t typeTokenLength = strlen(typetoken);
-		size_t pos = source.find(typetoken, 0);
+		size_t pos = source.find(typetoken, 0); //Start of shader type declaration line
 
 		while (pos != std::string::npos) {
 
-			size_t eol = source.find_first_of("\r\n", pos);
+			size_t eol = source.find_first_of("\r\n", pos); //End of shader type declaration line
 			VX_CORE_ASSERT((eol != std::string::npos), "Syntax Error");
-			size_t begin = pos + typeTokenLength + 1;
+			size_t begin = pos + typeTokenLength + 1;  //Start of shader type name (after "#type " keyword)
 			std::string type = source.substr(begin, eol - begin);
 			VX_CORE_ASSERT(ShaderTypeFromString(type), "Invalid Shader type Specified");
 
-			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
-			pos = source.find(typetoken, nextLinePos);
+			size_t nextLinePos = source.find_first_not_of("\r\n", eol); //Start of shader code after shader type declaration line
+			VX_CORE_ASSERT((nextLinePos != std::string::npos), "Syntax Error");
+			pos = source.find(typetoken, nextLinePos); //Start of next Shader type Declaration line
 			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
 		}
 
