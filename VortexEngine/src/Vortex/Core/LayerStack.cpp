@@ -27,6 +27,7 @@ namespace Vortex {
 		auto itr = std::find(m_Layers.begin(), m_Layers.end(), layer);
 
 		if (itr != m_Layers.end()) {
+			layer->OnDetach();
 			m_Layers.erase(itr);
 			m_LayerInsertIndex--;
 		}
@@ -34,10 +35,11 @@ namespace Vortex {
 
 	void LayerStack::PopOverlay(Layer* overlay) {
 
-		auto itr = std::find(m_Layers.begin(), m_Layers.end(), overlay);
+		auto itr = std::find(m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), overlay);
 
 		if (itr != m_Layers.end())
 		{
+			overlay->OnDetach();
 			m_Layers.erase(itr);
 		}
 	}

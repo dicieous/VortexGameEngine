@@ -66,15 +66,14 @@ namespace Vortex {
 		vertexBuffer->Bind();
 
 
-		uint32_t index = 0;
 		for (const auto& element : layoutRef) {
 
-			glEnableVertexAttribArray(index);
+			glEnableVertexAttribArray(m_VertexBufferIndex);
 
-			glVertexAttribPointer(index, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
+			glVertexAttribPointer(m_VertexBufferIndex, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
 				element.Normalized ? GL_TRUE : GL_FALSE, layoutRef.GetStride(), (const void*)(intptr_t)element.Offset);
 
-			index++;
+			m_VertexBufferIndex++;
 		}
 
 		m_vertexBuffers.push_back(vertexBuffer);
