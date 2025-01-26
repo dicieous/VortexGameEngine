@@ -174,6 +174,7 @@ namespace Vortex {
 		// Always detach shaders after a successful link.
 		for (auto iD : glShaderIDs) {
 			glDetachShader(program, iD);
+			glDeleteShader(iD);
 		}
 
 		m_RendererID = program;

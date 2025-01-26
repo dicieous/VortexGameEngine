@@ -1,9 +1,11 @@
 [submodule "VortexEngine/vendor/spdlog"]
 	path = VortexEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+	branch = v1.x
 [submodule "VortexEngine/vendor/GLFW"]
 	path = VortexEngine/vendor/GLFW
 	url = https://github.com/dicieous/glfw.git
+	branch = master
 [submodule "VortexEngine/vendor/imgui"]
 	path = VortexEngine/vendor/imgui
 	url = https://github.com/dicieous/imgui.git
@@ -11,3 +13,4 @@
 [submodule "VortexEngine/vendor/glm"]
 	path = VortexEngine/vendor/glm
 	url = https://github.com/g-truc/glm
+	branch = master
