@@ -46,5 +46,6 @@ namespace Vortex {
 		};
 
 		WindowData m_Data;
+
 	};
 }

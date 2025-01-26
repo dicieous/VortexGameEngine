@@ -1,5 +1,6 @@
 #include "Vxpch.h"
 #include "Application.h"
+#include "Core.h"
 
 #include "Vortex/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
@@ -7,7 +8,7 @@
 
 namespace Vortex {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+//#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
@@ -18,7 +19,7 @@ namespace Vortex {
 			s_Instance = this;
 
 		m_Window = Scope<Window>(Window::Create(WindowProps(name)));
-		m_Window->SetEventCallBack(BIND_EVENT_FN(OnEvent));
+		m_Window->SetEventCallBack(VX_BIND_EVENT_FUNC(Application::OnEvent));
 
 		Renderer::Init();
 
@@ -28,7 +29,7 @@ namespace Vortex {
 
 	Application::~Application() {
 		VX_PROFILE_FUNCTION();
-
+		Renderer::ShutDown();
 	}
 
 	void Application::PushLayer(Layer* layer) {
@@ -55,8 +56,8 @@ namespace Vortex {
 		VX_PROFILE_FUNCTION();
 
 		EventDispacher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(VX_BIND_EVENT_FUNC(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(VX_BIND_EVENT_FUNC(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);

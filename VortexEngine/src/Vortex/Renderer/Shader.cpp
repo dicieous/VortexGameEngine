@@ -18,7 +18,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return std::make_shared<OpenGLShader>(filePath);
+			return CreateRef<OpenGLShader>(filePath);
 		}
 
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
@@ -37,7 +37,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");

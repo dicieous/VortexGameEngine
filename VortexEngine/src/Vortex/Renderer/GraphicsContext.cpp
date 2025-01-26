@@ -1,13 +1,12 @@
 #include "Vxpch.h"
-#include "VertexArray.h"
-#include "Renderer.h"
+#include "Vortex/Renderer/GraphicsContext.h"
 
-#include "Platform/OpenGL/OpenGLVertexArray.h"
-
+#include "Vortex/Renderer/Renderer.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Vortex {
 
-	Ref<VertexArray> VertexArray::Create()
+	Scope<GraphicsContext> Vortex::GraphicsContext::Create(void* window)
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -18,13 +17,10 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return CreateRef<OpenGLVertexArray>();
+			return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
 		}
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;
 	}
+
 }
-
-
-
-

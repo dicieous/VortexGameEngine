@@ -1,9 +1,9 @@
 #include "Vxpch.h"
 #include "ImGuiLayer.h"
 
-#include "imgui_internal.h"
-#include "backends/imgui_impl_opengl3.h"
-#include "backends/imgui_impl_glfw.h"
+#include <imgui_internal.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
 
 #include "Vortex/Core/Application.h"
 

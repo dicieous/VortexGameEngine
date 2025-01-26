@@ -47,7 +47,7 @@ namespace Vortex {
 		bool m_canRotate;
 		
 		glm::vec3 m_cameraPositon = { 0.0f, 0.0f,0.0f };
-		float m_cameraRotation = 0.0f;
+		float m_cameraRotation = 0.0f; //In degrees, in the anti-clockwise direction
 
 		float m_cameraTranslationSpeed = 1.0f;
 		float m_cameraRotationSpeed = 10.0f;

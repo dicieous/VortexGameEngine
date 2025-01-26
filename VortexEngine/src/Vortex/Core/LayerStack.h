@@ -8,7 +8,7 @@ namespace Vortex {
 	class VORTEX_API LayerStack
 	{
 	public:
-		LayerStack();
+		LayerStack() = default;
 		~LayerStack();
 
 		void PushLayer(Layer* layer);

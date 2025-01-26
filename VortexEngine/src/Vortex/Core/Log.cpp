@@ -1,9 +1,11 @@
 #include "Vxpch.h"
 #include "Log.h"
 
+#include <spdlog/sinks/stdout_color_sinks.h>
+
 namespace Vortex {
-	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-	std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+	Ref<spdlog::logger> Log::s_CoreLogger;
+	Ref<spdlog::logger> Log::s_ClientLogger;
 
 	void Log::Init() {
 		spdlog::set_pattern("%^[%T] %n: %v%$");
