@@ -1,5 +1,4 @@
 #Directories
-.vs/
 bin/
 bin-int/
 
@@ -12,3 +11,10 @@ Sandbox/Vortex-Startup.json
 VortexEditor/Vortex-RunTime.json
 VortexEditor/Vortex-ShutDown.json
 VortexEditor/Vortex-Startup.json
+
+#Visual Studio Files and Folders
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**vcxproj.user
