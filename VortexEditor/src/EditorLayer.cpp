@@ -37,7 +37,7 @@ namespace Vortex {
 		public:
 
 			void OnCreate() {
-				std::cout << "CameraController::OnCreate" << std::endl;
+				//std::cout << "CameraController::OnCreate" << std::endl;
 			}
 
 			void OnUpdate(TimeStep ts) {
@@ -59,6 +59,7 @@ namespace Vortex {
 		};
 
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		m_SecondCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
