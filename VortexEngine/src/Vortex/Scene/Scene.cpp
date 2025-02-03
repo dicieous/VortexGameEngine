@@ -33,8 +33,23 @@ namespace Vortex {
 
 	void Scene::OnUpdate(TimeStep ts)
 	{
-		//Renderer2D
 
+		//Update Scripts
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) 
+				{
+					if (!nsc.Instance) {
+						nsc.InstantiateFunction();
+						nsc.Instance->m_Entity = Entity{ entity, this };
+
+						nsc.OnCreateFunction(nsc.Instance);
+					}
+
+					nsc.OnUpdateFunction(nsc.Instance, ts);
+				});
+		}
+
+		//Renderer2D
 		Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;
 		{

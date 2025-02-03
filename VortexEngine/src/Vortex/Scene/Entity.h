@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Scene.h"
-#include "Vortex/Scene/Components.h"
 
 #include <entt.hpp>
 
@@ -33,7 +32,7 @@ namespace Vortex {
 		bool TryGetComponent( T& outComponent)
 		{
 			if (HasComponent<T>()) {
-				m_Scene->m_Registry.get<T>(m_EntityHandle);
+				outComponent = m_Scene->m_Registry.get<T>(m_EntityHandle);
 				return true;
 			}
 

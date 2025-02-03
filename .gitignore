@@ -8,6 +8,7 @@ Sandbox/Vortex-RunTime.json
 Sandbox/Vortex-ShutDown.json
 Sandbox/Vortex-Startup.json
 
+*.ini
 VortexEditor/Vortex-RunTime.json
 VortexEditor/Vortex-ShutDown.json
 VortexEditor/Vortex-Startup.json

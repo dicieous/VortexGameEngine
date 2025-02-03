@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "VertexArray.h";
+#include "VertexArray.h"
 
 namespace Vortex {
 

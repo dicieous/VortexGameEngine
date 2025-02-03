@@ -2,8 +2,8 @@
 #include "Vxpch.h"
 #include "Renderer2D.h"
 
-#include "VertexArray.h";
-#include "Shader.h";
+#include "VertexArray.h"
+#include "Shader.h"
 #include "RenderCommand.h"
 
 #include <GLFW/glfw3.h>

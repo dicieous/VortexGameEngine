@@ -31,11 +31,39 @@ namespace Vortex {
 		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Second Camera");
 		auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
 		cc.primary = false;
+
+		class CameraController : public ScriptableEntity {
+
+		public:
+
+			void OnCreate() {
+				std::cout << "CameraController::OnCreate" << std::endl;
+			}
+
+			void OnUpdate(TimeStep ts) {
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 5.0f;
+				if (Input::IsKeyPressed(VX_KEY_A))
+					transform[3][0] -= speed * ts;
+				if (Input::IsKeyPressed(VX_KEY_D))
+					transform[3][0] += speed * ts;
+				if (Input::IsKeyPressed(VX_KEY_W))
+					transform[3][1] += speed * ts;
+				if (Input::IsKeyPressed(VX_KEY_S))
+					transform[3][1] -= speed * ts;
+			}
+
+			void OnDestroy() {
+
+			}
+		};
+
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
 	{
-
+		VX_PROFILE_FUNCTION();
 	}
 
 	void EditorLayer::OnUpdate(TimeStep timeStep)

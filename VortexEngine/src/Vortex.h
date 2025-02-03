@@ -8,8 +8,9 @@
 #include "Vortex/Renderer/OrthographicCameraController.h"
 #include "Vortex/Core/TimeStep.h"
 
-#include "Vortex/Scene/Entity.h"
 #include "Vortex/Scene/Scene.h"
+#include "Vortex/Scene/Entity.h"
+#include "Vortex/Scene/ScriptableEntity.h"
 #include "Vortex/Scene/Components.h"
 
 //--------- Renderer -----------
