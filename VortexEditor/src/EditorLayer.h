@@ -1,5 +1,6 @@
 #pragma once
 #include<Vortex.h>
+#include "Panels/SceneHeirarchyPanel.h"
 
 namespace Vortex {
 	class EditorLayer : public Layer {
@@ -36,5 +37,8 @@ namespace Vortex {
 
 		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
+
+		//Panels
+		SceneHeirarchyPanel m_SceneHeirarchyPanel;
 	};
 }

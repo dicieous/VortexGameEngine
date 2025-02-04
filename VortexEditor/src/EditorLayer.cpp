@@ -60,6 +60,8 @@ namespace Vortex {
 
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		m_SecondCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -164,6 +166,8 @@ namespace Vortex {
 		}
 
 		ImGui::End();
+
+		m_SceneHeirarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Batching Test Rendering");
 
