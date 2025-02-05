@@ -23,6 +23,9 @@ namespace Vortex {
 
 		auto& square = m_ActiveScene->CreateEntity("Square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f));
+
+		auto& square2 = m_ActiveScene->CreateEntity("Red Square");
+		square2.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		m_SquareEntity = square;
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");

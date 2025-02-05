@@ -4,7 +4,8 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Vortex {
+namespace Vortex
+{
 
 	SceneHeirarchyPanel::SceneHeirarchyPanel(const Ref<Scene>& context)
 	{
@@ -77,6 +78,84 @@ namespace Vortex {
 			{
 				auto& transform = entity.GetComponent<TransformComponent>().Transform;
 				ImGui::DragFloat3("Position ", glm::value_ptr(transform[3]), 0.1f);
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (entity.HasComponent<CameraComponent>())
+		{
+
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+			{
+				auto& cameraComponent = entity.GetComponent<CameraComponent>();
+				auto& camera = cameraComponent.Camera;
+
+				ImGui::Checkbox("Primary", &cameraComponent.primary);
+
+				const char* projectionTypeStrings[] = { "Perspective", "OrthoGraphic" };
+
+				const char* currentProjectionType = projectionTypeStrings[(int)camera.GetProjectionType()];
+				if (ImGui::BeginCombo("Projection", currentProjectionType))
+				{
+					for (int type = 0; type < 2; type++) {
+						bool isSelected = currentProjectionType == projectionTypeStrings[type];
+						if (ImGui::Selectable(projectionTypeStrings[type], isSelected)) 
+						{
+							currentProjectionType = projectionTypeStrings[type];
+							camera.SetProjectionType((SceneCamera::ProjectionType)type);
+						}
+
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective) 
+				{
+					float verticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("Vertical FOV", &verticalFOV))
+					{
+						camera.SetPerspectiveVerticalFOV(glm::radians(verticalFOV));
+					}
+
+					float nearClip = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("NearClip", &nearClip))
+					{
+						camera.SetPerspectiveNearClip(nearClip);
+					}
+
+					float farClip = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("FarClip", &farClip))
+					{
+						camera.SetPerspectiveFarClip(farClip);
+					}
+				}
+
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+				{
+					ImGui::Checkbox("Fixed AspectRatio", &cameraComponent.FixedAspectRatio);
+
+					float orthoSize = camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Size", &orthoSize))
+					{
+						camera.SetOrthographicSize(orthoSize);
+					}
+
+					float nearClip = camera.GetOrthographicNearClip();
+					if (ImGui::DragFloat("NearClip", &nearClip))
+					{
+						camera.SetOrthoGraphicNearClip(nearClip);
+					}
+
+					float farClip = camera.GetOrthographicFarClip();
+					if (ImGui::DragFloat("FarClip", &farClip))
+					{
+						camera.SetOrthoGraphicFarClip(farClip);
+					}
+
+				}
 
 				ImGui::TreePop();
 			}
