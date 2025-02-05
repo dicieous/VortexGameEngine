@@ -172,42 +172,14 @@ namespace Vortex {
 
 		m_SceneHeirarchyPanel.OnImGuiRender();
 
-		ImGui::Begin("Batching Test Rendering");
+		ImGui::Begin("Stats");
 
-		ImGui::Text("2D Batch Renderer Stats");
+		ImGui::Text("2DRenderer Stats");
 
 		ImGui::Text("Vertices : %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices : %d", stats.GetTotalIndexCount());
 		ImGui::Text("Draw Calls : %d", stats.DrawCalls);
 		ImGui::Text("Quads : %d", stats.QuadCount);
-
-		ImGui::Separator();
-
-		auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
-		ImGui::Text("%s", tag.c_str());
-
-		if (m_SquareEntity)
-		{
-			auto& spriteColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("SquareColor", glm::value_ptr(spriteColor));
-		}
-
-		ImGui::Separator();
-
-		ImGui::DragFloat3("Camera Transform", glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
-
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_CameraEntity.GetComponent<CameraComponent>().primary = m_PrimaryCamera;
-			m_SecondCameraEntity.GetComponent<CameraComponent>().primary = !m_PrimaryCamera;
-		}
-
-		{
-			auto& camera = m_SecondCameraEntity.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
-				camera.SetOrthographicSize(orthoSize);
-		}
 
 		ImGui::End();
 
@@ -215,7 +187,7 @@ namespace Vortex {
 		ImGui::Begin("ViewPort");
 
 
-		uint32_t texture = m_FrameBuffer->GetAttachementID();
+		uint64_t texture = m_FrameBuffer->GetAttachementID();
 
 		m_ViewPortFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
