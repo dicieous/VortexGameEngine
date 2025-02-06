@@ -31,6 +31,11 @@ namespace Vortex {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::OnUpdate(TimeStep ts)
 	{
 
@@ -52,7 +57,7 @@ namespace Vortex {
 
 		//Renderer2D
 		Camera* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 		{
 			auto view = m_Registry.view<TransformComponent, CameraComponent>();
 
@@ -62,7 +67,7 @@ namespace Vortex {
 				if (camera.primary)
 				{
 					mainCamera = &camera.Camera;
-					cameraTransform = &transform.Transform;
+					cameraTransform = transform.GetTransform();
 					break;
 				}
 			}
@@ -70,14 +75,14 @@ namespace Vortex {
 
 		if (mainCamera) {
 
-			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 
 			for (auto entity : group)
 			{
 				auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuads(transform, spriteRenderer.Color);
+				Renderer2D::DrawQuads(transform.GetTransform(), spriteRenderer.Color);
 			}
 
 			Renderer2D::EndScene();
