@@ -157,6 +157,11 @@ namespace Vortex {
 
 	void Renderer2D::Flush()
 	{
+		if (s_2Ddata.QuadIndexCount == 0)
+		{
+			return; //Nothing to Draw
+		}
+
 		//Bind Textures
 		for (uint32_t i = 0; i < s_2Ddata.TextureSlotIndex; i++) {
 			s_2Ddata.TextureSlots[i]->Bind(i);

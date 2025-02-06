@@ -18,7 +18,9 @@ namespace Vortex {
 		T& AddComponent(Args&&... args)
 		{
 			VX_CORE_ASSERT((!HasComponent<T>()), "Component already Present in the Entity");
-			return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)... );
+			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdded<T>(*this, component);
+			return component;
 		}
 
 		template<typename T>
@@ -49,7 +51,7 @@ namespace Vortex {
 		void RemoveComponent()
 		{
 			VX_CORE_ASSERT((HasComponent<T>()), "Component not Present in the Entity")
-			return m_Scene->m_Registry.remove<T>(m_EntityHandle);
+			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
 
 		operator bool() const { return m_EntityHandle != entt::null; }
