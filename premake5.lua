@@ -23,12 +23,14 @@ IncludeDir["ImGui"] = "VortexEngine/vendor/imgui"
 IncludeDir["glm"] = "VortexEngine/vendor/glm"
 IncludeDir["stb_image"] = "VortexEngine/vendor/stb_image"
 IncludeDir["Entt"] = "VortexEngine/vendor/Entt/include"
+IncludeDir["yaml_cpp"] = "VortexEngine/vendor/yaml-cpp/include"
 
 
 group "Dependencies"
 	include "VortexEngine/vendor/Glad"
 	include "VortexEngine/vendor/GLFW"
 	include "VortexEngine/vendor/imgui"
+	include "VortexEngine/vendor/yaml-cpp"
 
 group ""
 
@@ -64,7 +66,8 @@ project "VortexEngine"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.Entt}"
+		"%{IncludeDir.Entt}",
+		"%{IncludeDir.yaml_cpp}"
 
 	}
 
@@ -72,6 +75,7 @@ project "VortexEngine"
 		"Glad",
 		"GLFW",
 		"ImGui",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 
@@ -80,7 +84,8 @@ project "VortexEngine"
 
 		defines{
 			"VX_PLATFORM_WINDOWS",
-			"GLFW_INCLUDE_NONE"
+			"GLFW_INCLUDE_NONE",
+			"YAML_CPP_STATIC_DEFINE"
 		}
 
 		-- postbuildcommands{

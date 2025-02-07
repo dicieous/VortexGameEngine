@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include "Vortex/Scene/SceneSerializer.h"
 
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,7 +21,7 @@ namespace Vortex {
 
 		m_ActiveScene = CreateRef<Scene>();
 
-
+#if 0
 		auto& square = m_ActiveScene->CreateEntity("Square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f));
 
@@ -63,6 +64,7 @@ namespace Vortex {
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		m_SecondCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
+#endif
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
@@ -164,6 +166,18 @@ namespace Vortex {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serialize(m_ActiveScene);
+					serialize.Serialize("Assets/Scenes/Example.vortex");
+				}
+				
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serialize(m_ActiveScene);
+					serialize.Deserialize("Assets/Scenes/Example.vortex");
+				}
+
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 
 				ImGui::EndMenu();
