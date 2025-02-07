@@ -5,7 +5,7 @@
 
 namespace Vortex {
 	EditorLayer::EditorLayer() :
-		Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true) {}
+		Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true) {}
 
 	void EditorLayer::OnAttach()
 	{
@@ -149,15 +149,20 @@ namespace Vortex {
 
 		// Submit the DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 300.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
 
+		style.WindowMinSize.x = minWinSizeX;
+
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("Docking"))
+			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 
