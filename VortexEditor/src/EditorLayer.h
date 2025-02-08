@@ -17,6 +17,13 @@ namespace Vortex {
 		virtual void OnEvent(Vortex::Event& event) override;
 
 	private:
+		bool OnKeyPressed(KeyPressedEvent& event);
+
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+
+	private:
 		Vortex::OrthographicCameraController m_CameraController;
 
 		//Temp

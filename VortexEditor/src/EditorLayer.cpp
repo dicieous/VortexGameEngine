@@ -4,9 +4,14 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Vortex {
+#include "Vortex/Utils/PlatformUtils.h"
+
+namespace Vortex
+{
 	EditorLayer::EditorLayer() :
-		Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true) {}
+		Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true)
+	{
+	}
 
 	void EditorLayer::OnAttach()
 	{
@@ -36,14 +41,17 @@ namespace Vortex {
 		auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
 		cc.primary = false;
 
-		class CameraController : public ScriptableEntity {
+		class CameraController : public ScriptableEntity
+		{
 
 		public:
-			void OnCreate() {
+			void OnCreate()
+			{
 				//std::cout << "CameraController::OnCreate" << std::endl;
 			}
 
-			void OnUpdate(TimeStep ts) {
+			void OnUpdate(TimeStep ts)
+			{
 				auto& transform = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 				if (Input::IsKeyPressed(VX_KEY_A))
@@ -56,7 +64,8 @@ namespace Vortex {
 					transform.y -= speed * ts;
 			}
 
-			void OnDestroy() {
+			void OnDestroy()
+			{
 
 			}
 		};
@@ -166,16 +175,19 @@ namespace Vortex {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Serialize"))
+				if (ImGui::MenuItem("New", "CTRL+N"))
 				{
-					SceneSerializer serialize(m_ActiveScene);
-					serialize.Serialize("Assets/Scenes/Example.vortex");
+					NewScene();
 				}
-				
-				if (ImGui::MenuItem("Deserialize"))
+
+				if (ImGui::MenuItem("Open...", "CTRL+O"))
 				{
-					SceneSerializer serialize(m_ActiveScene);
-					serialize.Deserialize("Assets/Scenes/Example.vortex");
+					OpenScene();
+				}
+
+				if (ImGui::MenuItem("Save As...", "CTRL+Shift+S"))
+				{
+					SaveSceneAs();
 				}
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
@@ -224,5 +236,78 @@ namespace Vortex {
 	void EditorLayer::OnEvent(Event& event)
 	{
 		m_CameraController.OnEvent(event);
+
+		EventDispacher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(VX_BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+	}
+
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& event)
+	{
+		//Shortcuts
+		if (event.GetRepeatCount() > 0)
+		{
+			return false;
+		}
+
+		bool control = Input::IsKeyPressed(VX_KEY_LEFT_CONTROL) || Input::IsKeyPressed(VX_KEY_RIGHT_CONTROL);
+		bool Shift = Input::IsKeyPressed(VX_KEY_LEFT_SHIFT) || Input::IsKeyPressed(VX_KEY_RIGHT_SHIFT);
+
+		switch (event.GetKeyCode())
+		{
+		case VX_KEY_N:
+			if (control)
+			{
+				NewScene();
+			}
+			break;
+
+		case VX_KEY_O:
+			if (control)
+			{
+				OpenScene();
+			}
+			break;
+
+		case VX_KEY_S:
+			if (control && Shift)
+			{
+				SaveSceneAs();
+			}
+			break;
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filePath = FileDialogs::OpenFile("Vortex Scene (*.vortex)\0*.vortex\0");
+
+		if (!filePath.empty())
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+
+			SceneSerializer serialize(m_ActiveScene);
+			serialize.Deserialize(filePath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filePath = FileDialogs::SaveFile("Vortex Scene (*.vortex)\0*.vortex\0");
+
+		if (!filePath.empty())
+		{
+			SceneSerializer serialize(m_ActiveScene);
+			serialize.Serialize(filePath);
+		}
 	}
 }
