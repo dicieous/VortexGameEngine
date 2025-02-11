@@ -99,6 +99,7 @@ namespace Vortex
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
@@ -108,6 +109,7 @@ namespace Vortex
 			m_CameraController.OnUpdate(timeStep);
 		}
 
+		m_EditorCamera.OnUpdate(timeStep);
 
 		//Rendering
 		Renderer2D::ResetStats();
@@ -116,7 +118,7 @@ namespace Vortex
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		m_ActiveScene->OnUpdateRuntime(timeStep);
+		m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
 
 		m_FrameBuffer->UnBind();
 	}
@@ -252,10 +254,15 @@ namespace Vortex
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			//Camera Data
-			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			// RuntimeCamera
+			//auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			//auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			//const glm::mat4& cameraProjection = camera.GetProjection();
+			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			//Editor Camera
+			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
 			//Transform Data
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
@@ -290,6 +297,7 @@ namespace Vortex
 	void EditorLayer::OnEvent(Event& event)
 	{
 		m_CameraController.OnEvent(event);
+		m_EditorCamera.OnEvent(event);
 
 		EventDispacher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(VX_BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
