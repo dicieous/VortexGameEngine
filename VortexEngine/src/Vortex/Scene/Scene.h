@@ -7,6 +7,7 @@
 namespace Vortex {
 
 	class Entity;
+	class EditorCamera;
 
 	class Scene {
 
@@ -17,7 +18,8 @@ namespace Vortex {
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(TimeStep ts);
+		void OnUpdateEditor(TimeStep ts, EditorCamera& camera);
+		void OnUpdateRuntime(TimeStep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();

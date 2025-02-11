@@ -24,9 +24,10 @@ namespace Vortex
 		frameSpecs.Height = 720;
 
 		m_FrameBuffer = FrameBuffer::Create(frameSpecs);
-		//m_ViewportSize = { 1280.0f, 720.0f };
 
 		m_ActiveScene = CreateRef<Scene>();
+
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 #if 0
 		auto& square = m_ActiveScene->CreateEntity("Square");
@@ -115,7 +116,7 @@ namespace Vortex
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		m_ActiveScene->OnUpdate(timeStep);
+		m_ActiveScene->OnUpdateRuntime(timeStep);
 
 		m_FrameBuffer->UnBind();
 	}
@@ -268,7 +269,7 @@ namespace Vortex
 			float snapValues[3] = { snapValue, snapValue, snapValue };
 
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), (ImGuizmo::OPERATION)m_GizmoType,
-				ImGuizmo::MODE::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr );
+				ImGuizmo::MODE::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
 
 			if (ImGuizmo::IsUsing())
 			{
@@ -329,9 +330,9 @@ namespace Vortex
 			}
 			break;
 
-	//Gizmos
-	if (ImGuizmo::IsUsing())
-	{
+			//Gizmos
+			if (ImGuizmo::IsUsing())
+			{
 		case VX_KEY_Q:
 			m_GizmoType = -1;
 			break;
@@ -347,8 +348,10 @@ namespace Vortex
 		case VX_KEY_R:
 			m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
-	}
-	}
+			}
+		}
+
+		return false;
 	}
 
 	void EditorLayer::NewScene()

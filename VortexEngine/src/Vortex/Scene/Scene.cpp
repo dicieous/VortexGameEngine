@@ -5,6 +5,7 @@
 #include "Vortex/Renderer/Renderer2D.h"
 
 #include "Entity.h"
+#include "Vortex/Renderer/EditorCamera.h"
 
 
 namespace Vortex {
@@ -36,7 +37,22 @@ namespace Vortex {
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdate(TimeStep ts)
+	void Scene::OnUpdateEditor(TimeStep ts, EditorCamera& camera)
+	{
+		Renderer2D::BeginScene(camera);
+
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+		for (auto entity : group)
+		{
+			auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			Renderer2D::DrawQuads(transform.GetTransform(), spriteRenderer.Color);
+		}
+
+		Renderer2D::EndScene();
+	}
+
+	void Scene::OnUpdateRuntime(TimeStep ts)
 	{
 
 		//Update Scripts

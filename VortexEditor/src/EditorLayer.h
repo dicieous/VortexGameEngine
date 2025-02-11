@@ -1,6 +1,8 @@
 #pragma once
 #include<Vortex.h>
+
 #include "Panels/SceneHeirarchyPanel.h"
+#include "Vortex/Renderer/EditorCamera.h"
 
 namespace Vortex {
 	class EditorLayer : public Layer {
@@ -39,6 +41,8 @@ namespace Vortex {
 
 		Entity m_CameraEntity;
 		Entity m_SecondCameraEntity;
+
+		EditorCamera m_EditorCamera;
 
 		bool m_PrimaryCamera = true;
 
