@@ -3,8 +3,10 @@
 
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <ImGuizmo.h>
 
 #include "Vortex/Utils/PlatformUtils.h"
+#include "Vortex/Math/Math.h"
 
 namespace Vortex
 {
@@ -221,12 +223,63 @@ namespace Vortex
 
 		m_ViewPortFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
-		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewPortFocused || !m_ViewPortHovered);
+		const auto& layer = Application::Get().GetImGuiLayer();
+
+		if (!ImGui::IsAnyItemActive())
+			layer->BlockEvents(!m_ViewPortFocused && !m_ViewPortHovered);
+		else
+			layer->BlockEvents(!m_ViewPortFocused || !m_ViewPortHovered);
 
 		ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
+
+		//Gizmos
+
+		//TODO : Implement Grids for Editor Window
+
+		Entity selectedEntity = m_SceneHeirarchyPanel.GetSelectedEntity();
+		if (selectedEntity && m_GizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			float windowWidth = (float)ImGui::GetWindowWidth();
+
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			//Camera Data
+			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			//Transform Data
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			//snapping
+			bool snap = Input::IsKeyPressed(VX_KEY_LEFT_CONTROL);
+			float snapValue = 0.5; // Snap to 0.5m for translation/scale
+			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE) snapValue = 45.0f; //In Degrees
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), (ImGuizmo::OPERATION)m_GizmoType,
+				ImGuizmo::MODE::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr );
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				tc.Translation = translation;
+				tc.Rotation = rotation; //Implement showing rotation in degree above 360 degree while changing it from Imguizmo(Optional, needed when animation keyframe is used)
+				tc.Scale = scale;
+			}
+		}
 
 		ImGui::PopStyleVar();
 		ImGui::End();
@@ -275,7 +328,27 @@ namespace Vortex
 				SaveSceneAs();
 			}
 			break;
-		}
+
+	//Gizmos
+	if (ImGuizmo::IsUsing())
+	{
+		case VX_KEY_Q:
+			m_GizmoType = -1;
+			break;
+
+		case VX_KEY_W:
+			m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+			break;
+
+		case VX_KEY_E:
+			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+			break;
+
+		case VX_KEY_R:
+			m_GizmoType = ImGuizmo::OPERATION::SCALE;
+			break;
+	}
+	}
 	}
 
 	void EditorLayer::NewScene()

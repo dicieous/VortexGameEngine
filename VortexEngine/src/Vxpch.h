@@ -19,5 +19,6 @@
 
 #ifdef VX_PLATFORM_WINDOWS
 
+#define NOMINMAX
 #include <Windows.h>
 #endif // VX_PLATFORM_WINDOWS

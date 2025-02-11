@@ -42,6 +42,8 @@ namespace Vortex {
 
 		bool m_PrimaryCamera = true;
 
+		int m_GizmoType = 7;
+
 		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 

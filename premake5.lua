@@ -24,6 +24,7 @@ IncludeDir["glm"] = "VortexEngine/vendor/glm"
 IncludeDir["stb_image"] = "VortexEngine/vendor/stb_image"
 IncludeDir["Entt"] = "VortexEngine/vendor/Entt/include"
 IncludeDir["yaml_cpp"] = "VortexEngine/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "VortexEngine/vendor/ImGuizmo"
 
 
 group "Dependencies"
@@ -55,7 +56,10 @@ project "VortexEngine"
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/Entt/include/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
-		"%{prj.name}/vendor/glm/glm/**.h"
+		"%{prj.name}/vendor/glm/glm/**.h",
+		
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs{
@@ -67,7 +71,8 @@ project "VortexEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.Entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 
 	}
 
@@ -79,11 +84,14 @@ project "VortexEngine"
 		"opengl32.lib"
 	}
 
+	filter "files:VortexEngine/vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
+	
 	filter "system:windows"
 		systemversion "latest"
 
 		defines{
-			"VX_PLATFORM_WINDOWS",
+			--"VX_PLATFORM_WINDOWS",
 			"GLFW_INCLUDE_NONE",
 			"YAML_CPP_STATIC_DEFINE"
 		}
@@ -188,7 +196,8 @@ project "VortexEditor"
 		"VortexEngine/src",
 		"VortexEngine/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.Entt}"
+		"%{IncludeDir.Entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links{

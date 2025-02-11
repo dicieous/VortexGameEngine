@@ -311,7 +311,7 @@ namespace Vortex
 					float farClip = camera.GetPerspectiveFarClip();
 					if (ImGui::DragFloat("FarClip", &farClip))
 					{
-						camera.SetPerspectiveFarClip(farClip);
+						camera.SetPerspectiveFarClip(farClip);       
 					}
 				}
 

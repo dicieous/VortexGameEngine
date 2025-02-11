@@ -17,3 +17,6 @@
 [submodule "VortexEngine/vendor/yaml-cpp"]
 	path = VortexEngine/vendor/yaml-cpp
 	url = https://github.com/dicieous/yaml-cpp.git
+[submodule "VortexEngine/vendor/ImGuizmo"]
+	path = VortexEngine/vendor/ImGuizmo
+	url = https://github.com/dicieous/ImGuizmo.git
