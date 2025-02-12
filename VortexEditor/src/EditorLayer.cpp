@@ -20,6 +20,7 @@ namespace Vortex
 		m_checkerBoardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
 
 		FrameBufferSpecifications frameSpecs;
+		frameSpecs.Attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::RED_INTEGER, FrameBufferTextureFormat::DEPTH24STENCIL8 };
 		frameSpecs.Width = 1280;
 		frameSpecs.Height = 720;
 
@@ -222,7 +223,7 @@ namespace Vortex
 		ImGui::Begin("ViewPort");
 
 
-		uint64_t texture = m_FrameBuffer->GetAttachementID();
+		uint64_t texture = m_FrameBuffer->GetColorAttachementRendererID();
 
 		m_ViewPortFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();

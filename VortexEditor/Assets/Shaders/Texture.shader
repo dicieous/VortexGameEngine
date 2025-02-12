@@ -28,6 +28,7 @@ void main()
 #version 330 core
 
 layout(location = 0) out vec4 o_Color;
+layout(location = 1) out int o_Color2;
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
@@ -76,4 +77,5 @@ void main()
 	}
 
 	o_Color = texColor;
+	o_Color2 = 50;
 }
