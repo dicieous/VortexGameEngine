@@ -200,4 +200,15 @@ namespace Vortex
 		Invalidate();
 	}
 
+	int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIndex, int x, int y)
+	{
+		VX_CORE_ASSERT((attachmentIndex < m_colorAttachments.size()), "Out of Bounds Index");
+		int pixelData;
+
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+
+		return pixelData;
+	}
+
 }

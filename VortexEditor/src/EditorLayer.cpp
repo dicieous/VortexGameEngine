@@ -121,6 +121,23 @@ namespace Vortex
 
 		m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
 
+		auto [mouseX, mouseY] = ImGui::GetMousePos();
+		mouseX -= m_viewportBounds[0].x;
+		mouseY -= m_viewportBounds[0].y;
+
+		glm::vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+
+		mouseY = m_ViewportSize.y - mouseY;
+
+		int mouseXPos = (int)mouseX;
+		int mouseYPos = (int)mouseY;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)m_ViewportSize.x && mouseY < (int)m_ViewportSize.y)
+		{
+			int pixelData = m_FrameBuffer->ReadPixel(1, mouseXPos, mouseYPos);
+			VX_CORE_TRACE("PixelData = {0}", pixelData);
+		}
+
 		m_FrameBuffer->UnBind();
 	}
 
@@ -222,6 +239,7 @@ namespace Vortex
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
 
+		auto viewportOffset = ImGui::GetCursorPos(); //Include Tab bar offset
 
 		uint64_t texture = m_FrameBuffer->GetColorAttachementRendererID();
 
@@ -238,6 +256,15 @@ namespace Vortex
 		m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
+
+		auto windowSize = ImGui::GetWindowSize();
+		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+		m_viewportBounds[0] = { minBound.x, minBound.y };
+		m_viewportBounds[1] = { maxBound.x, maxBound.y };
 
 		//Gizmos
 

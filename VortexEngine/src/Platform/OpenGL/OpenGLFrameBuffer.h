@@ -17,6 +17,7 @@ namespace Vortex {
 		void Invalidate();
 		
 		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
 
 		virtual uint32_t GetColorAttachementRendererID(uint32_t index = 0) const override { 
 			VX_CORE_ASSERT((index < m_colorAttachments.size()), "Out of index in OpenGLFrameBuffer::m_colorAttachments");  return m_colorAttachments[index]; }

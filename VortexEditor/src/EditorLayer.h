@@ -51,6 +51,7 @@ namespace Vortex {
 		glm::vec2 m_ViewportSize;
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 
+		glm::vec2 m_viewportBounds[2];
 		//Panels
 		SceneHeirarchyPanel m_SceneHeirarchyPanel;
 	};
