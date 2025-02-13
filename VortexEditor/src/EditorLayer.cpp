@@ -119,6 +119,9 @@ namespace Vortex
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
+		//Clear EntityID attachment to -1 
+		m_FrameBuffer->ClearAttachment(1, -1);
+
 		m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
 
 		auto [mouseX, mouseY] = ImGui::GetMousePos();

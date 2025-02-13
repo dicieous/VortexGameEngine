@@ -79,9 +79,27 @@ namespace Vortex
 
 			return false;
 		}
+
+		static GLenum VortexFBTextureToGLFormat(FrameBufferTextureFormat format)
+		{
+			switch (format)
+			{
+			case Vortex::FrameBufferTextureFormat::RGBA8:
+				return GL_RGBA8;
+
+			case Vortex::FrameBufferTextureFormat::RED_INTEGER:
+				return GL_RED_INTEGER;
+
+			case Vortex::FrameBufferTextureFormat::DEPTH24STENCIL8:
+				return GL_DEPTH24_STENCIL8;
+			}
+
+			VX_CORE_ASSERT(false, "Invalid Format");
+			return 0;
+		}
 	}
 
-	Vortex::OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecifications& specs)
+	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecifications& specs)
 		:m_Specifications(specs)
 	{
 		for (auto format : m_Specifications.Attachments.AttachmentsList)
@@ -209,6 +227,14 @@ namespace Vortex
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 
 		return pixelData;
+	}
+
+	void OpenGLFrameBuffer::ClearAttachment(uint32_t attachmentIndex, int value)
+	{
+		VX_CORE_ASSERT((attachmentIndex < m_colorAttachments.size()), "Out of Bounds Index");
+
+		auto& spec = m_ColorAttachmentsSpecs[attachmentIndex];
+		glClearTexImage(m_colorAttachments[attachmentIndex], 0, Utils::VortexFBTextureToGLFormat(spec.TextureFormat), GL_INT, &value);
 	}
 
 }
