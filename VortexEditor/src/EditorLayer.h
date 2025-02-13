@@ -41,6 +41,7 @@ namespace Vortex {
 
 		Entity m_CameraEntity;
 		Entity m_SecondCameraEntity;
+		Entity m_HoveredEntity;
 
 		EditorCamera m_EditorCamera;
 

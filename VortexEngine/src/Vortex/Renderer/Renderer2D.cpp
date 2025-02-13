@@ -18,6 +18,9 @@ namespace Vortex {
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
+
+		//Editor-Only
+		int EntityID;
 	};
 
 	struct Renderer2Ddata
@@ -56,11 +59,12 @@ namespace Vortex {
 		s_2Ddata.QuadVertexBuffer = VertexBuffer::Create(s_2Ddata.MAX_VERTICES * sizeof(QuadVertex));
 
 		s_2Ddata.QuadVertexBuffer->SetLayout({
-			{ShaderDataType::Float3, "a_Position"},
-			{ShaderDataType::Float4, "a_Color"},
-			{ShaderDataType::Float2, "a_TexCoord"},
-			{ShaderDataType::Float, "a_TexIndex"},
-			{ShaderDataType::Float, "a_TilingFactor"}
+			{ShaderDataType::Float3, "a_Position"	  },
+			{ShaderDataType::Float4, "a_Color"		  },
+			{ShaderDataType::Float2, "a_TexCoord"	  },
+			{ShaderDataType::Float,	 "a_TexIndex"	  },
+			{ShaderDataType::Float,	 "a_TilingFactor" },
+			{ShaderDataType::Int,	 "a_EntityID"     },
 			});
 
 		s_2Ddata.QuadVertexArray->AddVertexBuffer(s_2Ddata.QuadVertexBuffer);
@@ -196,7 +200,7 @@ namespace Vortex {
 		s_2Ddata.TextureSlotIndex = 1;
 	}
 
-	void Renderer2D::DrawQuads(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuads(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		VX_PROFILE_FUNCTION();
 
@@ -220,6 +224,7 @@ namespace Vortex {
 			s_2Ddata.QuadVertexBufferPtr->TexCoord = TexCoords[i];
 			s_2Ddata.QuadVertexBufferPtr->TexIndex = texIndex;
 			s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_2Ddata.QuadVertexBufferPtr->EntityID = entityID;
 			s_2Ddata.QuadVertexBufferPtr++;
 		}
 
@@ -228,7 +233,7 @@ namespace Vortex {
 		s_2Ddata.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuads(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::DrawQuads(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		VX_PROFILE_FUNCTION();
 
@@ -269,6 +274,7 @@ namespace Vortex {
 			s_2Ddata.QuadVertexBufferPtr->TexCoord = TexCoords[i];
 			s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_2Ddata.QuadVertexBufferPtr->EntityID = entityID;
 			s_2Ddata.QuadVertexBufferPtr++;
 		}
 
@@ -515,6 +521,11 @@ namespace Vortex {
 		s_2Ddata.QuadIndexCount += 6;
 
 		s_2Ddata.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID)
+	{
+		DrawQuads(transform, sprite.Color, entityID);
 	}
 
 	Renderer2D::Statistics Renderer2D::GetStats()

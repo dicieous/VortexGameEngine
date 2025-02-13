@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "EditorCamera.h"
 
+#include "Vortex/Scene/Components.h"
+
 namespace Vortex {
 
 	class Renderer2D {
@@ -23,14 +25,14 @@ namespace Vortex {
 
 		//TODO: Make it Clean
 		//primitives////
-		static void DrawQuads(const glm::mat4& transform, const glm::vec4& color);
-		static void DrawQuads(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
-		
 		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 
 		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
+		
+		static void DrawQuads(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+		static void DrawQuads(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f }, int entityID = -1);
 		
 		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
@@ -44,6 +46,9 @@ namespace Vortex {
 		
 		static void DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 		static void DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
+
+		//Editor-Only
+		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID);
 
 		//Statistics
 		struct Statistics

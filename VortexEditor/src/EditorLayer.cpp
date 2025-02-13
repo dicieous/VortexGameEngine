@@ -138,7 +138,11 @@ namespace Vortex
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)m_ViewportSize.x && mouseY < (int)m_ViewportSize.y)
 		{
 			int pixelData = m_FrameBuffer->ReadPixel(1, mouseXPos, mouseYPos);
-			VX_CORE_TRACE("PixelData = {0}", pixelData);
+
+			if (pixelData != -1 && m_HoveredEntity != Entity((entt::entity)pixelData, m_ActiveScene.get()))
+				m_HoveredEntity = Entity((entt::entity)pixelData, m_ActiveScene.get());
+			else if (pixelData == -1 && m_HoveredEntity != Entity())
+				m_HoveredEntity = Entity();
 		}
 
 		m_FrameBuffer->UnBind();
@@ -229,6 +233,13 @@ namespace Vortex
 		m_SceneHeirarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
+		
+		std::string name = "None";
+		TagComponent component;
+		if (m_HoveredEntity && m_HoveredEntity.TryGetComponent<TagComponent>(component))
+			name = component.Tag;
+		
+		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		ImGui::Text("2DRenderer Stats");
 

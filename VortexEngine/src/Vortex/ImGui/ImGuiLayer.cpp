@@ -61,7 +61,7 @@ namespace Vortex {
 #ifdef __EMSCRIPTEN__
 		ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, "#canvas");
 #endif
-		ImGui_ImplOpenGL3_Init("#version 410");
+		ImGui_ImplOpenGL3_Init("#version 450");
 	}
 
 	void ImGuiLayer::OnDetach()
