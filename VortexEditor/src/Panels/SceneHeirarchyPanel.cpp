@@ -91,6 +91,11 @@ namespace Vortex
 		ImGui::End();
 	}
 
+	void SceneHeirarchyPanel::SetSelectedEntity(Entity entity)
+	{
+		m_SelectionContext = entity;
+	}
+
 	void SceneHeirarchyPanel::DrawEntityNode(Entity entity)
 	{
 		auto& tag = entity.GetComponent<TagComponent>().Tag;

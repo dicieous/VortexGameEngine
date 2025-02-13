@@ -233,12 +233,12 @@ namespace Vortex
 		m_SceneHeirarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
-		
+
 		std::string name = "None";
 		TagComponent component;
 		if (m_HoveredEntity && m_HoveredEntity.TryGetComponent<TagComponent>(component))
 			name = component.Tag;
-		
+
 		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		ImGui::Text("2DRenderer Stats");
@@ -343,12 +343,14 @@ namespace Vortex
 
 		EventDispacher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(VX_BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(VX_BIND_EVENT_FUNC(EditorLayer::OnMouseButtonPressed));
 	}
 
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& event)
 	{
 		//Shortcuts
+		//TODO: Improve the Shortcuts
 		if (event.GetRepeatCount() > 0)
 		{
 			return false;
@@ -399,6 +401,18 @@ namespace Vortex
 			m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
 			}
+		}
+
+		return false;
+	}
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& event)
+	{
+		//TODO: Make a bool function or something to check for Gizmos selection
+		if (event.GetMouseButton() == VX_MOUSE_BUTTON_LEFT)
+		{
+			if (m_ViewPortHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(VX_KEY_LEFT_ALT))
+				m_SceneHeirarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
 
 		return false;
