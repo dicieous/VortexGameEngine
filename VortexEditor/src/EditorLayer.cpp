@@ -253,7 +253,12 @@ namespace Vortex
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
 
-		auto viewportOffset = ImGui::GetCursorPos(); //Include Tab bar offset
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin(); //Include Tab bar offset
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+
+		m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y};
+		m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
 
 		uint64_t texture = m_FrameBuffer->GetColorAttachementRendererID();
 
@@ -271,15 +276,6 @@ namespace Vortex
 
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
-		auto windowSize = ImGui::GetWindowSize();
-		ImVec2 minBound = ImGui::GetWindowPos();
-		minBound.x += viewportOffset.x;
-		minBound.y += viewportOffset.y;
-
-		ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
-		m_viewportBounds[0] = { minBound.x, minBound.y };
-		m_viewportBounds[1] = { maxBound.x, maxBound.y };
-
 		//Gizmos
 
 		//TODO : Implement Grids for Editor Window
@@ -290,17 +286,7 @@ namespace Vortex
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			float windowWidth = (float)ImGui::GetWindowWidth();
-
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-			//Camera Data
-			// RuntimeCamera
-			//auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			//auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			//const glm::mat4& cameraProjection = camera.GetProjection();
-			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			ImGuizmo::SetRect(m_viewportBounds[0].x, m_viewportBounds[0].y, m_viewportBounds[1].x - m_viewportBounds[0].x, m_viewportBounds[1].y - m_viewportBounds[0].y);
 
 			//Editor Camera
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
