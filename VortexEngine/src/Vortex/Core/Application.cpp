@@ -59,8 +59,8 @@ namespace Vortex {
 		dispatcher.Dispatch<WindowCloseEvent>(VX_BIND_EVENT_FUNC(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(VX_BIND_EVENT_FUNC(Application::OnWindowResize));
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
-			(*--it)->OnEvent(e);
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it) {
+			(*it)->OnEvent(e);
 			if (e.Handled) {
 				break;
 			}
@@ -68,7 +68,6 @@ namespace Vortex {
 
 		//VX_CORE_TRACE("{0}",e);
 	}
-
 
 	void Application::Run() {
 		VX_PROFILE_FUNCTION();

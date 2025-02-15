@@ -7,8 +7,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-namespace Vortex {
-	static GLenum ShaderTypeFromString(std::string& type) {
+namespace Vortex
+{
+	static GLenum ShaderTypeFromString(std::string& type)
+	{
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		else if (type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
 
@@ -57,14 +59,25 @@ namespace Vortex {
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 
-		if (in) {
+		if (in)
+		{
 			in.seekg(0, std::ios::end);
-			result.resize(in.tellg());
-			in.seekg(0, std::ios::beg);
-			in.read(&result[0], result.size());
-			in.close();
+
+			size_t size = in.tellg();
+			if (size != -1)
+			{
+				result.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&result[0], result.size());
+				in.close();
+			}
+			else
+			{
+				VX_CORE_ERROR("Could not open file '{0}' ", filePath);
+			}
 		}
-		else {
+		else
+		{
 			VX_CORE_ERROR("Could not open file '{0}' ", filePath);
 		}
 
@@ -81,7 +94,8 @@ namespace Vortex {
 		size_t typeTokenLength = strlen(typetoken);
 		size_t pos = source.find(typetoken, 0); //Start of shader type declaration line
 
-		while (pos != std::string::npos) {
+		while (pos != std::string::npos)
+		{
 
 			size_t eol = source.find_first_of("\r\n", pos); //End of shader type declaration line
 			VX_CORE_ASSERT((eol != std::string::npos), "Syntax Error");
@@ -107,7 +121,8 @@ namespace Vortex {
 		VX_CORE_ASSERT((ShaderSources.size() <= 2), "We only support two shaders for now");
 		std::array<GLenum, 2> glShaderIDs;
 		int glShaderIDsIndex = 0;
-		for (auto kv : ShaderSources) {
+		for (auto kv : ShaderSources)
+		{
 			GLenum type = kv.first;
 			const std::string& source = kv.second;
 
@@ -162,7 +177,8 @@ namespace Vortex {
 			glDeleteProgram(program);
 			// Don't leak shaders either.
 
-			for (auto iD : glShaderIDs) {
+			for (auto iD : glShaderIDs)
+			{
 				glDeleteShader(iD);
 			}
 
@@ -173,7 +189,8 @@ namespace Vortex {
 		}
 
 		// Always detach shaders after a successful link.
-		for (auto iD : glShaderIDs) {
+		for (auto iD : glShaderIDs)
+		{
 			glDetachShader(program, iD);
 			glDeleteShader(iD);
 		}
