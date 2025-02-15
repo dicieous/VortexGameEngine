@@ -297,7 +297,7 @@ namespace Vortex
 			glm::mat4 transform = tc.GetTransform();
 
 			//snapping
-			bool snap = Input::IsKeyPressed(VX_KEY_LEFT_CONTROL);
+			bool snap = Input::IsKeyPressed(Key::LeftControl);
 			float snapValue = 0.5; // Snap to 0.5m for translation/scale
 			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE) snapValue = 45.0f; //In Degrees
 
@@ -342,26 +342,26 @@ namespace Vortex
 			return false;
 		}
 
-		bool control = Input::IsKeyPressed(VX_KEY_LEFT_CONTROL) || Input::IsKeyPressed(VX_KEY_RIGHT_CONTROL);
-		bool Shift = Input::IsKeyPressed(VX_KEY_LEFT_SHIFT) || Input::IsKeyPressed(VX_KEY_RIGHT_SHIFT);
+		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		bool Shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
 
 		switch (event.GetKeyCode())
 		{
-		case VX_KEY_N:
+		case Key::N:
 			if (control)
 			{
 				NewScene();
 			}
 			break;
 
-		case VX_KEY_O:
+		case Key::O:
 			if (control)
 			{
 				OpenScene();
 			}
 			break;
 
-		case VX_KEY_S:
+		case Key::S:
 			if (control && Shift)
 			{
 				SaveSceneAs();
@@ -371,19 +371,19 @@ namespace Vortex
 			//Gizmos
 			if (ImGuizmo::IsUsing())
 			{
-		case VX_KEY_Q:
+		case Key::Q:
 			m_GizmoType = -1;
 			break;
 
-		case VX_KEY_W:
+		case Key::W:
 			m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 			break;
 
-		case VX_KEY_E:
+		case Key::E:
 			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 			break;
 
-		case VX_KEY_R:
+		case Key::R:
 			m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
 			}
@@ -395,9 +395,9 @@ namespace Vortex
 	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& event)
 	{
 		//TODO: Make a bool function or something to check for Gizmos selection
-		if (event.GetMouseButton() == VX_MOUSE_BUTTON_LEFT)
+		if (event.GetMouseButton() == Mouse::ButtonLeft)
 		{
-			if (m_ViewPortHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(VX_KEY_LEFT_ALT))
+			if (m_ViewPortHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
 				m_SceneHeirarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
 

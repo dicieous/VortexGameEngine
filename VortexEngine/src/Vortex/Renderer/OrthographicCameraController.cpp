@@ -18,25 +18,25 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		if (Input::IsKeyPressed(VX_KEY_A)) {
+		if (Input::IsKeyPressed(Key::A)) {
 			m_cameraPositon.x -= m_cameraTranslationSpeed * ts;
 		}
-		else if (Input::IsKeyPressed(VX_KEY_D)) {
+		else if (Input::IsKeyPressed(Key::D)) {
 			m_cameraPositon.x += m_cameraTranslationSpeed * ts;
 		}
-		else if (Input::IsKeyPressed(VX_KEY_W)) {
+		else if (Input::IsKeyPressed(Key::W)) {
 			m_cameraPositon.y += m_cameraTranslationSpeed * ts;
 		}
-		else if (Input::IsKeyPressed(VX_KEY_S)) {
+		else if (Input::IsKeyPressed(Key::S)) {
 			m_cameraPositon.y -= m_cameraTranslationSpeed * ts;
 		}
 
 
 		if (m_canRotate) {
-			if (Input::IsKeyPressed(VX_KEY_Q)) {
+			if (Input::IsKeyPressed(Key::Q)) {
 				m_cameraRotation += m_cameraRotationSpeed * ts;
 			}
-			else if (Input::IsKeyPressed(VX_KEY_E)) {
+			else if (Input::IsKeyPressed(Key::E)) {
 				m_cameraRotation -= m_cameraRotationSpeed * ts;
 			}
 

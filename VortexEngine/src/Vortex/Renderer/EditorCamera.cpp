@@ -16,18 +16,18 @@ namespace Vortex
 
 	void EditorCamera::OnUpdate(TimeStep timeStep)
 	{
-		if (Input::IsKeyPressed(VX_KEY_LEFT_ALT))
+		if (Input::IsKeyPressed(Key::LeftAlt))
 		{
 			//TODO : FIX this snapping of Editor Camera
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
 			m_InitialMousePosition = mouse;
 			
-			if (Input::IsMouseButtonPressed(VX_MOUSE_BUTTON_LEFT))
+			if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))
 				MouseRotate(delta);
-			else if (Input::IsMouseButtonPressed(VX_MOUSE_BUTTON_RIGHT))
+			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
 				MouseZoom(delta.y);
-			else if (Input::IsMouseButtonPressed(VX_MOUSE_BUTTON_MIDDLE))
+			else if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
 				MousePan(delta);
 		}
 
