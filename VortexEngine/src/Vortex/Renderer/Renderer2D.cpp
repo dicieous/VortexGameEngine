@@ -525,7 +525,10 @@ namespace Vortex {
 
 	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID)
 	{
-		DrawQuads(transform, sprite.Color, entityID);
+		if (sprite.Texture)
+			DrawQuads(transform, sprite.Texture, sprite.TilingFactor, sprite.Color, entityID);
+		else
+			DrawQuads(transform, sprite.Color, entityID);
 	}
 
 	Renderer2D::Statistics Renderer2D::GetStats()
