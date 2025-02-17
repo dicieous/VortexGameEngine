@@ -10,6 +10,8 @@
 
 namespace Vortex
 {
+	extern const std::filesystem::path g_AssetsPath;
+
 	EditorLayer::EditorLayer() :
 		Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true)
 	{
@@ -279,10 +281,11 @@ namespace Vortex
 		
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM");
-			const wchar_t* path = (const wchar_t*)payLoad->Data;
-
-			OpenScene(path);
+			if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payLoad->Data;
+				OpenScene(std::filesystem::path(g_AssetsPath) / path);
+			}
 
 			ImGui::EndDragDropTarget();
 		}

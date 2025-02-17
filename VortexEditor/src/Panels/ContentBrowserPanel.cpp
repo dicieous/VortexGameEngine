@@ -7,10 +7,10 @@
 namespace Vortex
 {
 	//Once we have Projects, Change this
-	static const std::filesystem::path s_AssetsPath = "Assets";
+	extern const std::filesystem::path g_AssetsPath = "Assets";
 
 	ContentBrowserPanel::ContentBrowserPanel()
-		:m_CurrentDirectory(s_AssetsPath)
+		:m_CurrentDirectory(g_AssetsPath)
 	{
 		m_DirectoryIcon = Texture2D::Create("Resources/Icons/ContentBrowser/DirectoryIcon.png");
 		m_FileIcon = Texture2D::Create("Resources/Icons/ContentBrowser/FileIcon.png");
@@ -20,7 +20,7 @@ namespace Vortex
 	{
 		ImGui::Begin("Content Browser");
 
-		if (m_CurrentDirectory != std::filesystem::path(s_AssetsPath))
+		if (m_CurrentDirectory != std::filesystem::path(g_AssetsPath))
 		{
 			if (ImGui::Button("<-"))
 			{
@@ -43,7 +43,7 @@ namespace Vortex
 		{
 			const auto& path = directoryEntry.path();
 
-			auto relativePath = std::filesystem::relative(path, s_AssetsPath);
+			auto relativePath = std::filesystem::relative(path, g_AssetsPath);
 			std::string fileNameString = relativePath.filename().string();
 
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
@@ -55,7 +55,7 @@ namespace Vortex
 			if (ImGui::BeginDragDropSource())
 			{
 				const wchar_t* itemPath = relativePath.c_str();
-				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, wcslen(itemPath) * sizeof(wchar_t));
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
 				ImGui::EndDragDropSource();
 			}
 
