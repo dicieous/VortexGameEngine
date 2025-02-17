@@ -231,6 +231,7 @@ namespace Vortex
 		ImGui::End();
 
 		m_SceneHeirarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 
 		ImGui::Begin("Stats");
 

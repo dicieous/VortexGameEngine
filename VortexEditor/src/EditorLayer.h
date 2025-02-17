@@ -2,6 +2,8 @@
 #include<Vortex.h>
 
 #include "Panels/SceneHeirarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
+
 #include "Vortex/Renderer/EditorCamera.h"
 
 namespace Vortex {
@@ -56,5 +58,6 @@ namespace Vortex {
 		glm::vec2 m_viewportBounds[2];
 		//Panels
 		SceneHeirarchyPanel m_SceneHeirarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 	};
 }
