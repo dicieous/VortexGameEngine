@@ -17,6 +17,29 @@
 namespace YAML
 {
 	template<>
+	struct convert<glm::vec2>
+	{
+		static Node encode(const glm::vec2& rhs)
+		{
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+
+			return node;
+		}
+
+		static bool decode(const Node& node, glm::vec2& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			return true;
+		}
+	};
+
+	template<>
 	struct convert<glm::vec3>
 	{
 		static Node encode(const glm::vec3& rhs)
@@ -71,6 +94,12 @@ namespace YAML
 
 namespace Vortex
 {
+	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+		return out;
+	}
 
 	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 	{
@@ -109,7 +138,7 @@ namespace Vortex
 		if (bodyTypeString == "Static") return RigidBody2DComponent::BodyType::Static;
 		if (bodyTypeString == "Dynamic") return RigidBody2DComponent::BodyType::Dynamic;
 		if (bodyTypeString == "Kinematic") return RigidBody2DComponent::BodyType::Kinematic;
-		
+
 		VX_CORE_ASSERT(false, "Unknown body type");
 		return RigidBody2DComponent::BodyType::Static;
 	}
@@ -191,7 +220,7 @@ namespace Vortex
 
 		if (entity.HasComponent<RigidBody2DComponent>())
 		{
-			out KEY("SpriteRendererComponent");
+			out KEY("RigidBody2DComponent");
 			out STARTMAP;//RigidBody2D
 
 			auto& rb2DComp = entity.GetComponent<RigidBody2DComponent>();
@@ -199,6 +228,24 @@ namespace Vortex
 			out KEYVAL("BodyType", RigidBody2DBodyTypeToString(rb2DComp.Type));
 			out KEYVAL("Fixed Rotation", rb2DComp.FixedRotation);
 			out ENDMAP;//RigidBody2D
+		}
+
+		if (entity.HasComponent<BoxCollider2DComponent>())
+		{
+			out KEY("BoxCollider2DComponent");
+			out STARTMAP;//BoxCollider2D
+
+			auto& bc2DComp = entity.GetComponent<BoxCollider2DComponent>();
+
+			out KEYVAL("Offset", bc2DComp.Offset);
+			out KEYVAL("Size", bc2DComp.Size);
+
+			out KEYVAL("Density", bc2DComp.Density);
+			out KEYVAL("Friction", bc2DComp.Friction);
+			out KEYVAL("Restitution", bc2DComp.Restitution);
+			out KEYVAL("RestitutionThreshold", bc2DComp.RestitutionThreshold);
+
+			out ENDMAP;//BoxCollider2D
 		}
 
 		out ENDMAP; //Entity
@@ -280,6 +327,27 @@ namespace Vortex
 				{
 					auto& spriteC = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					spriteC.Color = spriteComponent["Color"].as<glm::vec4>();
+				}
+
+				auto rb2DComponent = entity["RigidBody2DComponent"];
+				if (rb2DComponent)
+				{
+					auto& rb2DC = deserializedEntity.AddComponent<RigidBody2DComponent>();
+					rb2DC.Type = RigidBody2DBodyTypeFromString(rb2DComponent["BodyType"].as<std::string>());
+					rb2DC.FixedRotation = rb2DComponent["Fixed Rotation"].as<bool>();
+				}
+
+				auto bc2DComponent = entity["BoxCollider2DComponent"];
+				if (bc2DComponent)
+				{
+					auto& bc2DC = deserializedEntity.AddComponent<BoxCollider2DComponent>();
+					bc2DC.Offset = bc2DComponent["Offset"].as<glm::vec2>();
+					bc2DC.Size = bc2DComponent["Size"].as<glm::vec2>();
+
+					bc2DC.Density = bc2DComponent["Density"].as<float>();
+					bc2DC.Friction = bc2DComponent["Friction"].as<float>();
+					bc2DC.Restitution = bc2DComponent["Restitution"].as<float>();
+					bc2DC.RestitutionThreshold = bc2DComponent["RestitutionThreshold"].as<float>();
 				}
 
 				auto cameraComponent = entity["CameraComponent"];
