@@ -4,6 +4,9 @@
 
 #include "Vortex/Core/TimeStep.h"
 
+
+class b2World;
+
 namespace Vortex {
 
 	class Entity;
@@ -17,6 +20,9 @@ namespace Vortex {
 
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
+
+		void OnRuntimeStart();
+		void OnRuntimeStop();
 
 		void OnUpdateEditor(TimeStep ts, EditorCamera& camera);
 		void OnUpdateRuntime(TimeStep ts);
@@ -32,6 +38,7 @@ namespace Vortex {
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 		entt::registry m_Registry;
 
+		b2World* m_PhysicsWorld = nullptr;
 
 		friend class Entity;
 		friend class SceneSerializer;

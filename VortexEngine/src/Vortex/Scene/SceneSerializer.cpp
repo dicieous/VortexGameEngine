@@ -86,6 +86,33 @@ namespace Vortex
 		return out;
 	}
 
+	static std::string RigidBody2DBodyTypeToString(RigidBody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+		case RigidBody2DComponent::BodyType::Static:
+			return "Static";
+
+		case RigidBody2DComponent::BodyType::Dynamic:
+			return "Dynamic";
+
+		case RigidBody2DComponent::BodyType::Kinematic:
+			return "Kinematic";
+		}
+
+		VX_CORE_ASSERT(false, "Unknown body type");
+		return {};
+	}
+
+	static RigidBody2DComponent::BodyType RigidBody2DBodyTypeFromString(const std::string& bodyTypeString)
+	{
+		if (bodyTypeString == "Static") return RigidBody2DComponent::BodyType::Static;
+		if (bodyTypeString == "Dynamic") return RigidBody2DComponent::BodyType::Dynamic;
+		if (bodyTypeString == "Kinematic") return RigidBody2DComponent::BodyType::Kinematic;
+		
+		VX_CORE_ASSERT(false, "Unknown body type");
+		return RigidBody2DComponent::BodyType::Static;
+	}
 
 	SceneSerializer::SceneSerializer(const Ref<Scene>& scene)
 		:m_Scene(scene)
@@ -132,14 +159,14 @@ namespace Vortex
 			auto& camera = cameraComp.Camera;
 
 			//SceneCamera
-			camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective 
-				? out KEYVAL("ProjectionType", "Perspective") 
+			camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective
+				? out KEYVAL("ProjectionType", "Perspective")
 				: out KEYVAL("ProjectionType", "Orthographic");
-			
+
 			out KEYVAL("OrthographicSize", camera.GetOrthographicSize());
 			out KEYVAL("OrthographicNearClip", camera.GetOrthographicNearClip());
 			out KEYVAL("OrthographicFarClip", camera.GetOrthographicFarClip());
-			
+
 			out KEYVAL("PerspectiveFOV", camera.GetPerspectiveVerticalFOV());
 			out KEYVAL("PerspectiveFarClip", camera.GetPerspectiveFarClip());
 			out KEYVAL("PerspectiveNearClip", camera.GetPerspectiveNearClip());
@@ -158,8 +185,20 @@ namespace Vortex
 
 			auto& spriteComp = entity.GetComponent<SpriteRendererComponent>();
 			out KEYVAL("Color", spriteComp.Color);
-			
+
 			out ENDMAP;//SpriteRenderer
+		}
+
+		if (entity.HasComponent<RigidBody2DComponent>())
+		{
+			out KEY("SpriteRendererComponent");
+			out STARTMAP;//RigidBody2D
+
+			auto& rb2DComp = entity.GetComponent<RigidBody2DComponent>();
+
+			out KEYVAL("BodyType", RigidBody2DBodyTypeToString(rb2DComp.Type));
+			out KEYVAL("Fixed Rotation", rb2DComp.FixedRotation);
+			out ENDMAP;//RigidBody2D
 		}
 
 		out ENDMAP; //Entity
@@ -216,12 +255,12 @@ namespace Vortex
 			{
 				auto& entity = *it;
 				uint64_t uuid = entity["Entity"].as<uint64_t>();
-				
+
 				std::string name;
 				auto tagComponent = entity["TagComponent"];
 				if (tagComponent)
 					name = tagComponent["Tag"].as<std::string>();
-					
+
 				VX_CORE_TRACE("Deserialized Entity with ID = {0}, name = {1}", uuid, name);
 
 				Entity deserializedEntity = m_Scene->CreateEntity(name);
@@ -250,16 +289,16 @@ namespace Vortex
 					cameraC.Camera.SetProjectionType(cameraComponent["ProjectionType"].as<std::string>() == "Perspective"
 						? SceneCamera::ProjectionType::Perspective
 						: SceneCamera::ProjectionType::Orthographic);
-					
+
 					cameraC.Camera.SetOrthographicSize(cameraComponent["OrthographicSize"].as<float>());
 					cameraC.Camera.SetOrthoGraphicFarClip(cameraComponent["OrthographicFarClip"].as<float>());
 					cameraC.Camera.SetOrthoGraphicNearClip(cameraComponent["OrthographicNearClip"].as<float>());
-					
+
 					cameraC.Camera.SetPerspectiveVerticalFOV(cameraComponent["PerspectiveFOV"].as<float>());
 					cameraC.Camera.SetPerspectiveFarClip(cameraComponent["PerspectiveFarClip"].as<float>());
 					cameraC.Camera.SetPerspectiveNearClip(cameraComponent["PerspectiveNearClip"].as<float>());
 
-					
+
 					cameraC.primary = cameraComponent["Primary Camera"].as<bool>();
 					cameraC.FixedAspectRatio = cameraComponent["Fixed AspectRatio"].as<bool>();
 				}

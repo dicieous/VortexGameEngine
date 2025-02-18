@@ -25,6 +25,8 @@ IncludeDir["stb_image"] = "VortexEngine/vendor/stb_image"
 IncludeDir["Entt"] = "VortexEngine/vendor/Entt/include"
 IncludeDir["yaml_cpp"] = "VortexEngine/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "VortexEngine/vendor/ImGuizmo"
+IncludeDir["Box2D"] = "VortexEngine/vendor/Box2D/include"
+
 
 
 group "Dependencies"
@@ -32,6 +34,7 @@ group "Dependencies"
 	include "VortexEngine/vendor/GLFW"
 	include "VortexEngine/vendor/imgui"
 	include "VortexEngine/vendor/yaml-cpp"
+	include "VortexEngine/vendor/Box2D"
 
 group ""
 
@@ -72,8 +75,8 @@ project "VortexEngine"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.Entt}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.ImGuizmo}"
-
+		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.Box2D}",
 	}
 
 	links{
@@ -81,7 +84,8 @@ project "VortexEngine"
 		"GLFW",
 		"ImGui",
 		"yaml-cpp",
-		"opengl32.lib"
+		"opengl32.lib",
+		"Box2D"
 	}
 
 	filter "files:VortexEngine/vendor/ImGuizmo/**.cpp"

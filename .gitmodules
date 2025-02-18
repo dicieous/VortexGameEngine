@@ -20,3 +20,6 @@
 [submodule "VortexEngine/vendor/ImGuizmo"]
 	path = VortexEngine/vendor/ImGuizmo
 	url = https://github.com/dicieous/ImGuizmo.git
+[submodule "VortexEngine/vendor/Box2D"]
+	path = VortexEngine/vendor/Box2D
+	url = https://github.com/dicieous/box2d.git

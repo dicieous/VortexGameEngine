@@ -59,13 +59,13 @@ namespace Vortex
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-			
+
 			float panelWidth = ImGui::GetContentRegionAvail().x;
-			float buttonWidth = panelWidth * 0.5f; 
+			float buttonWidth = panelWidth * 0.5f;
 
 			// Center the button
 			ImGui::SetCursorPosX((panelWidth - buttonWidth) * 0.5f);
-			
+
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 
 			if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0)))
@@ -75,16 +75,40 @@ namespace Vortex
 
 			if (ImGui::BeginPopup("AddComponent"))
 			{
-				if (ImGui::MenuItem("Camera"))
+				if (!m_SelectionContext.HasComponent<CameraComponent>())
 				{
-					m_SelectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
+					if (ImGui::MenuItem("Camera"))
+					{
+						m_SelectionContext.AddComponent<CameraComponent>();
+						ImGui::CloseCurrentPopup();
+					}
 				}
 
-				if (ImGui::MenuItem("Sprite Renderer"))
+				if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
 				{
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
+					if (ImGui::MenuItem("Sprite Renderer"))
+					{
+						m_SelectionContext.AddComponent<SpriteRendererComponent>();
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!m_SelectionContext.HasComponent<RigidBody2DComponent>())
+				{
+					if (ImGui::MenuItem("RigidBody 2D"))
+					{
+						m_SelectionContext.AddComponent<RigidBody2DComponent>();
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
+				{
+					if (ImGui::MenuItem("BoxCollider 2D"))
+					{
+						m_SelectionContext.AddComponent<BoxCollider2DComponent>();
+						ImGui::CloseCurrentPopup();
+					}
 				}
 
 				ImGui::EndPopup();
@@ -202,7 +226,7 @@ namespace Vortex
 
 		ImGui::PopID();
 	}
-	
+
 
 	template<typename T, typename UIFunction>
 	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
@@ -319,7 +343,7 @@ namespace Vortex
 					float farClip = camera.GetPerspectiveFarClip();
 					if (ImGui::DragFloat("FarClip", &farClip))
 					{
-						camera.SetPerspectiveFarClip(farClip);       
+						camera.SetPerspectiveFarClip(farClip);
 					}
 				}
 
@@ -366,6 +390,43 @@ namespace Vortex
 				}
 
 				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
+			{
+				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
+
+				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+				{
+					for (int type = 0; type < 3; type++)
+					{
+						bool isSelected = currentBodyTypeString == bodyTypeStrings[type];
+						if (ImGui::Selectable(bodyTypeStrings[type], isSelected))
+						{
+							currentBodyTypeString = bodyTypeStrings[type];
+							component.Type = (RigidBody2DComponent::BodyType)type;
+						}
+
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
+			});
+
+
+		DrawComponent<BoxCollider2DComponent>("BoxCollider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
+				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+
+				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 	}
 }
