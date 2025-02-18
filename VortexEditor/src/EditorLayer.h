@@ -29,9 +29,15 @@ namespace Vortex {
 		void OpenScene(const std::filesystem::path& filePath);
 		void SaveSceneAs();
 
+		void OnScenePlay();
+		void OnSceneStop();
+
+		//UI ToolBar
+		void UI_ToolBar();
+
 	private:
 		Vortex::OrthographicCameraController m_CameraController;
-
+		
 		//Temp
 		Ref<VertexArray> m_squareVA;
 		Ref<Texture2D> m_checkerBoardTexture;
@@ -57,8 +63,21 @@ namespace Vortex {
 		glm::vec3 m_squareColor{ 0.2f, 0.3f, 0.8f };
 
 		glm::vec2 m_viewportBounds[2];
+
+		enum class SceneState
+		{
+			Edit = 0,
+			Play = 1,
+		};
+
+		SceneState m_SceneState = SceneState::Edit;
+
 		//Panels
 		SceneHeirarchyPanel m_SceneHeirarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
+
+		//Editor Resources
+		Ref<Texture2D> m_PlayIconTexture;
+		Ref<Texture2D> m_StopIconTexture;
 	};
 }

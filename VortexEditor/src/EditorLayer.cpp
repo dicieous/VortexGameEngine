@@ -20,6 +20,8 @@ namespace Vortex
 	void EditorLayer::OnAttach()
 	{
 		m_checkerBoardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
+		m_PlayIconTexture = Texture2D::Create("Resources/Icons/PlayButton.png");
+		m_StopIconTexture = Texture2D::Create("Resources/Icons/StopButton.png");
 
 		FrameBufferSpecifications frameSpecs;
 		frameSpecs.Attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::RED_INTEGER, FrameBufferTextureFormat::DEPTH24STENCIL8 };
@@ -107,12 +109,6 @@ namespace Vortex
 		}
 
 		//OnUpdate
-		if (m_ViewPortFocused)
-		{
-			m_CameraController.OnUpdate(timeStep);
-		}
-
-		m_EditorCamera.OnUpdate(timeStep);
 
 		//Rendering
 		Renderer2D::ResetStats();
@@ -124,7 +120,27 @@ namespace Vortex
 		//Clear EntityID attachment to -1 
 		m_FrameBuffer->ClearAttachment(1, -1);
 
-		m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
+		//Play the Game
+		switch (m_SceneState)
+		{
+		case SceneState::Edit:
+			{
+				if (m_ViewPortFocused)
+				{
+					m_CameraController.OnUpdate(timeStep);
+				}
+
+				m_EditorCamera.OnUpdate(timeStep);
+				m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
+
+				break;
+			}
+		case SceneState::Play:
+			{
+				m_ActiveScene->OnUpdateRuntime(timeStep);
+				break;
+			}
+		}
 
 		auto [mouseX, mouseY] = ImGui::GetMousePos();
 		mouseX -= m_viewportBounds[0].x;
@@ -332,9 +348,44 @@ namespace Vortex
 		}
 
 		ImGui::PopStyleVar();
+		
+		UI_ToolBar();
+		
 		ImGui::End();
 	}
 
+	void EditorLayer::UI_ToolBar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIconTexture : m_StopIconTexture;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+		if (ImGui::ImageButton("##icon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
+		{
+			if (m_SceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				OnSceneStop();
+		}
+
+		ImGui::PopStyleVar(3);
+		ImGui::PopStyleColor(3);
+
+		ImGui::End();
+	}
 
 	void EditorLayer::OnEvent(Event& event)
 	{
@@ -455,4 +506,15 @@ namespace Vortex
 			serialize.Serialize(filePath);
 		}
 	}
+
+	void EditorLayer::OnScenePlay()
+	{
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_SceneState = SceneState::Edit;
+	}
+	
 }
