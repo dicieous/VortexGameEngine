@@ -427,9 +427,20 @@ namespace Vortex
 			break;
 
 		case Key::S:
-			if (control && Shift)
+			if (control)
 			{
-				SaveSceneAs();
+				if (Shift)
+					SaveSceneAs();
+				else
+					SaveScene();
+			}
+			break;
+
+			//Scene Commands
+		case Key::D:
+			if (control)
+			{
+				OnDuplicateEntity();
 			}
 			break;
 
@@ -474,6 +485,8 @@ namespace Vortex
 		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+
+		m_EditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -488,12 +501,35 @@ namespace Vortex
 
 	void EditorLayer::OpenScene(const std::filesystem::path& filePath)
 	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+		if (m_SceneState != SceneState::Edit)
+			OnSceneStop();
 
-		SceneSerializer serialize(m_ActiveScene);
+		if (filePath.extension().string() != ".vortex")
+		{
+			VX_CORE_WARN("Could not Load {0} - Not a Scene File", filePath.filename().string());
+			return;
+		}
+		
+		Ref<Scene> newScene = CreateRef<Scene>();
+		SceneSerializer serializer(newScene);
+		if (serializer.Deserialize(filePath.string()))
+		{
+			m_EditorScene = newScene;
+			newScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHeirarchyPanel.SetContext(m_EditorScene);
+
+			m_ActiveScene = m_EditorScene;
+			m_EditorScenePath = filePath;
+		}
+
+		/*m_EditorScene = CreateRef<Scene>();
+		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHeirarchyPanel.SetContext(m_EditorScene);
+
+		SceneSerializer serialize(m_EditorScene);
 		serialize.Deserialize(filePath.string());
+
+		m_ActiveScene = m_EditorScene;*/
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -502,21 +538,59 @@ namespace Vortex
 
 		if (!filePath.empty())
 		{
-			SceneSerializer serialize(m_ActiveScene);
-			serialize.Serialize(filePath);
+			SerializeScene(m_ActiveScene, filePath);
+			m_EditorScenePath = filePath;
 		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (!m_EditorScenePath.empty())
+		{
+			SerializeScene(m_ActiveScene, m_EditorScenePath);
+		}
+		else
+		{
+			SaveSceneAs();
+		}
+	}
+
+	void EditorLayer::SerializeScene(Ref<Scene> scene, const std::filesystem::path& filePath)
+	{
+		SceneSerializer serialize(scene);
+		serialize.Serialize(filePath.string());
 	}
 
 	void EditorLayer::OnScenePlay()
 	{
 		m_SceneState = SceneState::Play;
+
+		m_ActiveScene = Scene::Copy(m_EditorScene);
 		m_ActiveScene->OnRuntimeStart();
+
+		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		m_SceneState = SceneState::Edit;
+		
 		m_ActiveScene->OnRuntimeStop();
+		m_ActiveScene = m_EditorScene;
+
+		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (m_SceneState != SceneState::Edit)
+			return;
+		
+		Entity selectedEntity = m_SceneHeirarchyPanel.GetSelectedEntity();
+		if (selectedEntity)
+		{
+			m_EditorScene->DuplicateEntity(selectedEntity);
+		}
 	}
 	
 }

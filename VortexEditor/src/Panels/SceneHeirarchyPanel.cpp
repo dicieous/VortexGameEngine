@@ -25,25 +25,27 @@ namespace Vortex
 	void SceneHeirarchyPanel::OnImGuiRender()
 	{
 		ImGui::Begin("Scene Heirarchy");
-
-		m_Context->m_Registry.view<entt::entity>().each([&](auto entityID)
-			{
-				Entity entity{ entityID, m_Context.get() };
-				DrawEntityNode(entity);
-			});
-
-		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
-			m_SelectionContext = {};
-
-		//Right-Click on Black Space
-		if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems))
+		if (m_Context)
 		{
-			if (ImGui::MenuItem("Create Entity"))
-			{
-				m_Context->CreateEntity("Empty Entity");
-			}
+			m_Context->m_Registry.view<entt::entity>().each([&](auto entityID)
+				{
+					Entity entity{ entityID, m_Context.get() };
+					DrawEntityNode(entity);
+				});
 
-			ImGui::EndPopup();
+			if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
+				m_SelectionContext = {};
+
+			//Right-Click on Black Space
+			if (ImGui::BeginPopupContextWindow(0, 1 | ImGuiPopupFlags_NoOpenOverItems))
+			{
+				if (ImGui::MenuItem("Create Entity"))
+				{
+					m_Context->CreateEntity("Empty Entity");
+				}
+
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -54,65 +56,6 @@ namespace Vortex
 		if (m_SelectionContext)
 		{
 			DrawComponents(m_SelectionContext);
-
-			ImGui::Separator();
-
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-
-			float panelWidth = ImGui::GetContentRegionAvail().x;
-			float buttonWidth = panelWidth * 0.5f;
-
-			// Center the button
-			ImGui::SetCursorPosX((panelWidth - buttonWidth) * 0.5f);
-
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
-
-			if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0)))
-				ImGui::OpenPopup("AddComponent");
-
-			ImGui::PopStyleVar();
-
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (!m_SelectionContext.HasComponent<CameraComponent>())
-				{
-					if (ImGui::MenuItem("Camera"))
-					{
-						m_SelectionContext.AddComponent<CameraComponent>();
-						ImGui::CloseCurrentPopup();
-					}
-				}
-
-				if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
-				{
-					if (ImGui::MenuItem("Sprite Renderer"))
-					{
-						m_SelectionContext.AddComponent<SpriteRendererComponent>();
-						ImGui::CloseCurrentPopup();
-					}
-				}
-
-				if (!m_SelectionContext.HasComponent<RigidBody2DComponent>())
-				{
-					if (ImGui::MenuItem("RigidBody 2D"))
-					{
-						m_SelectionContext.AddComponent<RigidBody2DComponent>();
-						ImGui::CloseCurrentPopup();
-					}
-				}
-
-				if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
-				{
-					if (ImGui::MenuItem("BoxCollider 2D"))
-					{
-						m_SelectionContext.AddComponent<BoxCollider2DComponent>();
-						ImGui::CloseCurrentPopup();
-					}
-				}
-
-				ImGui::EndPopup();
-			}
 		}
 
 		ImGui::End();
@@ -287,6 +230,65 @@ namespace Vortex
 			{
 				tag = std::string(buffer);
 			}
+		}
+
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+
+		float panelWidth = ImGui::GetContentRegionAvail().x;
+		float buttonWidth = panelWidth * 0.5f;
+
+		// Center the button
+		ImGui::SetCursorPosX((panelWidth - buttonWidth) * 0.5f);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+
+		if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0)))
+			ImGui::OpenPopup("AddComponent");
+
+		ImGui::PopStyleVar();
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (!m_SelectionContext.HasComponent<CameraComponent>())
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_SelectionContext.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
+			{
+				if (ImGui::MenuItem("Sprite Renderer"))
+				{
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<RigidBody2DComponent>())
+			{
+				if (ImGui::MenuItem("RigidBody 2D"))
+				{
+					m_SelectionContext.AddComponent<RigidBody2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
+			{
+				if (ImGui::MenuItem("BoxCollider 2D"))
+				{
+					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			ImGui::EndPopup();
 		}
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)

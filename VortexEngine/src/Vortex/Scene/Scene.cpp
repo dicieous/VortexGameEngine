@@ -49,6 +49,65 @@ namespace Vortex
 		delete m_PhysicsWorld;
 	}
 
+	template<typename Component>
+	static void CopyComponent(entt::registry& dest, const entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		auto view = src.view<Component>();
+		for (auto e : view)
+		{
+			UUID uuid = src.get<IDComponent>(e).ID;
+			VX_CORE_ASSERT((enttMap.find(uuid) != enttMap.end()), "Entity not present in Map");
+			entt::entity destEntity = enttMap.at(uuid);
+
+			auto& component = src.get<Component>(e);
+			dest.emplace_or_replace<Component>(destEntity, component);
+		}
+	}
+
+	template<typename Component>
+	static void CopyComponentIfExists(Entity dest, Entity src)
+	{
+		if (src.HasComponent<Component>())
+		{
+			dest.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+		}
+	}
+
+	Ref<Scene> Scene::Copy(Ref<Scene> other)
+	{
+		Ref<Scene> newScene = CreateRef<Scene>();
+
+		newScene->m_ViewportHeight = other->m_ViewportHeight;
+		newScene->m_ViewportWidth = other->m_ViewportWidth;
+
+		auto& srcSceneRegistry = other->m_Registry;
+		auto& destSceneRegistry = newScene->m_Registry;
+
+		std::unordered_map<UUID, entt::entity> enttMap;
+
+		auto idView = srcSceneRegistry.view<IDComponent>();
+
+		//Create entities in newScene
+		for (auto e : idView)
+		{
+			UUID uuid = srcSceneRegistry.get<IDComponent>(e).ID;
+			const auto& name = srcSceneRegistry.get<TagComponent>(e).Tag;
+
+			Entity newEntity = newScene->CreateEntityWithUUID(uuid, name);
+			enttMap[uuid] = (entt::entity)newEntity;
+		}
+
+		//Copy Components
+		CopyComponent<TransformComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<SpriteRendererComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<CameraComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<NativeScriptComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<RigidBody2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<BoxCollider2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+
+		return newScene;
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		return CreateEntityWithUUID(UUID(), name);
@@ -69,6 +128,19 @@ namespace Vortex
 	void Scene::DestroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
+	}
+
+	void Scene::DuplicateEntity(Entity entity)
+	{
+		std::string name = entity.GetName();
+		Entity newEntity = CreateEntity(name);
+
+		CopyComponentIfExists<TransformComponent>(newEntity, entity);
+		CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CameraComponent>(newEntity, entity);
+		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
+		CopyComponentIfExists<RigidBody2DComponent>(newEntity, entity);
+		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
 	}
 
 	void Scene::OnRuntimeStart()
@@ -221,7 +293,7 @@ namespace Vortex
 		for (auto entity : view)
 		{
 			auto& cameraComponent = view.get<CameraComponent>(entity);
-			if (!cameraComponent.FixedAspectRatio)
+			if (!cameraComponent.FixedAspectRatio || cameraComponent.Camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 			{
 				cameraComponent.Camera.SetViewportSize(width, height);
 			}
@@ -265,7 +337,8 @@ namespace Vortex
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+			component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
 	}
 
 	template<>

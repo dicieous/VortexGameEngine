@@ -1,13 +1,13 @@
 Scene: Untitled
 Entities:
 
-  - Entity: 12373683107172240926
+  - Entity: 1258047236883739555
     TagComponent:
       Tag: Surface
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, -0, -0.23417418]
-      Scale: [9.271066, 1, 1]
+      Translation: [-0.3663101, 0.43612665, 0.11737059]
+      Rotation: [0, -0, -0.23417409]
+      Scale: [14.1531315, 1.0686287, 1]
     SpriteRendererComponent:
       Color: [0.6962025, 0.4733196, 0.044063445, 1]
     RigidBody2DComponent:
@@ -21,13 +21,73 @@ Entities:
       Restitution: 0
       RestitutionThreshold: 0.5
 
-  - Entity: 16462275034916316897
+  - Entity: 2727284750092833117
+    TagComponent:
+      Tag: Surface
+    TransformComponent:
+      Translation: [-2.0574417, -12.369278, -3.1190186]
+      Rotation: [0.007376938, -0.030276772, -0.112238094]
+      Scale: [20.159826, 1.0686283, 1]
+    SpriteRendererComponent:
+      Color: [0.6962025, 0.4733196, 0.044063445, 1]
+    RigidBody2DComponent:
+      BodyType: Static
+      Fixed Rotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+
+  - Entity: 2826162476611886688
     TagComponent:
       Tag: Quad
     TransformComponent:
-      Translation: [-0.35843232, 4.2432227, -5.820766e-11]
+      Translation: [2.9929624, 3.9035468, -5.820765e-11]
       Rotation: [-0.025562083, -2.7939677e-09, 1.8690836]
-      Scale: [0.99999833, 0.9999975, 1]
+      Scale: [0.9999979, 0.9999975, 1]
+    SpriteRendererComponent:
+      Color: [0.24666338, 0.8312236, 0.23147999, 1]
+    RigidBody2DComponent:
+      BodyType: Dynamic
+      Fixed Rotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0.21
+      RestitutionThreshold: 0.5
+
+  - Entity: 12373683107172240926
+    TagComponent:
+      Tag: Surface
+    TransformComponent:
+      Translation: [12.64572, -4.648056, -1.0695801]
+      Rotation: [-0.03902301, -0.17557018, 0.6262409]
+      Scale: [16.511993, 1.0686271, 0.9999981]
+    SpriteRendererComponent:
+      Color: [0.6962025, 0.4733196, 0.044063445, 1]
+    RigidBody2DComponent:
+      BodyType: Static
+      Fixed Rotation: false
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+
+  - Entity: 14907257239076643983
+    TagComponent:
+      Tag: Quad
+    TransformComponent:
+      Translation: [-1.3278995, 4.417936, -5.8207657e-11]
+      Rotation: [-0.025562083, -2.793968e-09, 1.8690836]
+      Scale: [0.9999979, 0.9999975, 1]
     SpriteRendererComponent:
       Color: [0.24666338, 0.8312236, 0.23147999, 1]
     RigidBody2DComponent:
