@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Vortex/Scene/Components.h"
+#include "ScriptableEntity.h"
 #include "Vortex/Renderer/Renderer2D.h"
 
 #include "Entity.h"
@@ -50,9 +51,15 @@ namespace Vortex
 
 	Entity Scene::CreateEntity(const std::string& name)
 	{
+		return CreateEntityWithUUID(UUID(), name);
+	}
+
+	Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& name)
+	{
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TransformComponent>();
 
+		entity.AddComponent<IDComponent>(uuid);
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
 
@@ -242,6 +249,11 @@ namespace Vortex
 
 	template<>
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
 	{
 	}
 

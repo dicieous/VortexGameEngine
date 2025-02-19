@@ -152,7 +152,7 @@ namespace Vortex
 	{
 		out << YAML::Newline;
 		out STARTMAP; //Entity
-		out KEYVAL("Entity", "12837192831273"); //TODO: Entity ID goes here
+		out KEYVAL("Entity", entity.GetUUID());
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -310,7 +310,7 @@ namespace Vortex
 
 				VX_CORE_TRACE("Deserialized Entity with ID = {0}, name = {1}", uuid, name);
 
-				Entity deserializedEntity = m_Scene->CreateEntity(name);
+				Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)

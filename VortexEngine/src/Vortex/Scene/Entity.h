@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vortex/Core/UUID.h"
+#include "Components.h"
 #include "Scene.h"
 
 #include <entt.hpp>
@@ -57,6 +59,8 @@ namespace Vortex {
 		operator bool() const { return m_EntityHandle != entt::null; }
 		operator entt::entity() const { return m_EntityHandle; }
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
 
 		bool operator ==(const Entity& other) const
 		{

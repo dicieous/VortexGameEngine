@@ -2,6 +2,7 @@
 
 #include <entt.hpp>
 
+#include "Vortex/Core/UUID.h"
 #include "Vortex/Core/TimeStep.h"
 
 
@@ -19,6 +20,8 @@ namespace Vortex {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
+		
 		void DestroyEntity(Entity entity);
 
 		void OnRuntimeStart();
