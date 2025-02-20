@@ -163,6 +163,8 @@ namespace Vortex
 				m_HoveredEntity = Entity();
 		}
 
+		OnOverlayRender();
+
 		m_FrameBuffer->UnBind();
 	}
 
@@ -269,6 +271,10 @@ namespace Vortex
 
 		ImGui::End();
 
+		//ImGui::Begin("Settings");
+		//
+		//ImGui::End();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("ViewPort");
 
@@ -276,8 +282,12 @@ namespace Vortex
 		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
 		auto viewportOffset = ImGui::GetWindowPos();
 
-		m_viewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y};
-		m_viewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
+		glm::vec2 viewportMin = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		glm::vec2 viewportMax = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+		m_viewportBounds[0] = viewportMin;
+		m_viewportBounds[1] = viewportMax;
+
 
 		uint64_t texture = m_FrameBuffer->GetColorAttachementRendererID();
 
@@ -305,6 +315,41 @@ namespace Vortex
 
 			ImGui::EndDragDropTarget();
 		}
+
+		// Floating window constraints
+		ImVec2 floatingWindowPos;
+		ImVec2 floatingWindowSize;
+
+		ImGui::SetNextWindowBgAlpha(0.8f);
+
+
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize; // Prevents docking if unwanted
+
+		// Begin floating window
+		ImGui::Begin("##Floating Panel", nullptr, windowFlags);
+		ImGui::Dummy({ 1.0f, 5.0f });
+
+		ImVec2 currentPos = ImGui::GetCursorPos();
+		float offset = 20.0f;
+		ImGui::SetCursorPos({ currentPos.x + offset, currentPos.y });
+
+		ImGui::Text("View Colliders");
+		ImGui::SameLine();
+		ImGui::Checkbox("##View Colliders", &m_showPhysicsColliders);
+
+		// Get the updated position and size of the window
+		floatingWindowPos = ImGui::GetWindowPos();
+		floatingWindowSize = ImGui::GetWindowSize();
+
+		// **Clamp the position so it doesn't go outside the viewport**
+		floatingWindowPos.x = std::max(viewportMin.x + 5.0f, std::min(floatingWindowPos.x, viewportMax.x - floatingWindowSize.x - 5.0f));
+		floatingWindowPos.y = std::max(viewportMin.y + 5.0f, std::min(floatingWindowPos.y, viewportMax.y - floatingWindowSize.y - 5.0f));
+
+		// Apply the clamped position
+		ImGui::SetWindowPos(floatingWindowPos);
+
+		ImGui::End();
+
 
 		//Gizmos
 
@@ -478,6 +523,63 @@ namespace Vortex
 		}
 
 		return false;
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+
+		if (m_SceneState == SceneState::Play)
+		{
+			Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
+		}
+		else
+		{
+			Renderer2D::BeginScene(m_EditorCamera);
+		}
+
+		//Colliders Visualizing
+		if (m_showPhysicsColliders)
+		{
+			//Box Colliders
+			{
+				auto view = m_ActiveScene->GetAllEntitesWith<TransformComponent, BoxCollider2DComponent>();
+
+				for (auto entity : view)
+				{
+					auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::scale(glm::mat4(1.0), scale);
+
+					Renderer2D::DrawRect(transform, glm::vec4(0, 1, 0, 1));
+				}
+			}
+
+			//Circle Colliders
+			{
+				auto view = m_ActiveScene->GetAllEntitesWith<TransformComponent, CircleCollider2DComponent>();
+
+				for (auto entity : view)
+				{
+					auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+
+					glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+					glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::scale(glm::mat4(1.0), scale);
+
+					Renderer2D::DrawCircle(transform, glm::vec4(0, 1, 0, 1), 0.007f, 0.01f);
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
 	}
 
 	void EditorLayer::NewScene()

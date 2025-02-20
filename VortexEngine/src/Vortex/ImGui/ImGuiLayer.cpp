@@ -35,7 +35,7 @@ namespace Vortex {
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
 		io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-SemiBold.ttf", 16.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Medium.ttf", 16.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Medium.ttf", 16.5f);
 		//io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Regular.ttf", 17.0f);
 
 		// Setup Dear ImGui style

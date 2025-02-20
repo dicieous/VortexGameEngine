@@ -24,6 +24,8 @@ namespace Vortex {
 		bool OnKeyPressed(KeyPressedEvent& event);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 
+		void OnOverlayRender();
+
 		void NewScene();
 		
 		void OpenScene();
@@ -65,6 +67,8 @@ namespace Vortex {
 		EditorCamera m_EditorCamera;
 
 		bool m_PrimaryCamera = true;
+
+		bool m_showPhysicsColliders = false;
 
 		int m_GizmoType = 7;
 

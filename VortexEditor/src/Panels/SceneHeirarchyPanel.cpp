@@ -107,65 +107,89 @@ namespace Vortex
 	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValues = 0.0f, float columnWidth = 100.0f)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		auto boldfont = io.Fonts->Fonts[0]; //Make a Font Loading System(if needed more fonts)
+		auto boldFont = io.Fonts->Fonts[0];
 
 		ImGui::PushID(label.c_str());
 
-		ImGui::Columns(2);
-		ImGui::SetColumnWidth(0, columnWidth);
-		ImGui::Text(label.c_str());
-		ImGui::NextColumn();
+		// Begin table with 2 columns
+		if (ImGui::BeginTable("Vec3Table", 2, ImGuiTableFlags_NoBordersInBody))
+		{
+			// Set first column width
+			ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, columnWidth);
+			ImGui::TableSetupColumn("Values", ImGuiTableColumnFlags_WidthStretch);
 
-		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
 
-		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-		ImVec2 buttonSize = { lineHeight + 3.0f,lineHeight };
+			// Add label and vertical separator
+			ImGui::PushFont(boldFont);
+			ImGui::SetWindowFontScale(1.1f);  // Make label text 20% larger
+			ImGui::Text(label.c_str());
+			ImGui::SetWindowFontScale(1.0f);  // Reset font scale
+			ImGui::PopFont();
+			//ImGui::SameLine(columnWidth - 5.0f); // Adjust separator position
+			//ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "|");
 
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
-		ImGui::PushFont(boldfont);
-		if (ImGui::Button("X", buttonSize))
-			values.x = resetValues;
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+			ImGui::TableSetColumnIndex(1);
 
-		ImGui::SameLine();
-		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
+			// Calculate widths for even distribution
+			float availableWidth = ImGui::GetContentRegionAvail().x;
+			float componentWidth = availableWidth / 3.0f - ImGui::GetStyle().ItemSpacing.x;
 
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
-		ImGui::PushFont(boldfont);
-		if (ImGui::Button("Y", buttonSize))
-			values.y = resetValues;
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
+			// Adjust spacing between button and value
+			const float tightSpacing = 2.0f;  // Reduced spacing between button and value
 
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
-		ImGui::PushFont(boldfont);
-		if (ImGui::Button("Z", buttonSize))
-			values.z = resetValues;
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+			// X Component
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("X", buttonSize))
+				values.x = resetValues;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
 
-		ImGui::SameLine();
-		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
-		ImGui::PopItemWidth();
+			ImGui::SameLine(0.0f, tightSpacing);
+			ImGui::SetNextItemWidth(componentWidth - buttonSize.x - tightSpacing);
+			ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
 
-		ImGui::PopStyleVar();
+			ImGui::SameLine();
 
-		ImGui::Columns(1);
+			// Y Component
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("Y", buttonSize))
+				values.y = resetValues;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+
+			ImGui::SameLine(0.0f, tightSpacing);
+			ImGui::SetNextItemWidth(componentWidth - buttonSize.x - tightSpacing);
+			ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+
+			ImGui::SameLine();
+
+			// Z Component
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("Z", buttonSize))
+				values.z = resetValues;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+
+			ImGui::SameLine(0.0f, tightSpacing);
+			ImGui::SetNextItemWidth(componentWidth - buttonSize.x - tightSpacing);
+			ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+
+			ImGui::EndTable();
+		}
 
 		ImGui::PopID();
 	}
