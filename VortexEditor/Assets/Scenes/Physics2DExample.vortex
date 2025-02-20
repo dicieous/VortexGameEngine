@@ -1,15 +1,27 @@
 Scene: Untitled
 Entities:
 
+  - Entity: 12789610396318285357
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Translation: [0.6090183, 2.4360695, 0.69890666]
+      Rotation: [0, -0, 0]
+      Scale: [2, 2, 1]
+    CircleRendererComponent:
+      Color: [1, 0.98734176, 0, 1]
+      Thickness: 0.15
+      Fade: 0.05
+
   - Entity: 1258047236883739555
     TagComponent:
       Tag: Surface
     TransformComponent:
-      Translation: [-0.3663101, 0.43612665, 0.11737059]
-      Rotation: [0, -0, -0.23417409]
-      Scale: [14.1531315, 1.0686287, 1]
+      Translation: [-0.36631036, 0.4361267, 0.11737059]
+      Rotation: [0, -0, -0.23417416]
+      Scale: [14.153131, 1.0686287, 1]
     SpriteRendererComponent:
-      Color: [0.6962025, 0.4733196, 0.044063445, 1]
+      Color: [1, 0.73333335, 0.2784314, 1]
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -29,7 +41,7 @@ Entities:
       Rotation: [0.007376938, -0.030276772, -0.112238094]
       Scale: [20.159826, 1.0686283, 1]
     SpriteRendererComponent:
-      Color: [0.6962025, 0.4733196, 0.044063445, 1]
+      Color: [1, 0.73333335, 0.2784314, 1]
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -49,7 +61,7 @@ Entities:
       Rotation: [-0.025562083, -2.7939677e-09, 1.8690836]
       Scale: [0.9999979, 0.9999975, 1]
     SpriteRendererComponent:
-      Color: [0.24666338, 0.8312236, 0.23147999, 1]
+      Color: [0.34509805, 0.7764706, 1, 1]
     RigidBody2DComponent:
       BodyType: Dynamic
       Fixed Rotation: false
@@ -69,7 +81,7 @@ Entities:
       Rotation: [-0.03902301, -0.17557018, 0.6262409]
       Scale: [16.511993, 1.0686271, 0.9999981]
     SpriteRendererComponent:
-      Color: [0.6962025, 0.4733196, 0.044063445, 1]
+      Color: [1, 0.73333335, 0.2784314, 1]
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -85,11 +97,11 @@ Entities:
     TagComponent:
       Tag: Quad
     TransformComponent:
-      Translation: [-1.3278995, 4.417936, -5.8207657e-11]
-      Rotation: [-0.025562083, -2.793968e-09, 1.8690836]
+      Translation: [-1.3278995, 4.417936, -5.8207654e-11]
+      Rotation: [-0.025562083, -2.7939677e-09, 1.8690836]
       Scale: [0.9999979, 0.9999975, 1]
     SpriteRendererComponent:
-      Color: [0.24666338, 0.8312236, 0.23147999, 1]
+      Color: [0.34509805, 0.7764706, 1, 1]
     RigidBody2DComponent:
       BodyType: Dynamic
       Fixed Rotation: false

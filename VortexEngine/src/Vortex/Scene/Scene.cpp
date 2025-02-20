@@ -100,6 +100,7 @@ namespace Vortex
 		//Copy Components
 		CopyComponent<TransformComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
 		CopyComponent<SpriteRendererComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<CircleRendererComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
 		CopyComponent<CameraComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
 		CopyComponent<NativeScriptComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
 		CopyComponent<RigidBody2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
@@ -137,6 +138,7 @@ namespace Vortex
 
 		CopyComponentIfExists<TransformComponent>(newEntity, entity);
 		CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
 		CopyComponentIfExists<CameraComponent>(newEntity, entity);
 		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
 		CopyComponentIfExists<RigidBody2DComponent>(newEntity, entity);
@@ -191,12 +193,27 @@ namespace Vortex
 	{
 		Renderer2D::BeginScene(camera);
 
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-
-		for (auto entity : group)
+		//Draw Sprites
 		{
-			auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawSprite(transform.GetTransform(), spriteRenderer, (int)entity);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+			for (auto entity : group)
+			{
+				auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawSprite(transform.GetTransform(), spriteRenderer, (int)entity);
+			}
+
+		}
+
+		//Draw Circles
+		{
+			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+
+			for (auto entity : view)
+			{
+				auto [transform, circleRenderer] = view.get<TransformComponent, CircleRendererComponent>(entity);
+				Renderer2D::DrawCircle(transform.GetTransform(), circleRenderer.Color, circleRenderer.Thickness, circleRenderer.Fade, (int)entity);
+			}
 		}
 
 		Renderer2D::EndScene();
@@ -269,12 +286,27 @@ namespace Vortex
 
 			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-
-			for (auto entity : group)
+			//Draw Sprites
 			{
-				auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuads(transform.GetTransform(), spriteRenderer.Color);
+				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+				for (auto entity : group)
+				{
+					auto [transform, spriteRenderer] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+					Renderer2D::DrawSprite(transform.GetTransform(), spriteRenderer, (int)entity);
+				}
+
+			}
+
+			//Draw Circles
+			{
+				auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+
+				for (auto entity : view)
+				{
+					auto [transform, circleRenderer] = view.get<TransformComponent, CircleRendererComponent>(entity);
+					Renderer2D::DrawCircle(transform.GetTransform(), circleRenderer.Color, circleRenderer.Thickness, circleRenderer.Fade, (int)entity);
+				}
 			}
 
 			Renderer2D::EndScene();
@@ -343,6 +375,13 @@ namespace Vortex
 
 	template<>
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+
+	}
+
+
+	template<>
+	void Scene::OnComponentAdded <CircleRendererComponent> (Entity entity, CircleRendererComponent& component)
 	{
 
 	}

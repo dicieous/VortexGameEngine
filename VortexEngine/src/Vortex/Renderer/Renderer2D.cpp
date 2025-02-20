@@ -23,6 +23,18 @@ namespace Vortex {
 		int EntityID;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 WorldPosition;
+		glm::vec3 LocalPosition;
+		glm::vec4 Color;
+		float Thickness;
+		float Fade;
+
+		//Editor-Only
+		int EntityID;
+	};
+
 	struct Renderer2Ddata
 	{
 		static const uint32_t MAX_QUADS = 10000;
@@ -30,15 +42,24 @@ namespace Vortex {
 		static const uint32_t MAX_INDICES = MAX_QUADS * 6;
 		static const uint32_t MAX_TEXTURE_SLOTS = 32; // TODO: Render Capabilities
 
+		//Quads
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
-		Ref<Shader> TextureShader;
+		Ref<Shader> QuadShader;
 		Ref<Texture2D> WhiteTexture;
 
 		uint32_t QuadIndexCount = 0;
-
 		QuadVertex* QuadVertexBufferBase;
 		QuadVertex* QuadVertexBufferPtr;
+
+		//Circles
+		Ref<VertexArray> CircleVertexArray;
+		Ref<VertexBuffer> CircleVertexBuffer;
+		Ref<Shader> CircleShader;
+
+		uint32_t CircleIndexCount = 0;
+		CircleVertex* CircleVertexBufferBase;
+		CircleVertex* CircleVertexBufferPtr;
 
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = white Texture
@@ -53,7 +74,7 @@ namespace Vortex {
 	void Renderer2D::Init()
 	{
 		VX_PROFILE_FUNCTION();
-
+		//Quads
 		s_2Ddata.QuadVertexArray = VertexArray::Create();
 
 		s_2Ddata.QuadVertexBuffer = VertexBuffer::Create(s_2Ddata.MAX_VERTICES * sizeof(QuadVertex));
@@ -94,6 +115,25 @@ namespace Vortex {
 
 		delete[] quadIndices;
 
+		//Circles
+		s_2Ddata.CircleVertexArray = VertexArray::Create();
+
+		s_2Ddata.CircleVertexBuffer = VertexBuffer::Create(s_2Ddata.MAX_VERTICES * sizeof(CircleVertex));
+
+		s_2Ddata.CircleVertexBuffer->SetLayout({
+			{ShaderDataType::Float3, "a_WorldPosition" },
+			{ShaderDataType::Float3, "a_LocalPosition" },
+			{ShaderDataType::Float4, "a_Color"		   },
+			{ShaderDataType::Float,	 "a_Thickness"	   },
+			{ShaderDataType::Float,	 "a_Fade"		   },
+			{ShaderDataType::Int,	 "a_EntityID"      },
+			});
+
+		s_2Ddata.CircleVertexArray->AddVertexBuffer(s_2Ddata.CircleVertexBuffer);
+		s_2Ddata.CircleVertexArray->SetIndexBuffer(quadIB); //Used QuadIB
+		s_2Ddata.CircleVertexBufferBase = new CircleVertex[s_2Ddata.MAX_VERTICES];
+
+		
 		s_2Ddata.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_2Ddata.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
@@ -104,10 +144,12 @@ namespace Vortex {
 			samplers[i] = i;
 		}
 
-		s_2Ddata.TextureShader = Shader::Create("Assets/Shaders/Texture.shader");
-		s_2Ddata.TextureShader->Bind();
-		s_2Ddata.TextureShader->SetIntArray("u_Texture", samplers, s_2Ddata.MAX_TEXTURE_SLOTS);
+		s_2Ddata.QuadShader = Shader::Create("Assets/Shaders/Renderer2D_Quad.shader");
+		s_2Ddata.QuadShader->Bind();
+		s_2Ddata.QuadShader->SetIntArray("u_Texture", samplers, s_2Ddata.MAX_TEXTURE_SLOTS);
 
+		s_2Ddata.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.shader");
+		
 		s_2Ddata.TextureSlots[0] = s_2Ddata.WhiteTexture;
 
 		s_2Ddata.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -127,11 +169,17 @@ namespace Vortex {
 
 		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
 
-		s_2Ddata.TextureShader->Bind();
-		s_2Ddata.TextureShader->SetMat4("u_ViewProjection", viewProj);
+		s_2Ddata.QuadShader->Bind();
+		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", viewProj);
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.CircleShader->Bind();
+		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", viewProj);
+
+		s_2Ddata.CircleIndexCount = 0;
+		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
 		s_2Ddata.TextureSlotIndex = 1;
 	}
@@ -140,11 +188,17 @@ namespace Vortex {
 	{
 		glm::mat4 viewProj = camera.GetViewProjectionMatrix();
 
-		s_2Ddata.TextureShader->Bind();
-		s_2Ddata.TextureShader->SetMat4("u_ViewProjection", viewProj);
+		s_2Ddata.QuadShader->Bind();
+		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", viewProj);
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.CircleShader->Bind();
+		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", viewProj);
+
+		s_2Ddata.CircleIndexCount = 0;
+		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
 		s_2Ddata.TextureSlotIndex = 1;
 	}
@@ -153,11 +207,17 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		s_2Ddata.TextureShader->Bind();
-		s_2Ddata.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_2Ddata.QuadShader->Bind();
+		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.CircleShader->Bind();
+		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
+		s_2Ddata.CircleIndexCount = 0;
+		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
 		s_2Ddata.TextureSlotIndex = 1;
 	}
@@ -166,27 +226,36 @@ namespace Vortex {
 	{
 		VX_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint8_t*)s_2Ddata.QuadVertexBufferPtr - (uint8_t*)s_2Ddata.QuadVertexBufferBase;
-		s_2Ddata.QuadVertexBuffer->SetData(s_2Ddata.QuadVertexBufferBase, dataSize);
-
 		Flush();
 	}
 
 	void Renderer2D::Flush()
 	{
-		if (s_2Ddata.QuadIndexCount == 0)
+		if (s_2Ddata.QuadIndexCount)
 		{
-			return; //Nothing to Draw
+			uint32_t dataSize = (uint8_t*)s_2Ddata.QuadVertexBufferPtr - (uint8_t*)s_2Ddata.QuadVertexBufferBase;
+			s_2Ddata.QuadVertexBuffer->SetData(s_2Ddata.QuadVertexBufferBase, dataSize);
+
+			//Bind Textures
+			for (uint32_t i = 0; i < s_2Ddata.TextureSlotIndex; i++)
+			{
+				s_2Ddata.TextureSlots[i]->Bind(i);
+			}
+
+			s_2Ddata.QuadShader->Bind();
+			RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray, s_2Ddata.QuadIndexCount);
+			s_2Ddata.Stats.DrawCalls++;
 		}
 
-		//Bind Textures
-		for (uint32_t i = 0; i < s_2Ddata.TextureSlotIndex; i++) {
-			s_2Ddata.TextureSlots[i]->Bind(i);
+		if (s_2Ddata.CircleIndexCount)
+		{
+			uint32_t dataSize = (uint8_t*)s_2Ddata.CircleVertexBufferPtr - (uint8_t*)s_2Ddata.CircleVertexBufferBase;
+			s_2Ddata.CircleVertexBuffer->SetData(s_2Ddata.CircleVertexBufferBase, dataSize);
+
+			s_2Ddata.CircleShader->Bind();
+			RenderCommand::DrawIndexed(s_2Ddata.CircleVertexArray, s_2Ddata.CircleIndexCount);
+			s_2Ddata.Stats.DrawCalls++;
 		}
-
-		RenderCommand::DrawIndexed(s_2Ddata.QuadVertexArray, s_2Ddata.QuadIndexCount);
-
-		s_2Ddata.Stats.DrawCalls++;
 	}
 
 
@@ -196,6 +265,9 @@ namespace Vortex {
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
+
+		s_2Ddata.CircleIndexCount = 0;
+		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
 		s_2Ddata.TextureSlotIndex = 1;
 	}
@@ -519,6 +591,31 @@ namespace Vortex {
 		}
 
 		s_2Ddata.QuadIndexCount += 6;
+
+		s_2Ddata.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int entityID)
+	{
+		VX_PROFILE_FUNCTION();
+
+		//if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
+		//	FlushAndReset();
+		
+		const int maxVertexCount = 4;
+
+		for (int i = 0; i < maxVertexCount; i++)
+		{
+			s_2Ddata.CircleVertexBufferPtr->WorldPosition = transform * s_2Ddata.QuadVertexPositions[i];
+			s_2Ddata.CircleVertexBufferPtr->LocalPosition = s_2Ddata.QuadVertexPositions[i] * 2.0f;
+			s_2Ddata.CircleVertexBufferPtr->Color = color;
+			s_2Ddata.CircleVertexBufferPtr->Thickness = thickness;
+			s_2Ddata.CircleVertexBufferPtr->Fade = fade;
+			s_2Ddata.CircleVertexBufferPtr->EntityID = entityID;
+			s_2Ddata.CircleVertexBufferPtr++;
+		}
+
+		s_2Ddata.CircleIndexCount += 6;
 
 		s_2Ddata.Stats.QuadCount++;
 	}

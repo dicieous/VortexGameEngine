@@ -114,7 +114,7 @@ namespace Vortex
 		Renderer2D::ResetStats();
 
 		m_FrameBuffer->Bind();
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.18f, 0.22f, 0.3f, 1.0f });
 		RenderCommand::Clear();
 
 		//Clear EntityID attachment to -1 
@@ -210,7 +210,7 @@ namespace Vortex
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSizeX = style.WindowMinSize.x;
-		style.WindowMinSize.x = 300.0f;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
@@ -515,21 +515,12 @@ namespace Vortex
 		if (serializer.Deserialize(filePath.string()))
 		{
 			m_EditorScene = newScene;
-			newScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_SceneHeirarchyPanel.SetContext(m_EditorScene);
 
 			m_ActiveScene = m_EditorScene;
 			m_EditorScenePath = filePath;
 		}
-
-		/*m_EditorScene = CreateRef<Scene>();
-		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHeirarchyPanel.SetContext(m_EditorScene);
-
-		SceneSerializer serialize(m_EditorScene);
-		serialize.Deserialize(filePath.string());
-
-		m_ActiveScene = m_EditorScene;*/
 	}
 
 	void EditorLayer::SaveSceneAs()

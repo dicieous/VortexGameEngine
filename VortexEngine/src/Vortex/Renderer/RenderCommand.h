@@ -28,9 +28,14 @@ namespace Vortex {
 			return s_RendereAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexcount = 0)
 		{ 
-			s_RendereAPI->DrawIndexed(vertexArray, count); 
+			s_RendereAPI->DrawIndexed(vertexArray, indexcount);
+		};
+
+		inline static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		{
+			s_RendereAPI->DrawLines(vertexArray, vertexCount);
 		};
 
 	private:

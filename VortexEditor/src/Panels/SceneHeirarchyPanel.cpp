@@ -232,65 +232,6 @@ namespace Vortex
 			}
 		}
 
-		ImGui::Separator();
-
-		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-
-		float panelWidth = ImGui::GetContentRegionAvail().x;
-		float buttonWidth = panelWidth * 0.5f;
-
-		// Center the button
-		ImGui::SetCursorPosX((panelWidth - buttonWidth) * 0.5f);
-
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
-
-		if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0)))
-			ImGui::OpenPopup("AddComponent");
-
-		ImGui::PopStyleVar();
-
-		if (ImGui::BeginPopup("AddComponent"))
-		{
-			if (!m_SelectionContext.HasComponent<CameraComponent>())
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_SelectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
-			{
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<RigidBody2DComponent>())
-			{
-				if (ImGui::MenuItem("RigidBody 2D"))
-				{
-					m_SelectionContext.AddComponent<RigidBody2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
-			{
-				if (ImGui::MenuItem("BoxCollider 2D"))
-				{
-					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			ImGui::EndPopup();
-		}
-
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
 				DrawVec3Control("Position", component.Translation);
@@ -394,6 +335,15 @@ namespace Vortex
 				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 
+
+		DrawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+				ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+				ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
+			});
+
+
 		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
 			{
 				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
@@ -430,5 +380,78 @@ namespace Vortex
 				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
+
+
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.0f, 4.0f));
+
+
+		float panelWidth = ImGui::GetWindowWidth();
+		float buttonWidth = panelWidth * 0.5f;
+
+		// Center the button
+		ImGui::SetCursorPosX((panelWidth - buttonWidth) * 0.5f);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+
+		if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0)))
+			ImGui::OpenPopup("AddComponent");
+
+		ImGui::PopStyleVar();
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (!m_SelectionContext.HasComponent<CameraComponent>())
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_SelectionContext.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
+			{
+				if (ImGui::MenuItem("Sprite Renderer"))
+				{
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<CircleRendererComponent>())
+			{
+				if (ImGui::MenuItem("Circle Renderer"))
+				{
+					m_SelectionContext.AddComponent<CircleRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<RigidBody2DComponent>())
+			{
+				if (ImGui::MenuItem("RigidBody 2D"))
+				{
+					m_SelectionContext.AddComponent<RigidBody2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
+			{
+				if (ImGui::MenuItem("BoxCollider 2D"))
+				{
+					m_SelectionContext.AddComponent<BoxCollider2DComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+			}
+			
+			ImGui::EndPopup();
+			
+
+		}
+
+		ImGui::Dummy(ImVec2(0.0f, 100.0f));
 	}
 }

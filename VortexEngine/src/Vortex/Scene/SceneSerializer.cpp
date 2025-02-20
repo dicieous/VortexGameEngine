@@ -218,6 +218,19 @@ namespace Vortex
 			out ENDMAP;//SpriteRenderer
 		}
 
+		if (entity.HasComponent<CircleRendererComponent>())
+		{
+			out KEY("CircleRendererComponent");
+			out STARTMAP;//CircleRenderer
+
+			auto& circleComp = entity.GetComponent<CircleRendererComponent>();
+			out KEYVAL("Color", circleComp.Color);
+			out KEYVAL("Thickness", circleComp.Thickness);
+			out KEYVAL("Fade", circleComp.Fade);
+
+			out ENDMAP;//CircleRenderer
+		}
+
 		if (entity.HasComponent<RigidBody2DComponent>())
 		{
 			out KEY("RigidBody2DComponent");
@@ -327,6 +340,15 @@ namespace Vortex
 				{
 					auto& spriteC = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					spriteC.Color = spriteComponent["Color"].as<glm::vec4>();
+				}
+
+				auto circleComponent = entity["CircleRendererComponent"];
+				if (circleComponent)
+				{
+					auto& circleC = deserializedEntity.AddComponent<CircleRendererComponent>();
+					circleC.Color = circleComponent["Color"].as<glm::vec4>();
+					circleC.Thickness = circleComponent["Thickness"].as<float>();
+					circleC.Fade = circleComponent["Fade"].as<float>();
 				}
 
 				auto rb2DComponent = entity["RigidBody2DComponent"];
