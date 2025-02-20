@@ -33,9 +33,14 @@ namespace Vortex {
 			s_RendereAPI->DrawIndexed(vertexArray, indexcount);
 		};
 
-		inline static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		inline static void DrawLine(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
 		{
-			s_RendereAPI->DrawLines(vertexArray, vertexCount);
+			s_RendereAPI->DrawLine(vertexArray, vertexCount);
+		};
+
+		inline static void SetLineWidth(float thickness)
+		{
+			s_RendereAPI->SetLineWidth(thickness);
 		};
 
 	private:

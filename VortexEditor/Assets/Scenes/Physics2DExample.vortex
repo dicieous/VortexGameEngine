@@ -5,20 +5,30 @@ Entities:
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Translation: [0.6090183, 2.4360695, 0.69890666]
-      Rotation: [0, -0, 0]
+      Translation: [0.6090183, 2.4360695, 0]
+      Rotation: [0, 0, 0]
       Scale: [2, 2, 1]
     CircleRendererComponent:
       Color: [1, 0.98734176, 0, 1]
       Thickness: 0.15
-      Fade: 0.05
+      Fade: 0.02
+    RigidBody2DComponent:
+      BodyType: Dynamic
+      Fixed Rotation: false
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 1
+      Density: 1
+      Friction: 0.29
+      Restitution: 0.66
+      RestitutionThreshold: 0.5
 
   - Entity: 1258047236883739555
     TagComponent:
       Tag: Surface
     TransformComponent:
-      Translation: [-0.36631036, 0.4361267, 0.11737059]
-      Rotation: [0, -0, -0.23417416]
+      Translation: [-0.36631012, 0.43612665, 0]
+      Rotation: [0, 0, -0.23417416]
       Scale: [14.153131, 1.0686287, 1]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
@@ -37,8 +47,8 @@ Entities:
     TagComponent:
       Tag: Surface
     TransformComponent:
-      Translation: [-2.0574417, -12.369278, -3.1190186]
-      Rotation: [0.007376938, -0.030276772, -0.112238094]
+      Translation: [-2.0574417, -12.369278, 0]
+      Rotation: [0, 0, -0.112238094]
       Scale: [20.159826, 1.0686283, 1]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
@@ -57,7 +67,7 @@ Entities:
     TagComponent:
       Tag: Quad
     TransformComponent:
-      Translation: [2.9929624, 3.9035468, -5.820765e-11]
+      Translation: [2.967385, 3.8956828, 0]
       Rotation: [-0.025562083, -2.7939677e-09, 1.8690836]
       Scale: [0.9999979, 0.9999975, 1]
     SpriteRendererComponent:
@@ -69,17 +79,17 @@ Entities:
       Offset: [0, 0]
       Size: [0.5, 0.5]
       Density: 1
-      Friction: 0.5
-      Restitution: 0.21
+      Friction: 0.24
+      Restitution: 0.73
       RestitutionThreshold: 0.5
 
   - Entity: 12373683107172240926
     TagComponent:
       Tag: Surface
     TransformComponent:
-      Translation: [12.64572, -4.648056, -1.0695801]
-      Rotation: [-0.03902301, -0.17557018, 0.6262409]
-      Scale: [16.511993, 1.0686271, 0.9999981]
+      Translation: [13.754339, -3.771033, -1.3120726]
+      Rotation: [7.078794e-08, -8.881784e-15, 0.5811948]
+      Scale: [16.512001, 1.0686272, 0.9999981]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
     RigidBody2DComponent:
@@ -97,9 +107,9 @@ Entities:
     TagComponent:
       Tag: Quad
     TransformComponent:
-      Translation: [-1.3278995, 4.417936, -5.8207654e-11]
-      Rotation: [-0.025562083, -2.7939677e-09, 1.8690836]
-      Scale: [0.9999979, 0.9999975, 1]
+      Translation: [-1.3278995, 4.417936, -1.4901161e-08]
+      Rotation: [-0.05524006, -5.5879354e-09, 1.8690835]
+      Scale: [0.99999803, 0.99999845, 1]
     SpriteRendererComponent:
       Color: [0.34509805, 0.7764706, 1, 1]
     RigidBody2DComponent:
@@ -109,15 +119,15 @@ Entities:
       Offset: [0, 0]
       Size: [0.5, 0.5]
       Density: 1
-      Friction: 0.5
-      Restitution: 0.21
+      Friction: 0.21
+      Restitution: 0.82
       RestitutionThreshold: 0.5
 
   - Entity: 11384544110414188875
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [0, 0.82412004, 7.7228284]
+      Translation: [4.66467, -4.547631, 19.061773]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -125,7 +135,7 @@ Entities:
       OrthographicSize: 10
       OrthographicNearClip: -1
       OrthographicFarClip: 1
-      PerspectiveFOV: 0.7853982
+      PerspectiveFOV: 1.0471976
       PerspectiveFarClip: 1000
       PerspectiveNearClip: 0.001
       Primary Camera: true

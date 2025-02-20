@@ -261,6 +261,24 @@ namespace Vortex
 			out ENDMAP;//BoxCollider2D
 		}
 
+		if (entity.HasComponent<CircleCollider2DComponent>())
+		{
+			out KEY("CircleCollider2DComponent");
+			out STARTMAP;//CircleCollider2D
+
+			auto& cc2DComp = entity.GetComponent<CircleCollider2DComponent>();
+
+			out KEYVAL("Offset", cc2DComp.Offset);
+			out KEYVAL("Radius", cc2DComp.Radius);
+
+			out KEYVAL("Density", cc2DComp.Density);
+			out KEYVAL("Friction", cc2DComp.Friction);
+			out KEYVAL("Restitution", cc2DComp.Restitution);
+			out KEYVAL("RestitutionThreshold", cc2DComp.RestitutionThreshold);
+
+			out ENDMAP;//CircleCollider2D
+		}
+
 		out ENDMAP; //Entity
 	}
 
@@ -370,6 +388,19 @@ namespace Vortex
 					bc2DC.Friction = bc2DComponent["Friction"].as<float>();
 					bc2DC.Restitution = bc2DComponent["Restitution"].as<float>();
 					bc2DC.RestitutionThreshold = bc2DComponent["RestitutionThreshold"].as<float>();
+				}
+
+				auto cc2DComponent = entity["CircleCollider2DComponent"];
+				if (cc2DComponent)
+				{
+					auto& cc2DC = deserializedEntity.AddComponent<CircleCollider2DComponent>();
+					cc2DC.Offset = cc2DComponent["Offset"].as<glm::vec2>();
+					cc2DC.Radius = cc2DComponent["Radius"].as<float>();
+
+					cc2DC.Density = cc2DComponent["Density"].as<float>();
+					cc2DC.Friction = cc2DComponent["Friction"].as<float>();
+					cc2DC.Restitution = cc2DComponent["Restitution"].as<float>();
+					cc2DC.RestitutionThreshold = cc2DComponent["RestitutionThreshold"].as<float>();
 				}
 
 				auto cameraComponent = entity["CameraComponent"];

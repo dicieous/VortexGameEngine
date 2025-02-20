@@ -25,6 +25,7 @@ namespace Vortex {
 
 		//TODO: Make it Clean
 		//primitives////
+		//Quads
 		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuads(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuads(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
@@ -45,7 +46,18 @@ namespace Vortex {
 		static void DrawRotatedQuads(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 		static void DrawRotatedQuads(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f,1.0f,1.0f,1.0f });
 
+		//Circles
 		static void DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness = 1.0f, float fade = 0.005f, int entityID = -1);
+
+		//Lines
+		static void DrawLine(const glm::vec3& p0, const glm::vec3& p1, const glm::vec4& color, int entityID = -1);
+		void SetLineWidth(float width);
+		float GetLineWidth() const;
+
+		//Rect
+		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityID = -1);
+
 
 		//Editor-Only
 		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID);
