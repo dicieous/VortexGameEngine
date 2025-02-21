@@ -6,6 +6,34 @@
 
 namespace Vortex
 {
+	static void DrawTextWithEllipsis(const char* text, float maxWidth)
+	{
+		ImVec2 textSize = ImGui::CalcTextSize(text);
+		if (textSize.x <= maxWidth)
+		{
+			// Center the text if it fits
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (maxWidth - textSize.x) * 0.5f);
+			ImGui::TextUnformatted(text);
+			return;
+		}
+
+		// Text needs truncation
+		std::string displayText = text;
+		const char* ellipsis = "...";
+		float ellipsisWidth = ImGui::CalcTextSize(ellipsis).x;
+
+		while (textSize.x > maxWidth - ellipsisWidth && !displayText.empty())
+		{
+			displayText.pop_back();
+			textSize = ImGui::CalcTextSize(displayText.c_str());
+		}
+
+		displayText += ellipsis;
+		// Center the truncated text
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (maxWidth - ImGui::CalcTextSize(displayText.c_str()).x) * 0.5f);
+		ImGui::TextUnformatted(displayText.c_str());
+	}
+
 	//Once we have Projects, Change this
 	extern const std::filesystem::path g_AssetsPath = "Assets";
 
@@ -28,7 +56,7 @@ namespace Vortex
 			}
 		}
 
-		static float padding = 16.0f;
+		const float padding = 10.0f;
 		static float thumbnailSize = 64;
 		float cellSize = thumbnailSize + padding;
 
@@ -65,15 +93,45 @@ namespace Vortex
 					m_CurrentDirectory /= path.filename();
 			}
 
-			ImGui::TextWrapped(fileNameString.c_str());
+			DrawTextWithEllipsis(fileNameString.c_str(), thumbnailSize);
 
 			ImGui::NextColumn();
 		}
 
 		ImGui::Columns(1);
 
-		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
-		ImGui::SliderFloat("Padding", &padding, 0, 32);
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNav;
+		ImGui::Begin("##SliderPanel", nullptr, windowFlags);
+
+		// Style the minimal slider
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.3f, 0.3f, 0.3f, 0.3f));         // Barely visible track
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));  // Slightly more visible on hover
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));   // Same as hover
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.8f, 0.8f, 0.8f, 0.8f));      // Light gray handle
+		ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); // White when active
+
+		// Make the slider thinner
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);    // Square corners    
+		ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 7.0f);      // Smaller grab handle
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.0f, 2.0f)); // Minimal padding
+		ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 2.0f);     // Slightly rounded handle
+
+		// Position at bottom left
+		float windowWidth = ImGui::GetWindowSize().x;
+		float sliderWidth = 150.0f; // Adjust width as needed
+		//ImGui::SetWindowSize(ImVec2(windowWidth, 10.0f));
+		float windowHeight = ImGui::GetWindowSize().y;
+		ImGui::SetCursorPos(ImVec2((windowWidth - (sliderWidth + 10.0f)), 6.0f));
+
+		ImGui::PushItemWidth(sliderWidth);
+		ImGui::SliderFloat("##ThumbnailSize", &thumbnailSize, 32.0f, 256.0f, "");
+		ImGui::PopItemWidth();
+
+		// Pop all style modifications
+		ImGui::PopStyleVar(4);
+		ImGui::PopStyleColor(5);
+
+		ImGui::End();	
 
 		//TODO:Status Bar
 		ImGui::End();

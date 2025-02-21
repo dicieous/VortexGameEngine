@@ -48,10 +48,14 @@ namespace Vortex {
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 5.0f;
-			style.FrameRounding = 5.0f;
+			style.FrameRounding = 4.0f;
 			style.PopupRounding = 5.0f;
 			style.TabRounding = 5.0f;
-
+			style.DockingSeparatorSize = 0.7f;
+			style.WindowBorderSize = 0.1f;
+			//style.FrameBorderSize = 0.0f;
+			style.TabBorderSize = 0.0f;
+			style.TabBarOverlineSize = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 

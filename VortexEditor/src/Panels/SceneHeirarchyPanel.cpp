@@ -407,8 +407,8 @@ namespace Vortex
 
 		DrawComponent<CircleCollider2DComponent>("CircleCollider 2D", entity, [](auto& component)
 			{
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat("Radius", &component.Radius);
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset),0.1f, 0.0f);
+				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f);
 
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
