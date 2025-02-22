@@ -11,6 +11,9 @@
 #include "Window.h"
 #include "Vortex/Core/TimeStep.h"
 
+
+int main(int argc, char** argv);
+
 namespace Vortex {
 
 	class VORTEX_API Application
@@ -21,7 +24,6 @@ namespace Vortex {
 
 		virtual ~Application();
 
-		void Run();
 		void OnEvent(Event& e);
 
 		void PushLayer(Layer* layer);
@@ -39,6 +41,7 @@ namespace Vortex {
 		bool OnWindowResize(WindowResizeEvent& e);
 
 	private:
+		void Run();
 		Scope<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
@@ -52,6 +55,7 @@ namespace Vortex {
 
 	private:
 		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
 	};
 
 	//To be defined in CLIENT

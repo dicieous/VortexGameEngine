@@ -9,7 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 
-namespace Vortex {
+namespace Vortex
+{
 
 	struct QuadVertex
 	{
@@ -115,7 +116,8 @@ namespace Vortex {
 		uint32_t* quadIndices = new uint32_t[s_2Ddata.MAX_INDICES];
 
 		uint32_t offset = 0;
-		for (int i = 0; i < s_2Ddata.MAX_INDICES; i += 6) {
+		for (int i = 0; i < s_2Ddata.MAX_INDICES; i += 6)
+		{
 
 			if (i + 5 >= s_2Ddata.MAX_INDICES) break;
 
@@ -174,7 +176,8 @@ namespace Vortex {
 
 		int samplers[s_2Ddata.MAX_TEXTURE_SLOTS];
 
-		for (uint32_t i = 0; i < s_2Ddata.MAX_TEXTURE_SLOTS; i++) {
+		for (uint32_t i = 0; i < s_2Ddata.MAX_TEXTURE_SLOTS; i++)
+		{
 			samplers[i] = i;
 		}
 
@@ -184,7 +187,7 @@ namespace Vortex {
 
 		s_2Ddata.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.shader");
 		s_2Ddata.LineShader = Shader::Create("Assets/Shaders/Renderer2D_Line.shader");
-		
+
 		s_2Ddata.TextureSlots[0] = s_2Ddata.WhiteTexture;
 
 		s_2Ddata.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
@@ -217,7 +220,7 @@ namespace Vortex {
 		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.CircleIndexCount = 0;
 		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
-		
+
 		s_2Ddata.LineShader->Bind();
 		s_2Ddata.LineShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.LineVertexCount = 0;
@@ -318,7 +321,8 @@ namespace Vortex {
 	}
 
 
-	void Renderer2D::FlushAndReset() {
+	void Renderer2D::FlushAndReset()
+	{
 
 		EndScene();
 
@@ -393,6 +397,9 @@ namespace Vortex {
 
 		if (textureIndex == 0.0f)
 		{
+			if (s_2Ddata.TextureSlotIndex >= Renderer2Ddata::MAX_TEXTURE_SLOTS)
+				FlushAndReset();
+
 			textureIndex = (float)s_2Ddata.TextureSlotIndex;
 			s_2Ddata.TextureSlots[s_2Ddata.TextureSlotIndex] = texture;
 			s_2Ddata.TextureSlotIndex++;
@@ -573,6 +580,9 @@ namespace Vortex {
 
 		if (textureIndex == 0.0f)
 		{
+			if (s_2Ddata.TextureSlotIndex >= Renderer2Ddata::MAX_TEXTURE_SLOTS)
+				FlushAndReset();
+
 			textureIndex = (float)s_2Ddata.TextureSlotIndex;
 			s_2Ddata.TextureSlots[s_2Ddata.TextureSlotIndex] = texture;
 			s_2Ddata.TextureSlotIndex++;
@@ -660,7 +670,7 @@ namespace Vortex {
 
 		//if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
 		//	FlushAndReset();
-		
+
 		const int maxVertexCount = 4;
 
 		for (int i = 0; i < maxVertexCount; i++)

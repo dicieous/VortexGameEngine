@@ -132,9 +132,9 @@ Entities:
       Scale: [1, 1, 1]
     CameraComponent:
       ProjectionType: Perspective
-      OrthographicSize: 10
+      OrthographicSize: 20
       OrthographicNearClip: -1
-      OrthographicFarClip: 1
+      OrthographicFarClip: 30
       PerspectiveFOV: 1.0471976
       PerspectiveFarClip: 1000
       PerspectiveNearClip: 0.001
