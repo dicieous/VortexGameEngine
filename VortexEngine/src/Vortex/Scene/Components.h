@@ -162,4 +162,21 @@ namespace Vortex
 		CircleCollider2DComponent() = default;
 		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
 	};
+
+	template<typename... Component>
+	struct ComponentGroup
+	{
+
+	};
+
+	using AllComponent = 
+		ComponentGroup<
+		TransformComponent,
+		NativeScriptComponent,
+		CameraComponent,
+		SpriteRendererComponent,
+		CircleRendererComponent,
+		RigidBody2DComponent,
+		BoxCollider2DComponent,
+		CircleCollider2DComponent>;
 }
