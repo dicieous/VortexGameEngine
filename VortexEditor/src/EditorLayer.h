@@ -37,6 +37,7 @@ namespace Vortex {
 		void SerializeScene(Ref<Scene> scene, const std::filesystem::path& filePath);
 
 		void OnScenePlay();
+		void OnSceneSimulate();
 		void OnSceneStop();
 
 		void OnDuplicateEntity();
@@ -81,6 +82,7 @@ namespace Vortex {
 		{
 			Edit = 0,
 			Play = 1,
+			Simulate = 2,
 		};
 
 		SceneState m_SceneState = SceneState::Edit;
@@ -91,6 +93,7 @@ namespace Vortex {
 
 		//Editor Resources
 		Ref<Texture2D> m_PlayIconTexture;
+		Ref<Texture2D> m_SimulateIconTexture;
 		Ref<Texture2D> m_StopIconTexture;
 	};
 }

@@ -21,6 +21,7 @@ namespace Vortex
 	{
 		m_checkerBoardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
 		m_PlayIconTexture = Texture2D::Create("Resources/Icons/PlayButton.png");
+		m_SimulateIconTexture = Texture2D::Create("Resources/Icons/SimulateButton.png");
 		m_StopIconTexture = Texture2D::Create("Resources/Icons/StopButton.png");
 
 		FrameBufferSpecifications frameSpecs;
@@ -30,7 +31,8 @@ namespace Vortex
 
 		m_FrameBuffer = FrameBuffer::Create(frameSpecs);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_EditorScene = CreateRef<Scene>();
+		m_ActiveScene = m_EditorScene;
 
 		m_EditorCamera = EditorCamera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f);
 
@@ -124,22 +126,30 @@ namespace Vortex
 		switch (m_SceneState)
 		{
 		case SceneState::Edit:
+		{
+			if (m_ViewPortFocused)
 			{
-				if (m_ViewPortFocused)
-				{
-					m_CameraController.OnUpdate(timeStep);
-				}
-
-				m_EditorCamera.OnUpdate(timeStep);
-				m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
-
-				break;
+				m_CameraController.OnUpdate(timeStep);
 			}
+
+			m_EditorCamera.OnUpdate(timeStep);
+			m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
+
+			break;
+		}
+
 		case SceneState::Play:
-			{
-				m_ActiveScene->OnUpdateRuntime(timeStep);
-				break;
-			}
+		{
+			m_ActiveScene->OnUpdateRuntime(timeStep);
+			break;
+		}
+
+		case SceneState::Simulate:
+		{
+			m_EditorCamera.OnUpdate(timeStep);
+			m_ActiveScene->OnUpdateSimulation(timeStep, m_EditorCamera);
+			break;
+		}
 		}
 
 		auto [mouseX, mouseY] = ImGui::GetMousePos();
@@ -304,7 +314,7 @@ namespace Vortex
 		m_ViewportSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 		ImGui::Image(texture, ImVec2{ m_ViewportSize.x , m_ViewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
-		
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -393,9 +403,9 @@ namespace Vortex
 		}
 
 		ImGui::PopStyleVar();
-		
+
 		UI_ToolBar();
-		
+
 		ImGui::End();
 	}
 
@@ -413,17 +423,34 @@ namespace Vortex
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
 
 		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-		
-		float size = ImGui::GetWindowHeight() - 4.0f;
-		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_PlayIconTexture : m_StopIconTexture;
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 
-		if (ImGui::ImageButton("##icon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
+		float size = ImGui::GetWindowHeight() - 4.0f;
 		{
-			if (m_SceneState == SceneState::Edit)
-				OnScenePlay();
-			else if (m_SceneState == SceneState::Play)
-				OnSceneStop();
+			Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_PlayIconTexture : m_StopIconTexture;
+			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton("##Playicon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
+			{
+				if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate)
+					OnScenePlay();
+				else if (m_SceneState == SceneState::Play)
+					OnSceneStop();
+			}
+		}
+
+		ImGui::SameLine();
+
+		{
+			Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_SimulateIconTexture : m_StopIconTexture;
+			//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton("##Simulateicon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
+			{
+				if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play)
+					OnSceneSimulate();
+				else if (m_SceneState == SceneState::Simulate)
+					OnSceneStop();
+			}
 		}
 
 		ImGui::PopStyleVar(3);
@@ -531,6 +558,9 @@ namespace Vortex
 		if (m_SceneState == SceneState::Play)
 		{
 			Entity camera = m_ActiveScene->GetPrimaryCameraEntity();
+			if (!camera)
+				return;
+
 			Renderer2D::BeginScene(camera.GetComponent<CameraComponent>().Camera, camera.GetComponent<TransformComponent>().GetTransform());
 		}
 		else
@@ -611,7 +641,7 @@ namespace Vortex
 			VX_CORE_WARN("Could not Load {0} - Not a Scene File", filePath.filename().string());
 			return;
 		}
-		
+
 		Ref<Scene> newScene = CreateRef<Scene>();
 		SceneSerializer serializer(newScene);
 		if (serializer.Deserialize(filePath.string()))
@@ -656,6 +686,9 @@ namespace Vortex
 
 	void EditorLayer::OnScenePlay()
 	{
+		if (m_SceneState == SceneState::Simulate)
+			OnSceneStop();
+
 		m_SceneState = SceneState::Play;
 
 		m_ActiveScene = Scene::Copy(m_EditorScene);
@@ -664,11 +697,36 @@ namespace Vortex
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
+	void EditorLayer::OnSceneSimulate()
+	{
+		if (m_SceneState == SceneState::Play)
+			OnSceneStop();
+
+		m_SceneState = SceneState::Simulate;
+
+		m_ActiveScene = Scene::Copy(m_EditorScene);
+		m_ActiveScene->OnSimulationStart();
+
+		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
+	}
+
 	void EditorLayer::OnSceneStop()
 	{
+		VX_CORE_ASSERT((m_SceneState == SceneState::Play || m_SceneState == SceneState::Simulate), "Invalid Scene");
+
+		switch (m_SceneState)
+		{
+		case SceneState::Play:
+			m_ActiveScene->OnRuntimeStop();
+			break;
+
+		case SceneState::Simulate:
+			m_ActiveScene->OnSimulationStop();
+			break;
+		}
+
 		m_SceneState = SceneState::Edit;
-		
-		m_ActiveScene->OnRuntimeStop();
+
 		m_ActiveScene = m_EditorScene;
 
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
@@ -678,12 +736,12 @@ namespace Vortex
 	{
 		if (m_SceneState != SceneState::Edit)
 			return;
-		
+
 		Entity selectedEntity = m_SceneHeirarchyPanel.GetSelectedEntity();
 		if (selectedEntity)
 		{
 			m_EditorScene->DuplicateEntity(selectedEntity);
 		}
 	}
-	
+
 }
