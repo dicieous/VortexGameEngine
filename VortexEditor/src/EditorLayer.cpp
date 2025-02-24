@@ -474,7 +474,7 @@ namespace Vortex
 	{
 		//Shortcuts
 		//TODO: Improve the Shortcuts
-		if (event.GetRepeatCount() > 0)
+		if (event.IsRepeated())
 		{
 			return false;
 		}

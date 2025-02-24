@@ -97,7 +97,7 @@ namespace Vortex {
 				{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(keyCode, scanCode, 0);
+					KeyPressedEvent event(keyCode, scanCode, false);
 					data.EventCallback(event);
 					break;
 				}
@@ -109,7 +109,7 @@ namespace Vortex {
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(keyCode, scanCode, 1);
+					KeyPressedEvent event(keyCode, scanCode, true);
 					data.EventCallback(event);
 					break;
 				}

@@ -24,20 +24,21 @@ namespace Vortex {
 	class VORTEX_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keyCode, int scanCode, int repeatCount) : KeyEvent(keyCode, scanCode), m_repeatCount(repeatCount) {}
+		KeyPressedEvent(int keyCode, int scanCode, bool IsRepeated) 
+			: KeyEvent(keyCode, scanCode), m_IsRepeated(IsRepeated) {}
 
-		inline int GetRepeatCount() const { return m_repeatCount; }
+		inline bool IsRepeated() const { return m_IsRepeated; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_repeatCount << " repeats)";
+			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_IsRepeated << " repeats)";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
 	private:
-		int m_repeatCount;
+		bool m_IsRepeated;
 	};
 
 	class VORTEX_API KeyTypedEvent : public KeyEvent
