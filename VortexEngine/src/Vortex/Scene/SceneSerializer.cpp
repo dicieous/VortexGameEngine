@@ -48,6 +48,7 @@ namespace YAML
 			node.push_back(rhs.x);
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
+			node.SetStyle(EmitterStyle::Flow);
 
 			return node;
 		}
@@ -74,6 +75,7 @@ namespace YAML
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
 			node.push_back(rhs.w);
+			node.SetStyle(EmitterStyle::Flow);
 
 			return node;
 		}
@@ -315,7 +317,17 @@ namespace Vortex
 		std::stringstream str;
 		str << stream.rdbuf();
 
-		YAML::Node data = YAML::Load(str.str());
+		YAML::Node data;
+		try
+		{
+			data = YAML::LoadFile(filePath);
+		}
+		catch (YAML::ParserException e)
+		{
+			VX_CORE_ERROR("Failed to load .vortex File {0}\n {1} ", filePath, e.what());
+			return false;
+		}
+
 		if (!data["Scene"])
 			return false;
 

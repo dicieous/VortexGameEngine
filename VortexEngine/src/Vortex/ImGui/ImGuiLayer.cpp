@@ -51,12 +51,13 @@ namespace Vortex {
 			style.FrameRounding = 4.0f;
 			style.PopupRounding = 5.0f;
 			style.TabRounding = 5.0f;
-			style.DockingSeparatorSize = 0.7f;
-			style.WindowBorderSize = 0.1f;
-			//style.FrameBorderSize = 0.0f;
+			style.DockingSeparatorSize = 0.6f;
+			style.WindowBorderSize = 0.0f;
+			style.FrameBorderSize = 0.0f;
 			style.TabBorderSize = 0.0f;
-			style.TabBarOverlineSize = 0.0f;
+			style.TabBarOverlineSize = 0.1f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+			style.WindowMenuButtonPosition = ImGuiDir_None;
 		}
 
 		SetDarkThemeColor();
@@ -129,32 +130,34 @@ namespace Vortex {
 	void ImGuiLayer::SetDarkThemeColor()
 	{
 		auto& styleColors = ImGui::GetStyle().Colors;
-		styleColors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
+		styleColors[ImGuiCol_WindowBg] = ImVec4{ 0.18f, 0.18f, 0.18f, 1.0f };
+		styleColors[ImGuiCol_BorderShadow] = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		styleColors[ImGuiCol_Border] = ImVec4{ 0.11f, 0.11, 0.11, 1.0f };
 
 		// Headers
-		styleColors[ImGuiCol_Header] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+		styleColors[ImGuiCol_Header] = ImVec4{ 0.12f, 0.125f, 0.12f, 1.0f };
 		styleColors[ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
 		styleColors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 
 		// Buttons
-		styleColors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+		styleColors[ImGuiCol_Button] = ImVec4{ 0.24f, 0.24f, 0.24f, 1.0f };
 		styleColors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
 		styleColors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 
 		// Frame BG
-		styleColors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+		styleColors[ImGuiCol_FrameBg] = ImVec4{ 0.24f, 0.24f, 0.24f, 1.0f };
 		styleColors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
 		styleColors[ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 
 		// Tabs
-		styleColors[ImGuiCol_Tab] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		styleColors[ImGuiCol_Tab] = ImVec4{ 0.24f, 0.24f, 0.24f, 1.0f };
 		styleColors[ImGuiCol_TabHovered] = ImVec4{ 0.38f, 0.3805f, 0.381f, 1.0f };
 		styleColors[ImGuiCol_TabActive] = ImVec4{ 0.28f, 0.2805f, 0.281f, 1.0f };
 		styleColors[ImGuiCol_TabUnfocused] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		styleColors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
 
 		//Title
-		styleColors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+		styleColors[ImGuiCol_TitleBg] = ImVec4{ 0.12f, 0.12f, 0.12f, 1.0f };
 		styleColors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		styleColors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 

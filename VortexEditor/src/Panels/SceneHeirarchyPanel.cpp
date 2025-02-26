@@ -343,7 +343,27 @@ namespace Vortex
 			{
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
-				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				ImVec2 textureSlotSize = { 100.0f, 100.0f };
+				ImTextureID textureID = (component.Texture) ? component.Texture->GetRendererID() : -1;
+
+				if (!component.Texture)
+				{
+					auto greyTexture = Texture2D::Create(1, 1);
+					uint8_t grayTextureData[4] = { 192, 192, 192, 255 }; // R, G, B, A
+					greyTexture->SetData(grayTextureData, sizeof(grayTextureData));
+					textureID = greyTexture->GetRendererID();
+				}
+
+				ImGui::Text("Albedo: ");
+				ImGui::SameLine(0.0f, 5.0f);
+				
+				ImGui::ImageButton("TextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+				{
+					component.Texture = nullptr;
+				}
+
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -407,7 +427,7 @@ namespace Vortex
 
 		DrawComponent<CircleCollider2DComponent>("CircleCollider 2D", entity, [](auto& component)
 			{
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset),0.1f, 0.0f);
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset), 0.1f, 0.0f);
 				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f);
 
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -492,9 +512,9 @@ namespace Vortex
 					ImGui::CloseCurrentPopup();
 				}
 			}
-			
+
 			ImGui::EndPopup();
-			
+
 
 		}
 

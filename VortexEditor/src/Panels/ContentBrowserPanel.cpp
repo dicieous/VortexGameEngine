@@ -46,6 +46,7 @@ namespace Vortex
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_DockingSeparatorSize, 0.0f);
 		ImGui::Begin("Content Browser");
 
 		if (m_CurrentDirectory != std::filesystem::path(g_AssetsPath))
@@ -100,11 +101,12 @@ namespace Vortex
 
 		ImGui::Columns(1);
 
-		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration;
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize;
+		ImGui::PushStyleVar(ImGuiStyleVar_DockingSeparatorSize, 0.0f);
 		ImGui::Begin("##SliderPanel", nullptr, windowFlags);
 
 		// Style the minimal slider
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.3f, 0.3f, 0.3f, 0.3f));         // Barely visible track
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.11f, 0.11f, 0.11f, 0.6f));         // Barely visible track
 		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));  // Slightly more visible on hover
 		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));   // Same as hover
 		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.8f, 0.8f, 0.8f, 0.8f));      // Light gray handle
@@ -132,6 +134,7 @@ namespace Vortex
 		ImGui::PopStyleColor(5);
 
 		ImGui::End();	
+		ImGui::PopStyleVar(2);
 
 		//TODO:Status Bar
 		ImGui::End();

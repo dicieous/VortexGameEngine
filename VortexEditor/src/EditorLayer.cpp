@@ -116,7 +116,7 @@ namespace Vortex
 		Renderer2D::ResetStats();
 
 		m_FrameBuffer->Bind();
-		RenderCommand::SetClearColor({ 0.18f, 0.22f, 0.3f, 1.0f });
+		RenderCommand::SetClearColor({ 0.15f, 0.25f, 0.35f, 1.0f });
 		RenderCommand::Clear();
 
 		//Clear EntityID attachment to -1 
@@ -336,6 +336,7 @@ namespace Vortex
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize; // Prevents docking if unwanted
 
 		// Begin floating window
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
 		ImGui::Begin("##Floating Panel", nullptr, windowFlags);
 		ImGui::Dummy({ 1.0f, 5.0f });
 
@@ -359,7 +360,7 @@ namespace Vortex
 		ImGui::SetWindowPos(floatingWindowPos);
 
 		ImGui::End();
-
+		ImGui::PopStyleVar();
 
 		//Gizmos
 
@@ -422,7 +423,7 @@ namespace Vortex
 		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
 
-		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize);
 
 		float size = ImGui::GetWindowHeight() - 4.0f;
 		{
@@ -442,7 +443,6 @@ namespace Vortex
 
 		{
 			Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_SimulateIconTexture : m_StopIconTexture;
-			//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 
 			if (ImGui::ImageButton("##Simulateicon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
 			{
