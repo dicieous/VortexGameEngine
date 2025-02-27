@@ -78,7 +78,7 @@ namespace Vortex
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
 
 			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
-			ImGui::ImageButton(fileNameString.c_str(), (ImTextureID)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
+			ImGui::ImageButton(fileNameString.c_str(), (ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 			ImGui::PopStyleColor();
 
 			if (ImGui::BeginDragDropSource())
@@ -101,16 +101,22 @@ namespace Vortex
 
 		ImGui::Columns(1);
 
-		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize;
+		ImVec2 parentSize = ImGui::GetWindowSize();
+		float panelHeight = 35.0f;
+		//float panelWidth = parentSize.x - 20.0f;
+
+		// Set cursor position at the bottom of the parent window
+		ImGui::SetCursorPos(ImVec2(10.0f, parentSize.y - panelHeight - 9.0f));
+
 		ImGui::PushStyleVar(ImGuiStyleVar_DockingSeparatorSize, 0.0f);
-		ImGui::Begin("##SliderPanel", nullptr, windowFlags);
+		ImGui::BeginChild("##SliderPanel", { panelWidth, panelHeight }, ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeX);
 
 		// Style the minimal slider
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.11f, 0.11f, 0.11f, 0.6f));         // Barely visible track
-		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));  // Slightly more visible on hover
-		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.2f, 0.2f, 0.2f, 0.4f));   // Same as hover
-		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.8f, 0.8f, 0.8f, 0.8f));      // Light gray handle
-		ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)); // White when active
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.11f, 0.11f, 0.11f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.13f, 0.13f, 0.13f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.13f, 0.13f, 0.13f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.8f, 0.8f, 0.8f, 0.8f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// Make the slider thinner
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);    // Square corners    
@@ -120,10 +126,10 @@ namespace Vortex
 
 		// Position at bottom left
 		float windowWidth = ImGui::GetWindowSize().x;
-		float sliderWidth = 150.0f; // Adjust width as needed
+		float sliderWidth = 160.0f; // Adjust width as needed
 		//ImGui::SetWindowSize(ImVec2(windowWidth, 10.0f));
 		float windowHeight = ImGui::GetWindowSize().y;
-		ImGui::SetCursorPos(ImVec2((windowWidth - (sliderWidth + 10.0f)), 6.0f));
+		ImGui::SetCursorPos(ImVec2((windowWidth - (sliderWidth + 10.0f)), 7.0f));
 
 		ImGui::PushItemWidth(sliderWidth);
 		ImGui::SliderFloat("##ThumbnailSize", &thumbnailSize, 32.0f, 256.0f, "");
@@ -133,7 +139,7 @@ namespace Vortex
 		ImGui::PopStyleVar(4);
 		ImGui::PopStyleColor(5);
 
-		ImGui::End();	
+		ImGui::EndChild();
 		ImGui::PopStyleVar(2);
 
 		//TODO:Status Bar

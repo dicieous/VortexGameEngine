@@ -8,7 +8,7 @@ namespace Vortex {
 	class VortexEditor : public Application {
 	public:
 		VortexEditor()
-			:Application("Vortex Editor")
+			:Application("Vortex Engine")
 		{
 			PushLayer(new EditorLayer());
 		}

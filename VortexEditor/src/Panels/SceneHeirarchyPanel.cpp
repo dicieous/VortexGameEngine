@@ -212,10 +212,12 @@ namespace Vortex
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentRegionavailable.x - lineHeight * 0.5f);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.12f, 0.125f, 0.12f, 1.0f });
 			if (ImGui::Button(":", ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
+			ImGui::PopStyleColor();
 
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings"))
@@ -341,23 +343,23 @@ namespace Vortex
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 
 				ImVec2 textureSlotSize = { 100.0f, 100.0f };
 				ImTextureID textureID = (component.Texture) ? component.Texture->GetRendererID() : -1;
 
-				if (!component.Texture)
-				{
-					auto greyTexture = Texture2D::Create(1, 1);
-					uint8_t grayTextureData[4] = { 192, 192, 192, 255 }; // R, G, B, A
-					greyTexture->SetData(grayTextureData, sizeof(grayTextureData));
-					textureID = greyTexture->GetRendererID();
-				}
+				//Don't know why it's not working(sit on it when free)
+				//if (!component.Texture)
+				//{
+				//	auto greyTexture = Texture2D::Create(1, 1);
+				//	uint8_t grayTextureData[4] = { 192, 192, 192, 255 }; // R, G, B, A
+				//	greyTexture->SetData(grayTextureData, sizeof(grayTextureData));
+				//	textureID = greyTexture->GetRendererID();
+				//}
 
 				ImGui::Text("Albedo: ");
 				ImGui::SameLine(0.0f, 5.0f);
 				
-				ImGui::ImageButton("TextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
+				ImGui::ImageButton("SpriteCircleTextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
@@ -376,6 +378,7 @@ namespace Vortex
 					ImGui::EndDragDropTarget();
 				}
 
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
 				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 
