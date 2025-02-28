@@ -5,6 +5,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "RenderCommand.h"
+#include "UniformBuffer.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
@@ -88,6 +89,14 @@ namespace Vortex
 		glm::vec4 QuadVertexPositions[4];
 
 		Renderer2D::Statistics Stats;
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjectionMatrix;
+		};
+		CameraData cameraBuffer;
+
+		Ref<UniformBuffer> CameraUniformBuffer;
 	};
 
 	static Renderer2Ddata s_2Ddata;
@@ -194,6 +203,8 @@ namespace Vortex
 		s_2Ddata.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		s_2Ddata.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		s_2Ddata.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		s_2Ddata.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2Ddata::CameraData), 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -209,20 +220,15 @@ namespace Vortex
 	{
 		VX_PROFILE_FUNCTION();
 
-		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-
-		s_2Ddata.QuadShader->Bind();
-		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", viewProj);
+		s_2Ddata.cameraBuffer.ViewProjectionMatrix = camera.GetProjection() * glm::inverse(transform);
+		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer, sizeof(Renderer2Ddata::CameraData));
+		
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
 
-		s_2Ddata.CircleShader->Bind();
-		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.CircleIndexCount = 0;
 		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
-		s_2Ddata.LineShader->Bind();
-		s_2Ddata.LineShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.LineVertexCount = 0;
 		s_2Ddata.LineVertexBufferPtr = s_2Ddata.LineVertexBufferBase;
 
@@ -231,20 +237,17 @@ namespace Vortex
 
 	void Renderer2D::BeginScene(const EditorCamera& camera)
 	{
-		glm::mat4 viewProj = camera.GetViewProjectionMatrix();
+		VX_PROFILE_FUNCTION();
 
-		s_2Ddata.QuadShader->Bind();
-		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", viewProj);
+		s_2Ddata.cameraBuffer.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer, sizeof(Renderer2Ddata::CameraData));
+
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
 
-		s_2Ddata.CircleShader->Bind();
-		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.CircleIndexCount = 0;
 		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
-		s_2Ddata.LineShader->Bind();
-		s_2Ddata.LineShader->SetMat4("u_ViewProjection", viewProj);
 		s_2Ddata.LineVertexCount = 0;
 		s_2Ddata.LineVertexBufferPtr = s_2Ddata.LineVertexBufferBase;
 
@@ -255,18 +258,15 @@ namespace Vortex
 	{
 		VX_PROFILE_FUNCTION();
 
-		s_2Ddata.QuadShader->Bind();
-		s_2Ddata.QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_2Ddata.cameraBuffer.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer, sizeof(Renderer2Ddata::CameraData));
+
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
 
-		s_2Ddata.CircleShader->Bind();
-		s_2Ddata.CircleShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		s_2Ddata.CircleIndexCount = 0;
 		s_2Ddata.CircleVertexBufferPtr = s_2Ddata.CircleVertexBufferBase;
 
-		s_2Ddata.LineShader->Bind();
-		s_2Ddata.LineShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		s_2Ddata.LineVertexCount = 0;
 		s_2Ddata.LineVertexBufferPtr = s_2Ddata.LineVertexBufferBase;
 

@@ -8,20 +8,28 @@ layout(location = 3) in float a_Thickness;
 layout(location = 4) in float a_Fade;
 layout(location = 5) in int a_EntityID;
 
-uniform mat4 u_ViewProjection;
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 u_ViewProjection;
+};
 
-out vec3 v_LocalPosition;
-out vec4 v_Color;
-out float v_Thickness;
-out float v_Fade;
-flat out int v_EntityID; 
+struct VertexOutput
+{
+	vec3 LocalPosition;
+	vec4 Color;
+	float Thickness;
+	float Fade;
+};
+
+layout (location = 0) out VertexOutput v_Out;
+layout (location = 4) flat out int v_EntityID;
 
 void main()
 {
-	v_LocalPosition = a_LocalPosition;
-	v_Color = a_Color;
-	v_Thickness = a_Thickness;
-	v_Fade = a_Fade;
+	v_Out.LocalPosition = a_LocalPosition;
+	v_Out.Color = a_Color;
+	v_Out.Thickness = a_Thickness;
+	v_Out.Fade = a_Fade;
 	v_EntityID = a_EntityID;
 
 	gl_Position = u_ViewProjection * vec4(a_WorldPosition, 1.0);
@@ -33,26 +41,31 @@ void main()
 layout(location = 0) out vec4 o_Color;
 layout(location = 1) out int o_EntityID;
 
-in vec3 v_LocalPosition;
-in vec4 v_Color;
-in float v_Thickness;
-in float v_Fade;
-flat in int v_EntityID;
+struct VertexOutput
+{
+	vec3 LocalPosition;
+	vec4 Color;
+	float Thickness;
+	float Fade;
+};
+
+layout (location = 0) in VertexOutput Input;
+layout (location = 4) flat in int v_EntityID;
 
 void main()
 {
 	// Calculate distance and fill circle with white
-	float distance = 1.0 - length(v_LocalPosition.xy);
+	float distance = 1.0 - length(Input.LocalPosition.xy);
 
 	// Smooth fade and thickness calculation
-	float circleAlpha = smoothstep(0.0, v_Fade, distance);
-	circleAlpha *= smoothstep(v_Thickness + v_Fade, v_Thickness, distance);
+	float circleAlpha = smoothstep(0.0, Input.Fade, distance);
+	circleAlpha *= smoothstep(Input.Thickness + Input.Fade, Input.Thickness, distance);
 
 	if(circleAlpha == 0.0)
 		discard;
 
 	// Set output color
-	o_Color = vec4(v_Color.rgb, v_Color.a * circleAlpha);
+	o_Color = vec4(Input.Color.rgb, Input.Color.a * circleAlpha);
 	
 	o_EntityID = v_EntityID;
 }

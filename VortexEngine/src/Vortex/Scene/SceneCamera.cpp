@@ -34,6 +34,7 @@ namespace Vortex
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
+		VX_CORE_ASSERT((width > 0 && height > 0), "ViewPortSize Invalid");
 		m_AspectRatio = (float)width / (float)height;
 		RecalculateProjection();
 	}
