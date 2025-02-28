@@ -9,6 +9,48 @@
 
 namespace Vortex
 {
+	static bool BeginTwoTableContent(ImGuiTableFlags flags = ImGuiTableFlags_None)
+	{
+		bool table = ImGui::BeginTable("layout_table", 2, flags | ImGuiTableFlags_SizingStretchProp);
+		ImGui::TableSetupColumn("Label", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+		ImGui::TableSetupColumn("Widget");
+
+		return table;
+	}
+
+	static void EndTwoTableContent()
+	{
+		ImGui::EndTable();
+	}
+
+	template<typename Func>
+	static bool LabeledUI(const char* label, Func imguiFunc)
+	{
+		ImGui::TableNextRow();
+		ImGui::TableSetColumnIndex(0);
+		// Get row height
+		float rowHeight = ImGui::GetTextLineHeightWithSpacing();
+		float cursorY = ImGui::GetCursorPosY();
+
+		// Center the text vertically
+		ImGui::SetCursorPosY(cursorY + (rowHeight - ImGui::GetTextLineHeight()) * 0.5f);
+		ImGui::Text(label);
+
+		ImGui::TableSetColumnIndex(1);
+		ImGui::PushItemWidth(-FLT_MIN);
+		if constexpr (std::is_same_v<decltype(imguiFunc()), void>)// Checks if the function got a void return type of bool
+		{
+			imguiFunc();
+			return false;
+		}
+		else
+		{
+			return imguiFunc();
+		}
+		ImGui::PopItemWidth();
+	}
+
+
 	extern const std::filesystem::path g_AssetsPath;
 
 	SceneHeirarchyPanel::SceneHeirarchyPanel(const Ref<Scene>& context)
@@ -123,9 +165,9 @@ namespace Vortex
 
 			// Add label and vertical separator
 			ImGui::PushFont(boldFont);
-			ImGui::SetWindowFontScale(1.1f);  // Make label text 20% larger
+			ImGui::SetWindowFontScale(1.1f);
 			ImGui::Text(label.c_str());
-			ImGui::SetWindowFontScale(1.0f);  // Reset font scale
+			ImGui::SetWindowFontScale(1.0f);
 			ImGui::PopFont();
 			//ImGui::SameLine(columnWidth - 5.0f); // Adjust separator position
 			//ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "|");
@@ -140,7 +182,7 @@ namespace Vortex
 			ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
 			// Adjust spacing between button and value
-			const float tightSpacing = 2.0f;  // Reduced spacing between button and value
+			const float tightSpacing = 2.0f;
 
 			// X Component
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
@@ -252,6 +294,17 @@ namespace Vortex
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+			// Get row height
+			float rowHeight = ImGui::GetTextLineHeightWithSpacing();
+			float cursorY = ImGui::GetCursorPosY();
+
+			// Center the text vertically
+			ImGui::SetCursorPosY(cursorY + (rowHeight - ImGui::GetTextLineHeight()) * 0.5f);
+			ImGui::Text("Entity Name");
+
+			ImGui::SameLine();
+			ImGui::SetCursorPosY(cursorY);
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
@@ -271,174 +324,246 @@ namespace Vortex
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
 			{
-				auto& camera = component.Camera;
-
-				ImGui::Checkbox("Primary", &component.primary);
-
-				const char* projectionTypeStrings[] = { "Perspective", "OrthoGraphic" };
-
-				const char* currentProjectionType = projectionTypeStrings[(int)camera.GetProjectionType()];
-				if (ImGui::BeginCombo("Projection", currentProjectionType))
+				ImGuiTableFlags flags = ImGuiTableFlags_None;
+				if (BeginTwoTableContent(flags))
 				{
-					for (int type = 0; type < 2; type++)
-					{
-						bool isSelected = currentProjectionType == projectionTypeStrings[type];
-						if (ImGui::Selectable(projectionTypeStrings[type], isSelected))
+					auto& camera = component.Camera;
+
+					LabeledUI("Primary", [&]() { ImGui::Checkbox("##Primary", &component.primary); });
+
+					const char* projectionTypeStrings[] = { "Perspective", "OrthoGraphic" };
+
+					LabeledUI("Projection", [&]()
 						{
-							currentProjectionType = projectionTypeStrings[type];
-							camera.SetProjectionType((SceneCamera::ProjectionType)type);
-						}
+							const char* currentProjectionType = projectionTypeStrings[(int)camera.GetProjectionType()];
+							if (ImGui::BeginCombo("##Projection", currentProjectionType))
+							{
+								for (int type = 0; type < 2; type++)
+								{
+									bool isSelected = currentProjectionType == projectionTypeStrings[type];
+									if (ImGui::Selectable(projectionTypeStrings[type], isSelected))
+									{
+										currentProjectionType = projectionTypeStrings[type];
+										camera.SetProjectionType((SceneCamera::ProjectionType)type);
+									}
 
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
-					}
-					ImGui::EndCombo();
-				}
+									if (isSelected)
+										ImGui::SetItemDefaultFocus();
+								}
+								ImGui::EndCombo();
+							}
+						});
 
-				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
-				{
-					float verticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
-					if (ImGui::DragFloat("Vertical FOV", &verticalFOV))
+					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 					{
-						camera.SetPerspectiveVerticalFOV(glm::radians(verticalFOV));
+						LabeledUI("Vertical FOV", [&]()
+							{
+								float verticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+								if (ImGui::DragFloat("##Vertical FOV", &verticalFOV))
+								{
+									camera.SetPerspectiveVerticalFOV(glm::radians(verticalFOV));
+								}
+							});
+
+						LabeledUI("NearClip", [&]()
+							{
+								float nearClip = camera.GetPerspectiveNearClip();
+								if (ImGui::DragFloat("##NearClip", &nearClip))
+								{
+									camera.SetPerspectiveNearClip(nearClip);
+								}
+							});
+
+						LabeledUI("FarClip", [&]()
+							{
+								float farClip = camera.GetPerspectiveFarClip();
+								if (ImGui::DragFloat("##FarClip", &farClip))
+								{
+									camera.SetPerspectiveFarClip(farClip);
+								}
+							});
 					}
 
-					float nearClip = camera.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("NearClip", &nearClip))
+					if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
 					{
-						camera.SetPerspectiveNearClip(nearClip);
+						LabeledUI("Fixed AspectRatio", [&]()
+							{
+								ImGui::Checkbox("##Fixed AspectRatio", &component.FixedAspectRatio);
+							});
+
+						LabeledUI("Size", [&]()
+							{
+								float orthoSize = camera.GetOrthographicSize();
+								if (ImGui::DragFloat("##Size", &orthoSize))
+								{
+									camera.SetOrthographicSize(orthoSize);
+								}
+							});
+
+						LabeledUI("NearClip", [&]()
+							{
+								float nearClip = camera.GetOrthographicNearClip();
+								if (ImGui::DragFloat("##NearClip", &nearClip))
+								{
+									camera.SetOrthoGraphicNearClip(nearClip);
+								}
+							});
+
+						LabeledUI("FarClip", [&]()
+							{
+								float farClip = camera.GetOrthographicFarClip();
+								if (ImGui::DragFloat("##FarClip", &farClip))
+								{
+									camera.SetOrthoGraphicFarClip(farClip);
+								}
+							});
 					}
 
-					float farClip = camera.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("FarClip", &farClip))
-					{
-						camera.SetPerspectiveFarClip(farClip);
-					}
-				}
-
-				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
-				{
-					ImGui::Checkbox("Fixed AspectRatio", &component.FixedAspectRatio);
-
-					float orthoSize = camera.GetOrthographicSize();
-					if (ImGui::DragFloat("Size", &orthoSize))
-					{
-						camera.SetOrthographicSize(orthoSize);
-					}
-
-					float nearClip = camera.GetOrthographicNearClip();
-					if (ImGui::DragFloat("NearClip", &nearClip))
-					{
-						camera.SetOrthoGraphicNearClip(nearClip);
-					}
-
-					float farClip = camera.GetOrthographicFarClip();
-					if (ImGui::DragFloat("FarClip", &farClip))
-					{
-						camera.SetOrthoGraphicFarClip(farClip);
-					}
-
+					EndTwoTableContent();
 				}
 			});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 			{
-
-				ImVec2 textureSlotSize = { 100.0f, 100.0f };
-				ImTextureID textureID = (component.Texture) ? component.Texture->GetRendererID() : -1;
-
-				//Don't know why it's not working(sit on it when free)
-				//if (!component.Texture)
-				//{
-				//	auto greyTexture = Texture2D::Create(1, 1);
-				//	uint8_t grayTextureData[4] = { 192, 192, 192, 255 }; // R, G, B, A
-				//	greyTexture->SetData(grayTextureData, sizeof(grayTextureData));
-				//	textureID = greyTexture->GetRendererID();
-				//}
-
-				ImGui::Text("Albedo: ");
-				ImGui::SameLine(0.0f, 5.0f);
-				
-				ImGui::ImageButton("SpriteCircleTextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
-
-				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+				ImGuiTableFlags flags = ImGuiTableFlags_None;
+				if (BeginTwoTableContent(flags))
 				{
-					component.Texture = nullptr;
-				}
 
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					ImVec2 textureSlotSize = { 100.0f, 100.0f };
+					ImTextureID textureID = (component.Texture) ? component.Texture->GetRendererID() : -1;
+
+#if 0
+					//Don't know why it's not working(sit on it when free)
+					if (!component.Texture)
 					{
-						const wchar_t* path = (const wchar_t*)payLoad->Data;
-						std::filesystem::path texturePath = std::filesystem::path(g_AssetsPath) / path;
-						component.Texture = Texture2D::Create(texturePath.string());
+						auto greyTexture = Texture2D::Create(1, 1);
+						uint8_t grayTextureData[4] = { 192, 192, 192, 255 }; // R, G, B, A
+						greyTexture->SetData(grayTextureData, sizeof(grayTextureData));
+						textureID = greyTexture->GetRendererID();
+					}
+#endif
+
+					LabeledUI("Albedo: ", [&]()
+						{
+							ImGui::ImageButton("##SpriteCircleTextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
+						});
+
+					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+					{
+						component.Texture = nullptr;
 					}
 
-					ImGui::EndDragDropTarget();
-				}
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+						{
+							const wchar_t* path = (const wchar_t*)payLoad->Data;
+							std::filesystem::path texturePath = std::filesystem::path(g_AssetsPath) / path;
+							component.Texture = Texture2D::Create(texturePath.string());
+						}
 
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+						ImGui::EndDragDropTarget();
+					}
+
+					LabeledUI("Color", [&]()
+						{
+							ImGuiColorEditFlags colorflags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_PickerHueWheel;
+							ImGui::ColorEdit4("##Color", glm::value_ptr(component.Color), colorflags);
+						});
+
+					LabeledUI("Tiling Factor", [&]() { ImGui::DragFloat("##Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f); });
+
+					EndTwoTableContent();
+				}
 			});
 
 
 		DrawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-				ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
-				ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
+				if (BeginTwoTableContent())
+				{
+					LabeledUI("Color", [&]()
+						{
+							ImGuiColorEditFlags colorflags = ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_PickerHueWheel;
+							ImGui::ColorEdit4("##Color", glm::value_ptr(component.Color), colorflags);
+						});
+
+					LabeledUI("Thickness", [&]() { ImGui::DragFloat("##Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_ClampOnInput); });
+					LabeledUI("Fade", [&]() { ImGui::DragFloat("##Fade", &component.Fade, 0.00025f, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_ClampOnInput); });
+
+					EndTwoTableContent();
+				}
 			});
 
 
 		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
 			{
-				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
-
-				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
-				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+				if (BeginTwoTableContent())
 				{
-					for (int type = 0; type < 3; type++)
-					{
-						bool isSelected = currentBodyTypeString == bodyTypeStrings[type];
-						if (ImGui::Selectable(bodyTypeStrings[type], isSelected))
+					const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
+
+					LabeledUI("Body Type", [&]()
 						{
-							currentBodyTypeString = bodyTypeStrings[type];
-							component.Type = (RigidBody2DComponent::BodyType)type;
-						}
+							const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+							if (ImGui::BeginCombo("##Body Type", currentBodyTypeString))
+							{
+								for (int type = 0; type < 3; type++)
+								{
+									bool isSelected = currentBodyTypeString == bodyTypeStrings[type];
+									if (ImGui::Selectable(bodyTypeStrings[type], isSelected))
+									{
+										currentBodyTypeString = bodyTypeStrings[type];
+										component.Type = (RigidBody2DComponent::BodyType)type;
+									}
 
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
-					}
-					ImGui::EndCombo();
+									if (isSelected)
+										ImGui::SetItemDefaultFocus();
+								}
+								ImGui::EndCombo();
+							}
+						});
+
+					LabeledUI("Fixed Rotation", [&]() { ImGui::Checkbox("##Fixed Rotation", &component.FixedRotation); });
+
+					EndTwoTableContent();
 				}
-
-				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
 			});
 
 
 		DrawComponent<BoxCollider2DComponent>("BoxCollider 2D", entity, [](auto& component)
 			{
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+				if (BeginTwoTableContent())
+				{
+					LabeledUI("Offset", [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset)); });
+					LabeledUI("Size", [&]() { ImGui::DragFloat2("##Size", glm::value_ptr(component.Size)); });
+					
+					ImGui::Dummy(ImVec2(0.0f, 5.0f));
+					
+					LabeledUI("Density", [&]() { ImGui::DragFloat("##Density", &component.Density, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("Friction", [&]() { ImGui::DragFloat("##Friction", &component.Friction, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("Restitution", [&]() { ImGui::DragFloat("##Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("RestitutionThreshold", [&]() { ImGui::DragFloat("##RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f); });
 
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+					EndTwoTableContent();
+				}
 			});
 
 		DrawComponent<CircleCollider2DComponent>("CircleCollider 2D", entity, [](auto& component)
 			{
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset), 0.1f, 0.0f);
-				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f);
+				if (BeginTwoTableContent())
+				{
+					LabeledUI("Offset", [&]() { ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0.0f); });
+					LabeledUI("Radius", [&]() { ImGui::DragFloat("##Radius", &component.Radius, 0.1f, 0.0f); });
 
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+					ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+					LabeledUI("Density", [&]() { ImGui::DragFloat("##Density", &component.Density, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("Friction", [&]() { ImGui::DragFloat("##Friction", &component.Friction, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("Restitution", [&]() { ImGui::DragFloat("##Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f); });
+					LabeledUI("RestitutionThreshold", [&]() { ImGui::DragFloat("##RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f); });
+
+					EndTwoTableContent();
+				}
 			});
 
 

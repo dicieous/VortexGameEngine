@@ -35,7 +35,7 @@ namespace Vortex {
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
 		io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-SemiBold.ttf", 16.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Medium.ttf", 16.5f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Medium.ttf", 16.7f);
 		//io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/OpenSans/OpenSans-Regular.ttf", 17.0f);
 
 		// Setup Dear ImGui style
@@ -58,6 +58,7 @@ namespace Vortex {
 			style.TabBarOverlineSize = 0.1f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 			style.WindowMenuButtonPosition = ImGuiDir_None;
+			style.SeparatorTextAlign = { 0.5f, 0.5f };
 		}
 
 		SetDarkThemeColor();
@@ -130,6 +131,8 @@ namespace Vortex {
 	void ImGuiLayer::SetDarkThemeColor()
 	{
 		auto& styleColors = ImGui::GetStyle().Colors;
+		styleColors[ImGuiCol_SeparatorHovered] = ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f };
+
 		styleColors[ImGuiCol_WindowBg] = ImVec4{ 0.18f, 0.18f, 0.18f, 1.0f };
 		styleColors[ImGuiCol_BorderShadow] = ImVec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 		styleColors[ImGuiCol_Border] = ImVec4{ 0.11f, 0.11, 0.11, 1.0f };
@@ -155,6 +158,7 @@ namespace Vortex {
 		styleColors[ImGuiCol_TabActive] = ImVec4{ 0.28f, 0.2805f, 0.281f, 1.0f };
 		styleColors[ImGuiCol_TabUnfocused] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		styleColors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+		styleColors[ImGuiCol_TabSelectedOverline] = ImVec4{ 0.1f, 0.1f, 0.1f, 0.0f };
 
 		//Title
 		styleColors[ImGuiCol_TitleBg] = ImVec4{ 0.12f, 0.12f, 0.12f, 1.0f };
