@@ -4,6 +4,7 @@
 
 #include "Vortex/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
+#include <filesystem>
 
 
 namespace Vortex {
@@ -12,14 +13,19 @@ namespace Vortex {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name) {
+	Application::Application(const ApplicationSpecifications& AppSpecs)
+		:m_Specifications(AppSpecs)
+	{
 		VX_PROFILE_FUNCTION();
 
 		VX_CORE_ASSERT(!s_Instance, "Application Already Exist")
 			s_Instance = this;
 
-		m_Window = Scope<Window>(Window::Create(WindowProps(name)));
+		m_Window = Scope<Window>(Window::Create(WindowProps(m_Specifications.Name)));
 		m_Window->SetEventCallBack(VX_BIND_EVENT_FUNC(Application::OnEvent));
+
+		if(!m_Specifications.WorkingDirectory.empty())
+			std::filesystem::current_path(m_Specifications.WorkingDirectory);
 
 		Renderer::Init();
 

@@ -14,13 +14,21 @@
 
 int main(int argc, char** argv);
 
-namespace Vortex {
+
+namespace Vortex
+{
+
+	struct ApplicationSpecifications
+	{ 
+		std::string Name = "Vortex Application";
+		std::string WorkingDirectory;
+	};
 
 	class VORTEX_API Application
 	{
 	public:
 
-		Application(const std::string& name = "Vortex App");
+		Application(const ApplicationSpecifications& AppSpecs);
 
 		virtual ~Application();
 
@@ -31,17 +39,21 @@ namespace Vortex {
 
 		inline Window& GetWindow() { return *m_Window; }
 
+		const ApplicationSpecifications& GetSpecifications() const { return m_Specifications; }
+
 		void Close();
-		
+
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		inline static Application& Get() { return *s_Instance; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
+		void Run();
 
 	private:
-		void Run();
+		ApplicationSpecifications m_Specifications;
 		Scope<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;

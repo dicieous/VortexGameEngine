@@ -118,15 +118,6 @@ namespace Vortex
 			enttMap[uuid] = (entt::entity)newEntity;
 		}
 
-		//Copy Components(ID and Tag would already be present)
-		//CopyComponent<TransformComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<SpriteRendererComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<CircleRendererComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<CameraComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<NativeScriptComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<RigidBody2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<BoxCollider2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
-		//CopyComponent<CircleCollider2DComponent>(destSceneRegistry, srcSceneRegistry, enttMap);
 		CopyComponent(AllComponent{}, destSceneRegistry, srcSceneRegistry, enttMap);
 
 		return newScene;
@@ -158,14 +149,6 @@ namespace Vortex
 	{
 		Entity newEntity = CreateEntity(entity.GetName());
 
-		//CopyComponentIfExists<TransformComponent>(newEntity, entity);
-		//CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
-		//CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
-		//CopyComponentIfExists<CameraComponent>(newEntity, entity);
-		//CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
-		//CopyComponentIfExists<RigidBody2DComponent>(newEntity, entity);
-		//CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
-		//CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
 		CopyComponentIfExists(AllComponent{}, newEntity, entity);
 	}
 

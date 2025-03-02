@@ -8,10 +8,12 @@
 
 #include "SandBox2D.h"
 
-class ExampleLayer : public Vortex::Layer {
+class ExampleLayer : public Vortex::Layer
+{
 
 public:
-	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f, true) {
+	ExampleLayer() : Layer("Example"), m_CameraController(1280.0f / 720.0f, true)
+	{
 
 		m_vertexArray = Vortex::VertexArray::Create();
 
@@ -163,7 +165,8 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++)
+		{
 
 			for (int j = 0; j < 20; j++)
 			{
@@ -190,7 +193,8 @@ public:
 		Vortex::Renderer::EndScene();
 	}
 
-	virtual void OnImGuiRender() override {
+	virtual void OnImGuiRender() override
+	{
 		ImGui::Begin("FlatColor Settings");
 		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
 		ImGui::End();
@@ -218,19 +222,27 @@ private:
 	glm::vec4 m_squareColor{ 0.2f, 0.3f, 0.8f, 1.0f };
 };
 
-class SandBox : public Vortex::Application {
+class SandBox : public Vortex::Application
+{
 public:
-	SandBox() {
+	SandBox(Vortex::ApplicationSpecifications& specfications)
+		:Vortex::Application(specfications)
+	{
 		// PushLayer(new ExampleLayer());
 		PushLayer(new SandBox2D());
 	}
 
-	~SandBox() {
+	~SandBox()
+	{
 
 	}
 };
 
-Vortex::Application* Vortex::CreateApplication() {
+Vortex::Application* Vortex::CreateApplication()
+{
+	ApplicationSpecifications specs;
+	specs.Name = "Vortex SandBox";
+	specs.WorkingDirectory = "../VortexEditor";
 
-	return new SandBox();
+	return new SandBox(specs);
 }
