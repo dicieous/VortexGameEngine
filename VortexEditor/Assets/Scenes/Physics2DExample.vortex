@@ -32,6 +32,7 @@ Entities:
       Scale: [14.153131, 1.0686287, 1]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -52,6 +53,7 @@ Entities:
       Scale: [20.159826, 1.0686283, 1]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -72,6 +74,7 @@ Entities:
       Scale: [0.9999979, 0.9999975, 1]
     SpriteRendererComponent:
       Color: [0.34509805, 0.7764706, 1, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: Dynamic
       Fixed Rotation: false
@@ -92,6 +95,7 @@ Entities:
       Scale: [16.512001, 1.0686272, 0.9999981]
     SpriteRendererComponent:
       Color: [1, 0.73333335, 0.2784314, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: Static
       Fixed Rotation: false
@@ -108,10 +112,11 @@ Entities:
       Tag: Quad
     TransformComponent:
       Translation: [-1.3278995, 4.417936, -1.4901161e-08]
-      Rotation: [-0.05524006, -5.5879354e-09, 1.8690835]
-      Scale: [0.99999803, 0.99999845, 1]
+      Rotation: [-0.055240057, -5.5879354e-09, 1.8690835]
+      Scale: [0.99999803, 0.99999946, 1]
     SpriteRendererComponent:
       Color: [0.34509805, 0.7764706, 1, 1]
+      TilingFactor: 1
     RigidBody2DComponent:
       BodyType: Dynamic
       Fixed Rotation: false

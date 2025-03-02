@@ -216,6 +216,9 @@ namespace Vortex
 
 			auto& spriteComp = entity.GetComponent<SpriteRendererComponent>();
 			out KEYVAL("Color", spriteComp.Color);
+			if (spriteComp.Texture)
+				out KEYVAL("TexturePath", spriteComp.Texture->GetPath());
+			out KEYVAL("TilingFactor", spriteComp.TilingFactor);
 
 			out ENDMAP;//SpriteRenderer
 		}
@@ -370,6 +373,10 @@ namespace Vortex
 				{
 					auto& spriteC = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					spriteC.Color = spriteComponent["Color"].as<glm::vec4>();
+					if (spriteComponent["TexturePath"])
+						spriteC.Texture = Texture2D::Create(spriteComponent["TexturePath"].as<std::string>());
+					if (spriteComponent["TilingFactor"])
+						spriteC.TilingFactor = spriteComponent["TilingFactor"].as<float>();
 				}
 
 				auto circleComponent = entity["CircleRendererComponent"];

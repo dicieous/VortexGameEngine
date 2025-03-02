@@ -4,9 +4,11 @@
 
 #include <glad/glad.h>
 
-namespace Vortex {
+namespace Vortex
+{
 
-	class OpenGLTexture2D : public Texture2D{
+	class OpenGLTexture2D : public Texture2D
+	{
 
 	public:
 		OpenGLTexture2D(uint32_t& width, uint32_t& height);
@@ -17,11 +19,14 @@ namespace Vortex {
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
+		virtual const std::string& GetPath() const override { return m_path; }
+
 		virtual void SetData(void* data, uint32_t size) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 
-		virtual bool operator==(const Texture& other) const override {
+		virtual bool operator==(const Texture& other) const override
+		{
 			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
 		}
 

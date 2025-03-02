@@ -375,7 +375,7 @@ namespace Vortex
 		if (s_2Ddata.QuadIndexCount >= Renderer2Ddata::MAX_INDICES)
 			FlushAndReset();
 
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		//constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		float textureIndex = 0.0f;
 		const int maxVertexCount = 4;
@@ -408,7 +408,7 @@ namespace Vortex
 		for (int i = 0; i < maxVertexCount; i++)
 		{
 			s_2Ddata.QuadVertexBufferPtr->Position = transform * s_2Ddata.QuadVertexPositions[i];
-			s_2Ddata.QuadVertexBufferPtr->color = color;
+			s_2Ddata.QuadVertexBufferPtr->color = tintColor;
 			s_2Ddata.QuadVertexBufferPtr->TexCoord = TexCoords[i];
 			s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
@@ -594,7 +594,7 @@ namespace Vortex
 		for (int i = 0; i < maxVertexCount; i++)
 		{
 			s_2Ddata.QuadVertexBufferPtr->Position = transform * s_2Ddata.QuadVertexPositions[i];
-			s_2Ddata.QuadVertexBufferPtr->color = color;
+			s_2Ddata.QuadVertexBufferPtr->color = tintColor;
 			s_2Ddata.QuadVertexBufferPtr->TexCoord = TexCoords[i];
 			s_2Ddata.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_2Ddata.QuadVertexBufferPtr->TilingFactor = tilingFactor;
