@@ -34,7 +34,7 @@ namespace Vortex
 		m_EditorScene = CreateRef<Scene>();
 		m_ActiveScene = m_EditorScene;
 
-		m_EditorCamera = EditorCamera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f);
+		m_EditorCamera = EditorCamera(glm::radians(45.0f), 1.778f, 0.1f, 1000.0f);
 
 #if 0
 		auto& square = m_ActiveScene->CreateEntity("Square");
@@ -166,7 +166,7 @@ namespace Vortex
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)m_ViewportSize.x && mouseY < (int)m_ViewportSize.y)
 		{
 			int pixelData = m_FrameBuffer->ReadPixel(1, mouseXPos, mouseYPos);
-
+			VX_CORE_TRACE("Pixeldata: {0}", pixelData);
 			if (pixelData != -1 && m_HoveredEntity != Entity((entt::entity)pixelData, m_ActiveScene.get()))
 				m_HoveredEntity = Entity((entt::entity)pixelData, m_ActiveScene.get());
 			else if (pixelData == -1 && m_HoveredEntity != Entity())

@@ -1,4 +1,3 @@
-
 #include "Vxpch.h"
 #include "Renderer2D.h"
 
@@ -83,6 +82,12 @@ namespace Vortex
 		LineVertex* LineVertexBufferBase = nullptr;
 		LineVertex* LineVertexBufferPtr = nullptr;
 
+		//InfiniteGrid
+		Ref<VertexArray> GridQuadVertexArray;
+		Ref<Shader> GridQuadShader;
+		bool CanShowInfiniteGrid;
+
+
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = white Texture
 
@@ -93,6 +98,7 @@ namespace Vortex
 		struct CameraData
 		{
 			glm::mat4 ViewProjectionMatrix;
+			glm::vec3 CameraPosition;
 		};
 		CameraData cameraBuffer;
 
@@ -178,6 +184,9 @@ namespace Vortex
 		s_2Ddata.LineVertexArray->AddVertexBuffer(s_2Ddata.LineVertexBuffer);
 		s_2Ddata.LineVertexBufferBase = new LineVertex[s_2Ddata.MAX_VERTICES];
 
+		//InfiniteGrid
+		s_2Ddata.GridQuadVertexArray = VertexArray::Create();
+
 
 		s_2Ddata.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
@@ -196,6 +205,10 @@ namespace Vortex
 
 		s_2Ddata.CircleShader = Shader::Create("Assets/Shaders/Renderer2D_Circle.shader");
 		s_2Ddata.LineShader = Shader::Create("Assets/Shaders/Renderer2D_Line.shader");
+		s_2Ddata.GridQuadShader = Shader::Create("Assets/Shaders/Infinite_Grid.shader");
+		//s_2Ddata.GridQuadShader->Bind();
+
+		
 
 		s_2Ddata.TextureSlots[0] = s_2Ddata.WhiteTexture;
 
@@ -240,6 +253,7 @@ namespace Vortex
 		VX_PROFILE_FUNCTION();
 
 		s_2Ddata.cameraBuffer.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		s_2Ddata.cameraBuffer.CameraPosition = camera.GetPosition();
 		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer, sizeof(Renderer2Ddata::CameraData));
 
 		s_2Ddata.QuadIndexCount = 0;
@@ -259,7 +273,8 @@ namespace Vortex
 		VX_PROFILE_FUNCTION();
 
 		s_2Ddata.cameraBuffer.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
-		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer, sizeof(Renderer2Ddata::CameraData));
+		s_2Ddata.cameraBuffer.CameraPosition = camera.GetPosition();
+		s_2Ddata.CameraUniformBuffer->SetData(&s_2Ddata.cameraBuffer.ViewProjectionMatrix, sizeof(Renderer2Ddata::CameraData::ViewProjectionMatrix));
 
 		s_2Ddata.QuadIndexCount = 0;
 		s_2Ddata.QuadVertexBufferPtr = s_2Ddata.QuadVertexBufferBase;
@@ -318,6 +333,11 @@ namespace Vortex
 			RenderCommand::DrawLine(s_2Ddata.LineVertexArray, s_2Ddata.LineVertexCount);
 			s_2Ddata.Stats.DrawCalls++;
 		}
+
+		s_2Ddata.GridQuadShader->Bind();
+		s_2Ddata.GridQuadShader->SetFloat3("u_CameraWorldPos", glm::vec3(s_2Ddata.cameraBuffer.CameraPosition.x, s_2Ddata.cameraBuffer.CameraPosition.y + 0.01f, s_2Ddata.cameraBuffer.CameraPosition.z));
+		//VX_CORE_TRACE("Camera Position x: {0}, y: {1}, z: {2}", s_2Ddata.cameraBuffer.CameraPosition.x, s_2Ddata.cameraBuffer.CameraPosition.y, s_2Ddata.cameraBuffer.CameraPosition.z);
+		RenderCommand::Draw(s_2Ddata.GridQuadVertexArray, 6);
 	}
 
 
@@ -735,6 +755,11 @@ namespace Vortex
 		DrawLine(p2, p3, color);
 		DrawLine(p3, p0, color);
 		DrawLine(p0, p2, color);
+	}
+
+	void Renderer2D::DrawGrid(const InfiniteGridSpecifications& gridData)
+	{
+
 	}
 
 	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID)

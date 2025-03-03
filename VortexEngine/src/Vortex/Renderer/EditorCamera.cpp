@@ -20,7 +20,7 @@ namespace Vortex
 		{
 			//TODO : FIX this snapping of Editor Camera
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
-			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
+			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.0003f;
 			m_InitialMousePosition = mouse;
 			
 			if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))

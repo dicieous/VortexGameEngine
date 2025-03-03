@@ -28,6 +28,11 @@ namespace Vortex {
 			return s_RendereAPI->Clear();
 		}
 
+		inline static void Draw(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		{
+			s_RendereAPI->Draw(vertexArray, vertexCount);
+		};
+
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexcount = 0)
 		{ 
 			s_RendereAPI->DrawIndexed(vertexArray, indexcount);

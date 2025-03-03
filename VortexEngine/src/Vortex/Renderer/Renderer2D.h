@@ -9,6 +9,17 @@
 
 namespace Vortex {
 
+	struct InfiniteGridSpecifications
+	{
+		//Make it so that these values can be manipulated from the editor
+		bool Enabled = false;
+		float Size = 100.0f;
+		float CellSize = 0.025f;
+		glm::vec4 ColorThin = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		glm::vec4 ColorThick = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		float MinPixelsBetweenCells = 2.0f;
+	};
+
 	class Renderer2D {
 
 	public:
@@ -58,6 +69,8 @@ namespace Vortex {
 		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
 		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityID = -1);
 
+		//InfiniteGrid
+		static void DrawGrid(const InfiniteGridSpecifications& gridData);
 
 		//Editor-Only
 		static void DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID);
