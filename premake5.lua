@@ -65,6 +65,12 @@ project "VortexEngine"
 		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
+	defines{
+		"GLFW_INCLUDE_NONE",
+		"CRT_SECURE_NO_WARNINGS",
+		"YAML_CPP_STATIC_DEFINE"
+	}
+
 	includedirs{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
@@ -94,11 +100,12 @@ project "VortexEngine"
 	filter "system:windows"
 		systemversion "latest"
 
-		defines{
-			--"VX_PLATFORM_WINDOWS",
-			"GLFW_INCLUDE_NONE",
-			"YAML_CPP_STATIC_DEFINE"
-		}
+		-- defines{
+		-- 	--"VX_PLATFORM_WINDOWS",
+		-- 	"GLFW_INCLUDE_NONE",
+		-- 	"CRT_SECURE_NO_WARNINGS",
+		-- 	"YAML_CPP_STATIC_DEFINE"
+		-- }
 
 		-- postbuildcommands{
 		-- 	"{RMDIR} ../bin/" .. outputDir .. "/Sandbox",
