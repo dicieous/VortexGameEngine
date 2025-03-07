@@ -85,7 +85,6 @@ namespace Vortex
 		//InfiniteGrid
 		Ref<VertexArray> GridQuadVertexArray;
 		Ref<Shader> GridQuadShader;
-		bool CanShowInfiniteGrid;
 
 
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> TextureSlots;
@@ -333,11 +332,6 @@ namespace Vortex
 			RenderCommand::DrawLine(s_2Ddata.LineVertexArray, s_2Ddata.LineVertexCount);
 			s_2Ddata.Stats.DrawCalls++;
 		}
-
-		s_2Ddata.GridQuadShader->Bind();
-		s_2Ddata.GridQuadShader->SetFloat3("u_CameraWorldPos", glm::vec3(s_2Ddata.cameraBuffer.CameraPosition.x, s_2Ddata.cameraBuffer.CameraPosition.y + 0.01f, s_2Ddata.cameraBuffer.CameraPosition.z));
-		//VX_CORE_TRACE("Camera Position x: {0}, y: {1}, z: {2}", s_2Ddata.cameraBuffer.CameraPosition.x, s_2Ddata.cameraBuffer.CameraPosition.y, s_2Ddata.cameraBuffer.CameraPosition.z);
-		RenderCommand::Draw(s_2Ddata.GridQuadVertexArray, 6);
 	}
 
 
@@ -757,9 +751,21 @@ namespace Vortex
 		DrawLine(p0, p2, color);
 	}
 
-	void Renderer2D::DrawGrid(const InfiniteGridSpecifications& gridData)
+	void Renderer2D::DrawInfiniteGrid(const InfiniteGridSpecifications& gridSpecs)
 	{
+		if (!gridSpecs.Enabled) return;
 
+		s_2Ddata.GridQuadShader->Bind();
+
+		s_2Ddata.GridQuadShader->SetFloat3("u_CameraWorldPos", glm::vec3(s_2Ddata.cameraBuffer.CameraPosition.x, s_2Ddata.cameraBuffer.CameraPosition.y + 0.01f, s_2Ddata.cameraBuffer.CameraPosition.z));
+		s_2Ddata.GridQuadShader->SetFloat("u_GridSize", gridSpecs.Size);
+		s_2Ddata.GridQuadShader->SetFloat("u_GridCellSize", gridSpecs.CellSize);
+		s_2Ddata.GridQuadShader->SetFloat("u_GridMinPixelsBetweenCells", gridSpecs.MinPixelsBetweenCells);
+		s_2Ddata.GridQuadShader->SetFloat4("u_GridColorThin", gridSpecs.ColorThin);
+		s_2Ddata.GridQuadShader->SetFloat4("u_GridColorThick", gridSpecs.ColorThick);
+
+		RenderCommand::DrawInfinitGrid(s_2Ddata.GridQuadVertexArray, 6);
+		s_2Ddata.GridQuadShader->Unbind();
 	}
 
 	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& sprite, int entityID)

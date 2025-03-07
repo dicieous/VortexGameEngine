@@ -8,8 +8,7 @@ layout(std140, binding = 0) uniform Camera
 
 uniform vec3 u_CameraWorldPos;
 
-//make uniform
-float u_GridSize = 500.0;
+uniform float u_GridSize;
 
 out float o_GridSize;
 out vec3 o_WorldPos;
@@ -57,10 +56,10 @@ in float o_GridSize;
 in vec3 o_CameraWorlPos;
 
 //make these uniform
-float u_GridCellSize = 0.5;
-float u_GridMinPixelsBetweenCells = 2.0;
-vec4 u_GridColorThin = vec4(0.5, 0.5, 0.5, 0.25);
-vec4 u_GridColorThick = vec4(0.0, 0.0, 0.0, 0.25);
+uniform float u_GridCellSize;
+uniform float u_GridMinPixelsBetweenCells;
+uniform vec4 u_GridColorThin;
+uniform vec4 u_GridColorThick;
 
 float log10(float x)
 {
@@ -139,7 +138,7 @@ void main()
 		}
 	}
 
-	float OpacityFallOff = (1.0 - satf(length(o_WorldPos.xz - o_CameraWorlPos.xz) / o_GridSize));
+	float OpacityFallOff = (1.5 - satf(length(o_WorldPos.xz - o_CameraWorlPos.xz) / o_GridSize));
 	color.a *= OpacityFallOff;
 
 	

@@ -47,7 +47,8 @@ namespace Vortex {
 
 	private:
 		Vortex::OrthographicCameraController m_CameraController;
-		
+		InfiniteGridSpecifications m_InfiniteGridSpecs;
+
 		//Temp
 		Ref<VertexArray> m_squareVA;
 		Ref<Texture2D> m_checkerBoardTexture;

@@ -28,9 +28,9 @@ namespace Vortex {
 			return s_RendereAPI->Clear();
 		}
 
-		inline static void Draw(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		inline static void DrawInfinitGrid(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
 		{
-			s_RendereAPI->Draw(vertexArray, vertexCount);
+			s_RendereAPI->DrawInfinitGrid(vertexArray, vertexCount);
 		};
 
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexcount = 0)

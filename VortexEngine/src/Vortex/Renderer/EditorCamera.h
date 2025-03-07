@@ -56,7 +56,7 @@ namespace Vortex
 		float m_FOV = 45.0f, m_AspectRatio = 1.777f, m_NearClip = 0.1f, m_FarClip = 1000.0f;
 		
 		float m_Distance = 10.0f;
-		float m_Pitch = 0.0f, m_Yaw = 0.0f;
+		float m_Pitch = 0.3f, m_Yaw = 0.0f;
 
 		glm::mat4 m_ViewMatrix;
 		glm::vec3 m_Position{ 0.0f, 0.0f, 0.0f };

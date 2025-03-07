@@ -35,55 +35,6 @@ namespace Vortex
 		m_ActiveScene = m_EditorScene;
 
 		m_EditorCamera = EditorCamera(glm::radians(45.0f), 1.778f, 0.1f, 1000.0f);
-
-#if 0
-		auto& square = m_ActiveScene->CreateEntity("Square");
-		square.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f));
-
-		auto& square2 = m_ActiveScene->CreateEntity("Red Square");
-		square2.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		m_SquareEntity = square;
-
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
-		m_CameraEntity.AddComponent<CameraComponent>();
-
-		m_SecondCameraEntity = m_ActiveScene->CreateEntity("Second Camera");
-		auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
-		cc.primary = false;
-
-		class CameraController : public ScriptableEntity
-		{
-
-		public:
-			void OnCreate()
-			{
-				//std::cout << "CameraController::OnCreate" << std::endl;
-			}
-
-			void OnUpdate(TimeStep ts)
-			{
-				auto& transform = GetComponent<TransformComponent>().Translation;
-				float speed = 5.0f;
-				if (Input::IsKeyPressed(VX_KEY_A))
-					transform.x -= speed * ts;
-				if (Input::IsKeyPressed(VX_KEY_D))
-					transform.x += speed * ts;
-				if (Input::IsKeyPressed(VX_KEY_W))
-					transform.y += speed * ts;
-				if (Input::IsKeyPressed(VX_KEY_S))
-					transform.y -= speed * ts;
-			}
-
-			void OnDestroy()
-			{
-
-			}
-		};
-
-		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-		m_SecondCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
-#endif
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
@@ -134,7 +85,6 @@ namespace Vortex
 
 			m_EditorCamera.OnUpdate(timeStep);
 			m_ActiveScene->OnUpdateEditor(timeStep, m_EditorCamera);
-
 			break;
 		}
 
@@ -166,12 +116,15 @@ namespace Vortex
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)m_ViewportSize.x && mouseY < (int)m_ViewportSize.y)
 		{
 			int pixelData = m_FrameBuffer->ReadPixel(1, mouseXPos, mouseYPos);
-			VX_CORE_TRACE("Pixeldata: {0}", pixelData);
+			//VX_CORE_TRACE("Pixeldata: {0}", pixelData);
 			if (pixelData != -1 && m_HoveredEntity != Entity((entt::entity)pixelData, m_ActiveScene.get()))
 				m_HoveredEntity = Entity((entt::entity)pixelData, m_ActiveScene.get());
 			else if (pixelData == -1 && m_HoveredEntity != Entity())
 				m_HoveredEntity = Entity();
 		}
+
+		
+		Renderer2D::DrawInfiniteGrid(m_InfiniteGridSpecs);
 
 		OnOverlayRender();
 
@@ -696,7 +649,7 @@ namespace Vortex
 
 		m_ActiveScene = Scene::Copy(m_EditorScene);
 		m_ActiveScene->OnRuntimeStart();
-
+		m_InfiniteGridSpecs.Enabled = false;
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
@@ -731,7 +684,7 @@ namespace Vortex
 		m_SceneState = SceneState::Edit;
 
 		m_ActiveScene = m_EditorScene;
-
+		m_InfiniteGridSpecs.Enabled = true;
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
 	}
 
