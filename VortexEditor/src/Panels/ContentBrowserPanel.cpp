@@ -42,6 +42,8 @@ namespace Vortex
 	{
 		m_DirectoryIcon = Texture2D::Create("Resources/Icons/ContentBrowser/DirectoryIcon.png");
 		m_FileIcon = Texture2D::Create("Resources/Icons/ContentBrowser/FileIcon.png");
+
+		m_BackButton = Texture2D::Create("Resources/Icons/ContentBrowser/BackButton.png");
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
@@ -51,14 +53,16 @@ namespace Vortex
 
 		if (m_CurrentDirectory != std::filesystem::path(g_AssetsPath))
 		{
-			if (ImGui::Button("<-"))
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+			if (ImGui::ImageButton("ContentBrowserBackButton", (ImTextureID)m_BackButton->GetRendererID(), {20.0f, 20.0f}, {0, 1}, {1, 0}))
 			{
 				m_CurrentDirectory = m_CurrentDirectory.parent_path();
 			}
+			ImGui::PopStyleColor();
 		}
 
 		const float padding = 10.0f;
-		static float thumbnailSize = 64;
+		static float thumbnailSize = 64.0f;
 		float cellSize = thumbnailSize + padding;
 
 		float panelWidth = ImGui::GetContentRegionAvail().x;
