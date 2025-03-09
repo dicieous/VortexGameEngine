@@ -2,6 +2,7 @@
 #include "Vortex/Utils/PlatformUtils.h"
 #include "Vortex/Core/Application.h"
 
+#include <sstream>
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -40,6 +41,10 @@ namespace Vortex
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
 		ofn.nFilterIndex = 1;
+
+		// Sets the default extension by extracting it from the filter
+		ofn.lpstrDefExt = std::strchr(filter, '\0') + 1;
+
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 		if (GetSaveFileNameA(&ofn) == TRUE)
 		{

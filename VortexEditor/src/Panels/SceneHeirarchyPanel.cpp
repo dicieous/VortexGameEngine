@@ -443,7 +443,7 @@ namespace Vortex
 					}
 #endif
 
-					LabeledUI("Albedo: ", [&]()
+					LabeledUI("Sprite: ", [&]()
 						{
 							ImGui::ImageButton("##SpriteCircleTextureSlot", textureID, textureSlotSize, { 0, 1 }, { 1, 0 });
 						});
