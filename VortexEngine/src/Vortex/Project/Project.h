@@ -21,17 +21,28 @@ namespace Vortex
 	class Project
 	{
 	public:
-		static const std::filesystem::path& GetAssetDirectory()
+
+		static const std::filesystem::path& GetProjectDirectory()
 		{
 			VX_CORE_ASSERT(s_ActiveProject, "Project Does not Exist");
-			return s_ActiveProject->m_Config.AssetDirectory;
+			return s_ActiveProject->m_ProjectDirectory;
 		}
 
-		static ProjectConfig& GetConfig()
+		static std::filesystem::path GetAssetDirectory()
 		{
 			VX_CORE_ASSERT(s_ActiveProject, "Project Does not Exist");
-			return s_ActiveProject->m_Config;
+			return GetProjectDirectory() / s_ActiveProject->m_Config.AssetDirectory;
 		}
+
+		static std::filesystem::path GetAssetFileSystemPath(const std::filesystem::path& path)
+		{
+			VX_CORE_ASSERT(s_ActiveProject, "Project Does not Exist");
+			return GetAssetDirectory() / path;
+		}
+
+		ProjectConfig& GetConfig() { return m_Config; }
+
+		static Ref<Project> GetActive() { return s_ActiveProject; }
 
 		static Ref<Project> New();
 		static Ref<Project> Load(const std::filesystem::path& path);
@@ -39,6 +50,9 @@ namespace Vortex
 
 	private:
 		ProjectConfig m_Config;
+
+		std::filesystem::path m_ProjectDirectory;
+
 		inline static Ref<Project> s_ActiveProject;
 	};
 }

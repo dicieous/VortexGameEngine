@@ -1,5 +1,6 @@
 #include "Vxpch.h"
 #include "SceneSerializer.h"
+#include "Vortex/Project/Project.h"
 
 #include "Entity.h"
 #include "Components.h"
@@ -302,7 +303,7 @@ namespace Vortex
 				SerializeEntity(out, entity);
 			});
 		out << YAML::EndSeq;
-		out << YAML::EndMap;
+		out ENDMAP;
 
 		std::ofstream fout(filePath);
 		fout << out.c_str();
@@ -374,7 +375,12 @@ namespace Vortex
 					auto& spriteC = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					spriteC.Color = spriteComponent["Color"].as<glm::vec4>();
 					if (spriteComponent["TexturePath"])
-						spriteC.Texture = Texture2D::Create(spriteComponent["TexturePath"].as<std::string>());
+					{
+						std::string texturePath = spriteComponent["TexturePath"].as<std::string>();
+						auto path = Project::GetAssetFileSystemPath(texturePath);
+						spriteC.Texture = Texture2D::Create(path.string());
+					}
+
 					if (spriteComponent["TilingFactor"])
 						spriteC.TilingFactor = spriteComponent["TilingFactor"].as<float>();
 				}

@@ -10,7 +10,6 @@
 
 namespace Vortex
 {
-	extern const std::filesystem::path g_AssetsPath;
 
 	EditorLayer::EditorLayer() :
 		Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true)
@@ -19,7 +18,6 @@ namespace Vortex
 
 	void EditorLayer::OnAttach()
 	{
-		m_checkerBoardTexture = Texture2D::Create("Assets/Textures/Checkerboard.png");
 		m_PlayIconTexture = Texture2D::Create("Resources/Icons/PlayButton.png");
 		m_SimulateIconTexture = Texture2D::Create("Resources/Icons/SimulateButton.png");
 		m_StopIconTexture = Texture2D::Create("Resources/Icons/StopButton.png");
@@ -33,6 +31,18 @@ namespace Vortex
 
 		m_EditorScene = CreateRef<Scene>();
 		m_ActiveScene = m_EditorScene;
+
+		auto commandLineArgs = Application::Get().GetSpecifications().commandLineArgs;
+		if (commandLineArgs.Count > 1)
+		{
+			auto projectFilePath = commandLineArgs[1];
+			OpenProject(projectFilePath);
+		}
+		else
+		{
+			//TODO: Prompt the User to select a Directory
+			NewProject();
+		}
 
 		m_EditorCamera = EditorCamera(glm::radians(45.0f), 1.778f, 0.1f, 1000.0f);
 		m_SceneHeirarchyPanel.SetContext(m_ActiveScene);
@@ -220,7 +230,7 @@ namespace Vortex
 		ImGui::End();
 
 		m_SceneHeirarchyPanel.OnImGuiRender();
-		m_ContentBrowserPanel.OnImGuiRender();
+		m_ContentBrowserPanel->OnImGuiRender();
 
 		ImGui::Begin("Stats");
 
@@ -275,7 +285,7 @@ namespace Vortex
 			if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payLoad->Data;
-				OpenScene(std::filesystem::path(g_AssetsPath) / path);
+				OpenScene(path);
 			}
 
 			ImGui::EndDragDropTarget();
@@ -567,6 +577,27 @@ namespace Vortex
 
 		Renderer2D::EndScene();
 	}
+
+
+	void EditorLayer::NewProject()
+	{
+		Project::New();
+	}
+
+	void EditorLayer::OpenProject(const std::filesystem::path& filePath)
+	{
+		if (Project::Load(filePath))
+		{
+			auto startScenePath = Project::GetAssetFileSystemPath(Project::GetActive()->GetConfig().StartScene);
+			OpenScene(startScenePath);
+			m_ContentBrowserPanel = CreateScope<ContentBrowserPanel>();
+		}
+	}
+
+	void EditorLayer::SaveProject()
+	{
+	}
+
 
 	void EditorLayer::NewScene()
 	{

@@ -238,7 +238,7 @@ public:
 	}
 };
 
-Vortex::Application* Vortex::CreateApplication()
+Vortex::Application* Vortex::CreateApplication(ApplicationCommandLineArgs args)
 {
 	ApplicationSpecifications specs;
 	specs.Name = "Vortex SandBox";

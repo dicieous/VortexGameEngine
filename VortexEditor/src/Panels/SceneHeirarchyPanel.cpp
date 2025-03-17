@@ -51,8 +51,6 @@ namespace Vortex
 	}
 
 
-	extern const std::filesystem::path g_AssetsPath;
-
 	SceneHeirarchyPanel::SceneHeirarchyPanel(const Ref<Scene>& context)
 	{
 		SetContext(context);
@@ -458,7 +456,7 @@ namespace Vortex
 						if (const ImGuiPayload* payLoad = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 						{
 							const wchar_t* path = (const wchar_t*)payLoad->Data;
-							std::filesystem::path texturePath = std::filesystem::path(g_AssetsPath) / path;
+							std::filesystem::path texturePath(path);
 							component.Texture = Texture2D::Create(texturePath.string());
 						}
 

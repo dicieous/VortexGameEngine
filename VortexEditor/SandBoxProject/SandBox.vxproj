@@ -1,0 +1,4 @@
+Project:
+  Name: SandBox
+  StartScene: "Scenes/Physics2DExample.vortex"
+  AssetDirectory: "Assets"

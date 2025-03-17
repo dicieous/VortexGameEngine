@@ -14,7 +14,8 @@ namespace Vortex
 		void OnImGuiRender();
 
 	private:
-		std::filesystem::path m_CurrentDirectory;
+		std::filesystem::path m_BaseDirectoryPath;
+		std::filesystem::path m_CurrentDirectoryPath;
 
 		Ref<Texture2D> m_DirectoryIcon;
 		Ref<Texture2D> m_FileIcon;

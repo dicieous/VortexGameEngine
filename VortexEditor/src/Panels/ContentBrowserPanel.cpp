@@ -1,5 +1,6 @@
 #include "Vxpch.h"
 #include "ContentBrowserPanel.h"
+#include "Vortex/Project/Project.h"
 
 #include <imgui/imgui.h>
 
@@ -34,11 +35,8 @@ namespace Vortex
 		ImGui::TextUnformatted(displayText.c_str());
 	}
 
-	//Once we have Projects, Change this
-	extern const std::filesystem::path g_AssetsPath = "Assets";
-
 	ContentBrowserPanel::ContentBrowserPanel()
-		:m_CurrentDirectory(g_AssetsPath)
+		:m_BaseDirectoryPath(Project::GetAssetDirectory()), m_CurrentDirectoryPath(m_BaseDirectoryPath)
 	{
 		m_DirectoryIcon = Texture2D::Create("Resources/Icons/ContentBrowser/DirectoryIcon.png");
 		m_FileIcon = Texture2D::Create("Resources/Icons/ContentBrowser/FileIcon.png");
@@ -51,12 +49,12 @@ namespace Vortex
 		ImGui::PushStyleVar(ImGuiStyleVar_DockingSeparatorSize, 0.0f);
 		ImGui::Begin("Content Browser");
 
-		if (m_CurrentDirectory != std::filesystem::path(g_AssetsPath))
+		if (m_CurrentDirectoryPath != std::filesystem::path(m_BaseDirectoryPath))
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
 			if (ImGui::ImageButton("ContentBrowserBackButton", (ImTextureID)m_BackButton->GetRendererID(), {20.0f, 20.0f}, {0, 1}, {1, 0}))
 			{
-				m_CurrentDirectory = m_CurrentDirectory.parent_path();
+				m_CurrentDirectoryPath = m_CurrentDirectoryPath.parent_path();
 			}
 			ImGui::PopStyleColor();
 		}
@@ -72,11 +70,11 @@ namespace Vortex
 
 		ImGui::Columns(columnCount, 0, false);
 
-		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
+		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectoryPath))
 		{
 			const auto& path = directoryEntry.path();
 
-			auto relativePath = std::filesystem::relative(path, g_AssetsPath);
+			std::filesystem::path relativePath(path);
 			std::string fileNameString = relativePath.filename().string();
 
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
@@ -95,7 +93,7 @@ namespace Vortex
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
 				if (directoryEntry.is_directory())
-					m_CurrentDirectory /= path.filename();
+					m_CurrentDirectoryPath /= path.filename();
 			}
 
 			DrawTextWithEllipsis(fileNameString.c_str(), thumbnailSize);

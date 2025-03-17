@@ -2,7 +2,7 @@
 
 #ifdef VX_PLATFORM_WINDOWS
 
-extern Vortex::Application* Vortex::CreateApplication();
+extern Vortex::Application* Vortex::CreateApplication(ApplicationCommandLineArgs args);
 
 int main(int argc, char** argv) 
 {
@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	//int a = 5;
 	//VX_CORE_INFO("Hello! Var = {0}" ,a);
 	VX_PROFILE_BEGIN_SESSION("StartUp", "Vortex-Startup.json");
-	auto app = Vortex::CreateApplication();
+	auto app = Vortex::CreateApplication({argc, argv});
 	VX_PROFILE_END_SESSION();
 	
 	VX_PROFILE_BEGIN_SESSION("RunTime", "Vortex-RunTime.json");

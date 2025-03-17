@@ -17,11 +17,24 @@ int main(int argc, char** argv);
 
 namespace Vortex
 {
+	struct ApplicationCommandLineArgs
+	{
+		int Count = 0;
+		char** Args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			VX_CORE_ASSERT((index < Count), "Out of Range");
+			return Args[index];
+		}
+	};
 
 	struct ApplicationSpecifications
 	{ 
 		std::string Name = "Vortex Application";
 		std::string WorkingDirectory;
+
+		ApplicationCommandLineArgs commandLineArgs;
 	};
 
 	class VORTEX_API Application
@@ -71,6 +84,6 @@ namespace Vortex
 	};
 
 	//To be defined in CLIENT
-	Application* CreateApplication();
+	Application* CreateApplication(ApplicationCommandLineArgs args);
 }
 

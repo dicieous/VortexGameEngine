@@ -26,6 +26,11 @@ namespace Vortex {
 
 		void OnOverlayRender();
 
+		void NewProject();
+		void OpenProject(const std::filesystem::path& filePath);
+		void SaveProject();
+
+
 		void NewScene();
 		
 		void OpenScene();
@@ -90,7 +95,7 @@ namespace Vortex {
 
 		//Panels
 		SceneHeirarchyPanel m_SceneHeirarchyPanel;
-		ContentBrowserPanel m_ContentBrowserPanel;
+		Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 
 		//Editor Resources
 		Ref<Texture2D> m_PlayIconTexture;

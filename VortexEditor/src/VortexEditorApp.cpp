@@ -18,9 +18,11 @@ namespace Vortex {
 		}
 	};
 
-	Vortex::Application* Vortex::CreateApplication() {
+	Vortex::Application* Vortex::CreateApplication(ApplicationCommandLineArgs args) {
 		ApplicationSpecifications Specs;
 		Specs.Name = "Vortex Engine";
+		Specs.commandLineArgs = args;
+
 		return new VortexEditor(Specs);
 	}
 
