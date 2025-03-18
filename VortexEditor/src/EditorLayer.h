@@ -27,6 +27,7 @@ namespace Vortex {
 		void OnOverlayRender();
 
 		void NewProject();
+		bool OpenProject();
 		void OpenProject(const std::filesystem::path& filePath);
 		void SaveProject();
 

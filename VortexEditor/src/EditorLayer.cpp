@@ -41,7 +41,11 @@ namespace Vortex
 		else
 		{
 			//TODO: Prompt the User to select a Directory
-			NewProject();
+			//NewProject();
+
+			//If no project is opened close VortexEditor
+			if (!OpenProject())
+				Application::Get().Close();
 		}
 
 		m_EditorCamera = EditorCamera(glm::radians(45.0f), 1.778f, 0.1f, 1000.0f);
@@ -133,7 +137,7 @@ namespace Vortex
 				m_HoveredEntity = Entity();
 		}
 
-		
+
 		Renderer2D::DrawInfiniteGrid(m_InfiniteGridSpecs);
 
 		OnOverlayRender();
@@ -198,26 +202,30 @@ namespace Vortex
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("New", "CTRL+N"))
+
+				if (ImGui::MenuItem("Open Project", "CTRL+O"))
+				{
+					OpenProject();
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("New Scene", "CTRL+N"))
 				{
 					NewScene();
 				}
 
-				if (ImGui::MenuItem("Open...", "CTRL+O"))
-				{
-					OpenScene();
-				}
-
-
-				if (ImGui::MenuItem("Save", "CTRL+S"))
+				if (ImGui::MenuItem("Save Scene", "CTRL+S"))
 				{
 					SaveScene();
 				}
 
-				if (ImGui::MenuItem("Save As...", "CTRL+Shift+S"))
+				if (ImGui::MenuItem("Save Scene As...", "CTRL+Shift+S"))
 				{
 					SaveSceneAs();
 				}
+
+				ImGui::Separator();
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 
@@ -459,7 +467,7 @@ namespace Vortex
 		case Key::O:
 			if (control)
 			{
-				OpenScene();
+				OpenProject();
 			}
 			break;
 
@@ -582,6 +590,16 @@ namespace Vortex
 	void EditorLayer::NewProject()
 	{
 		Project::New();
+	}
+
+	bool EditorLayer::OpenProject()
+	{
+		std::string filePath = FileDialogs::OpenFile("Vortex Project (*.vxproj)\0*.vxproj\0");
+
+		if (filePath.empty()) return false;
+
+		OpenProject(filePath);
+		return true;
 	}
 
 	void EditorLayer::OpenProject(const std::filesystem::path& filePath)
