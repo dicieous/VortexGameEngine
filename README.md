@@ -161,6 +161,8 @@ Vortex::Application* Vortex::CreateApplication(ApplicationCommandLineArgs args)
 - [**GLM**](https://github.com/g-truc/glm): A math library for handling matrices and vectors in graphics programming.
 
 - [**premake5**](https://premake.github.io/): Build system configuration.
+- 
+- [**Yaml-cpp**](https://github.com/jbeder/yaml-cpp): YAML parser and emitter for C++.
 
 <br>
 
