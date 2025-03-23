@@ -398,7 +398,7 @@ namespace Vortex
 
 		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoResize);
 
-		float size = ImGui::GetWindowHeight() - 4.0f;
+		float size = ImGui::GetWindowHeight() - 10.0f;
 		{
 			Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_PlayIconTexture : m_StopIconTexture;
 			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
@@ -415,7 +415,7 @@ namespace Vortex
 		ImGui::SameLine();
 
 		{
-			Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_SimulateIconTexture : m_StopIconTexture;
+			/*Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_SimulateIconTexture : m_StopIconTexture;
 
 			if (ImGui::ImageButton("##Simulateicon", (ImTextureID)icon->GetRendererID(), ImVec2(size, size)))
 			{
@@ -423,7 +423,7 @@ namespace Vortex
 					OnSceneSimulate();
 				else if (m_SceneState == SceneState::Simulate)
 					OnSceneStop();
-			}
+			}*/
 		}
 
 		ImGui::PopStyleVar(3);
