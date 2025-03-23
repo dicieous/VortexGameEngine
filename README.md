@@ -11,7 +11,7 @@
 
 </div>
 
-#### *"Making a game engine from scratch: because I like pain."* 🙂
+#### *"Yes, I know Unreal and Unity exist. No, I don’t want to talk about it."* 🙂
 
 ## **Overview**
 - Vortex Game Engine is an in-development Game Engine, designed as a portfolio project to explore modern game Engine Development.You can clone the repository and experiment with making games using Vortex, but it is not yet at the level of a professional game engine.
@@ -20,7 +20,7 @@
 
 ## **Showcase**
 
-Will Add Soon..
+![Engine](https://github.com/dicieous/VortexGameEngine/blob/6a0279746eace38afedbabbefe9fd8af9716dd3f/Readme/Engine_Showcase_Image.png)
 
 <br>
 
@@ -174,7 +174,7 @@ This project is licensed under the [Apache-2.0](https://choosealicense.com/licen
 
 ## **Acknowledgements**
 
-- [**The Cherno**](https://www.youtube.com/@TheCherno): For Teaching me C++, also his Game Engine Series.
+- [**The Cherno**](https://www.youtube.com/@TheCherno): For Teaching me C++ and Game Engine Related Stuff.
 
 - [**LearnOpenGL**](https://learnopengl.com/): For Tutorials and Engaging Learning Experience.
 
