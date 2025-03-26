@@ -22,6 +22,8 @@
 
 ![Engine](https://github.com/dicieous/VortexGameEngine/blob/6a0279746eace38afedbabbefe9fd8af9716dd3f/Readme/Engine_Showcase_Image.png)
 
+This is the Video [Showcase](https://drive.google.com/file/d/1KwcLCQabKfTwAZ5ybFNzP41aSqao1C2Z/view?usp=sharing)
+
 <br>
 
 ## **Features**
@@ -178,7 +180,7 @@ This project is licensed under the [Apache-2.0](https://choosealicense.com/licen
 
 - [**LearnOpenGL**](https://learnopengl.com/): For Tutorials and Engaging Learning Experience.
 
-- [**Game Engine Architecture**](https://learnopengl.com/): A very good Resource for Game Engine Development.
+- [**Game Engine Architecture**](https://www.amazon.in/Engine-Architecture-Third-Jason-Gregory/dp/1138035459): A very good Resource for Game Engine Development.
 
 - [**GameMath**](https://gamemath.com/book/): A real Good Maths book for Game Dev in General.
 
