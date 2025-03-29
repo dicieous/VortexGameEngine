@@ -6,11 +6,29 @@
 
 namespace Vortex{
 
+	enum class ImageFormat
+	{
+		None = 0,
+		R8,
+		RGB8,
+		RGBA8,
+		RGBA32F
+	};
+
+	struct TextureSpecifications
+	{
+		uint32_t Width = 1;
+		uint32_t Height = 1;
+		ImageFormat Format = ImageFormat::RGBA8;
+		bool GenerateMips = false;
+	};
+
 	class Texture {
 
 	public:
 		virtual ~Texture() = default;
 
+		virtual const TextureSpecifications& GetTextureSpecifications() const = 0;
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 		virtual uint32_t GetRendererID() const = 0;
@@ -28,7 +46,7 @@ namespace Vortex{
 	class Texture2D : public Texture {
 
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height); //Add Format support in future for textures
+		static Ref<Texture2D> Create(const TextureSpecifications& specifications);
 		static Ref<Texture2D> Create(const std::string& path);
 	};
 }

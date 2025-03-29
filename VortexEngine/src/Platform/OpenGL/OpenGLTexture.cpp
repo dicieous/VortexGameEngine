@@ -4,13 +4,67 @@
 #include "stb_image.h"
 
 namespace Vortex {
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t& width, uint32_t& height)
-		:m_width(width), m_Height(height)
+
+	namespace Utils
+	{
+		static GLenum VortexImageFormatToGLDataFormat(ImageFormat format)
+		{
+			switch (format)
+			{
+			case Vortex::ImageFormat::None:
+				return GL_NONE;
+
+			case Vortex::ImageFormat::R8:
+				return GL_RED;
+
+			case Vortex::ImageFormat::RGB8:
+				return GL_RGB;
+
+			case Vortex::ImageFormat::RGBA8:
+				return GL_RGBA;
+
+			case Vortex::ImageFormat::RGBA32F:
+				return GL_RGBA32F;
+			}
+
+			VX_CORE_ASSERT(false, "Format Unknown");
+
+			return 0;
+		}
+
+		static GLenum VortexImageFormatToGLInternalFormat(ImageFormat format)
+		{
+			switch (format)
+			{
+			case Vortex::ImageFormat::None:
+				return GL_NONE;
+
+			case Vortex::ImageFormat::R8:
+				return GL_R8;
+
+			case Vortex::ImageFormat::RGB8:
+				return GL_RGB8;
+
+			case Vortex::ImageFormat::RGBA8:
+				return GL_RGBA8;
+
+			case Vortex::ImageFormat::RGBA32F:
+				return GL_RGBA32F;
+			}
+
+			VX_CORE_ASSERT(false, "Format Unknown");
+
+			return 0;
+		}
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecifications& specifications)
+		:m_Specifications(specifications), m_width(specifications.Width), m_Height(specifications.Height)
 	{
 		VX_PROFILE_FUNCTION();
 
-		m_internalFormat = GL_RGBA8;
-		m_dataFormat = GL_RGBA;
+		m_internalFormat = Utils::VortexImageFormatToGLInternalFormat(specifications.Format);
+		m_dataFormat = Utils::VortexImageFormatToGLDataFormat(specifications.Format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_internalFormat, m_width, m_Height);

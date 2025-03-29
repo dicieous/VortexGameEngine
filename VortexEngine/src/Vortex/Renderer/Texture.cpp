@@ -6,7 +6,7 @@
 
 namespace Vortex {
 
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	Ref<Texture2D> Texture2D::Create(const TextureSpecifications& specifications)
 	{
 		switch (Renderer::GetCurrentAPI())
 		{
@@ -17,7 +17,7 @@ namespace Vortex {
 
 		case RendererAPI::API::OpenGL:
 
-			return CreateRef<OpenGLTexture2D>(width, height);
+			return CreateRef<OpenGLTexture2D>(specifications);
 		}
 		VX_CORE_ASSERT(false, "Unkown RendererAPI!");
 		return nullptr;

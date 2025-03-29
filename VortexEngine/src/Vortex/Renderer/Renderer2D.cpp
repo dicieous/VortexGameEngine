@@ -186,8 +186,7 @@ namespace Vortex
 		//InfiniteGrid
 		s_2Ddata.GridQuadVertexArray = VertexArray::Create();
 
-
-		s_2Ddata.WhiteTexture = Texture2D::Create(1, 1);
+		s_2Ddata.WhiteTexture = Texture2D::Create(TextureSpecifications());
 		uint32_t whiteTextureData = 0xffffffff;
 		s_2Ddata.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
