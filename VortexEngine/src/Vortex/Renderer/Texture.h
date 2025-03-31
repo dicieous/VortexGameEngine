@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Vortex/Core/Core.h"
+#include "Vortex/Assets/Asset.h"
 
 namespace Vortex{
 
@@ -23,7 +24,7 @@ namespace Vortex{
 		bool GenerateMips = false;
 	};
 
-	class Texture {
+	class Texture : public Asset {
 
 	public:
 		virtual ~Texture() = default;
@@ -48,5 +49,8 @@ namespace Vortex{
 	public:
 		static Ref<Texture2D> Create(const TextureSpecifications& specifications);
 		static Ref<Texture2D> Create(const std::string& path);
+
+		static AssetType GetStaticType() { return AssetType::Texture2D; }
+		virtual AssetType GetType() const override { return GetStaticType(); }
 	};
 }
