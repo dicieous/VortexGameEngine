@@ -2,6 +2,7 @@
 
 #include "AssetManager.h"
 #include "EditorAssetManager.h"
+#include "AssetImporter.h"
 
 namespace Vortex
 {
@@ -37,10 +38,10 @@ namespace Vortex
 		else
 		{
 			const AssetMetaData& metaData = GetMetaData(handle);
-			//asset = AssetImporter::ImportAsset(metaData); //Implement Asset Importer
+			asset = AssetImporter::ImportAsset(handle, metaData);
 			
 			if (!asset)
-				VX_CORE_ASSERT(false, "Asset Could not be Imported");
+				VX_CORE_ERROR("EditorAssetManager::GetAsset - Asset Could not be Imported!");
 		}
 
 		return asset;

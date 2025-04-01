@@ -1,12 +1,13 @@
 #pragma once
 
-#include <Vortex/Core/UUID.h>
+#include "Vortex/Core/UUID.h"
+#include "Vortex/Core/Core.h"
 
 namespace Vortex
 {
 	using AssetHandle = UUID;
 
-	enum class AssetType
+	enum class AssetType : uint16_t
 	{
 		None,
 		Scene,

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Asset.h"
-#include "Vortex/Core/Core.h"
+
+#include <map>
 
 namespace Vortex
 {

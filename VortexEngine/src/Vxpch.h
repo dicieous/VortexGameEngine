@@ -14,6 +14,7 @@
 #include <unordered_set>
 
 #include "Vortex/Core/Log.h"
+#include "Vortex/Core/Buffer.h"
 
 #include "Vortex/Debug/Instrumentor.h"
 
