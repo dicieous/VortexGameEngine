@@ -188,7 +188,7 @@ namespace Vortex
 
 		s_2Ddata.WhiteTexture = Texture2D::Create(TextureSpecifications());
 		uint32_t whiteTextureData = 0xffffffff;
-		s_2Ddata.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+		s_2Ddata.WhiteTexture->SetData(Buffer(&whiteTextureData, sizeof(uint32_t)));
 
 		int samplers[s_2Ddata.MAX_TEXTURE_SLOTS];
 

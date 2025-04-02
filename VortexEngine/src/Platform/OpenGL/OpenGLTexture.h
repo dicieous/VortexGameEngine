@@ -11,8 +11,7 @@ namespace Vortex
 	{
 
 	public:
-		OpenGLTexture2D(const TextureSpecifications& specifications);
-		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(const TextureSpecifications& specifications, Buffer data);
 		virtual ~OpenGLTexture2D();
 
 		virtual const TextureSpecifications& GetTextureSpecifications() const override { return m_Specifications; }
@@ -22,7 +21,7 @@ namespace Vortex
 
 		virtual const std::string& GetPath() const override { return m_path; }
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(Buffer data) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 
